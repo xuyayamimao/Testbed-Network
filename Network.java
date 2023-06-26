@@ -7,24 +7,54 @@ import java.util.HashSet;
 
 public class Network implements Iterable<Integer>{
 
-    private ArrayList<Agent> agentsList;
-    private final int agentCount;
+    public ArrayList<Agent> agentsList;
+    public final int agentCount;
 
-    private class Agent {
-        private LinkedList<Edge> adjLists;
-        private boolean hasPlayed;
-        private int payoffs;
-        private boolean cooperate;
+    public class Agent {
+        public LinkedList<Edge> adjLists;
+        public boolean hasPlayed;
+        public int actualPayoffs;//agent's actualPayoffs in one trial
+        public boolean cooperate;
+        public boolean eliminated;
 
-        private Agent(){
+        public Agent(){
             adjLists = new LinkedList<>();
             hasPlayed = false;
-            payoffs = 0;
+            actualPayoffs = 0;
             cooperate = false;
+            eliminated = false;
+        }
+
+
+        public boolean getCooperate(){
+            return this.cooperate;
+        }
+
+        public void setCooperate(boolean cooperate){
+            this.cooperate = cooperate;
+        }
+
+        /**Strategy Update
+         * Randomly choose a survived neighbor to imitate and update strategy
+         */
+        public void stratgyUpdate(){
+            boolean result;
+            int neighborNum = adjLists.size();
+            int imiIndex = (int)Math.random()*neighborNum;//index of a randomly chosen neighbor
+            int imiNeighborIndex = adjLists.get(imiIndex).to;
+            double noise = 0.1;//constant value of uncertainty in assessing payoff
+            Agent imiNeighbor = agentsList.get(imiNeighborIndex);
+            double Wij = 1/(1+Math.exp(-(imiNeighbor.actualPayoffs - this.actualPayoffs)/noise));
+            if (Math.random() < Wij){
+                result = imiNeighbor.getCooperate();
+                setCooperate(result);
+            }else{
+                return;
+            }
         }
     }
 
-    /* Initializes a network with numAgents and no Edges. */
+    /** Initializes a network with numAgents and no Edges. */
     public Network(int numAgents) {
         agentsList = (ArrayList<Agent>) new ArrayList<Agent>();
         for (int k = 0; k < numAgents; k++) {
@@ -34,7 +64,7 @@ public class Network implements Iterable<Integer>{
     }
 
 
-    /* Adds a directed Edge (V1, V2) to the network. That is, adds an edge
+    /** Adds a directed Edge (V1, V2) to the network. That is, adds an edge
        in ONE direction, from agent v1 to agent v2. */
     public void addEdge(int v1, int v2) {
         addEdge(v1, v2, 0);
@@ -46,7 +76,7 @@ public class Network implements Iterable<Integer>{
         addUndirectedEdge(v1, v2, 0);
     }
 
-    /* Adds a directed Edge (V1, V2) to the network with weight WEIGHT. If the
+    /** Adds a directed Edge (V1, V2) to the network with weight WEIGHT. If the
        Edge already exists, replaces the current Edge with a new Edge with
        weight WEIGHT. */
     public void addEdge(int v1, int v2, int weight) {
@@ -60,7 +90,7 @@ public class Network implements Iterable<Integer>{
         v1neighbors.add(new Edge(v1, v2, weight));
     }
 
-    /* Adds an undirected Edge (V1, V2) to the network with weight WEIGHT. If the
+    /** Adds an undirected Edge (V1, V2) to the network with weight WEIGHT. If the
        Edge already exists, replaces the current Edge with a new Edge with
        weight WEIGHT. */
     public void addUndirectedEdge(int v1, int v2, int weight) {
@@ -68,7 +98,7 @@ public class Network implements Iterable<Integer>{
         addEdge(v2, v1, weight);
     }
 
-    /* Returns true if there exists an Edge from agent FROM to agent TO.
+    /** Returns true if there exists an Edge from agent FROM to agent TO.
        Returns false otherwise. */
     public boolean isAdjacent(int from, int to) {
         if (from == to){
@@ -82,7 +112,7 @@ public class Network implements Iterable<Integer>{
         return false;
     }
 
-    /* Returns a list of all the neighbors of agent v in the network */
+    /** Returns a list of all the neighbors of agent v in the network */
     public List<Integer> neighbors(int v) {
         List<Integer> neighbors = new ArrayList<>();
         for (Edge e: agentsList.get(v).adjLists){
@@ -91,7 +121,7 @@ public class Network implements Iterable<Integer>{
         return neighbors;
     }
 
-    /* Returns the number of incoming Edges for agent V. */
+    /** Returns the number of incoming Edges for agent V. */
     public int inDegree(int v) {
         int sum  = 0;
         for (int i = 0; i < agentCount; i++){
@@ -106,7 +136,7 @@ public class Network implements Iterable<Integer>{
         return sum;
     }//we probably won't need this method because inDegree only exists for directed edge
 
-    /* Returns an Iterator that outputs the agents of the graph in topological
+    /** Returns an Iterator that outputs the agents of the graph in topological
        sorted order. */
     public Iterator<Integer> iterator() {
         return new TopologicalIterator();
