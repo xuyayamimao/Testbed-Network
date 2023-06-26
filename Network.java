@@ -14,11 +14,13 @@ public class Network implements Iterable<Integer>{
         private LinkedList<Edge> adjLists;
         private boolean hasPlayed;
         private int payoffs;
+        private boolean cooperate;
 
         private Agent(){
             adjLists = new LinkedList<>();
             hasPlayed = false;
             payoffs = 0;
+            cooperate = false;
         }
     }
 
@@ -33,7 +35,7 @@ public class Network implements Iterable<Integer>{
 
 
     /* Adds a directed Edge (V1, V2) to the network. That is, adds an edge
-       in ONE directions, from agent v1 to agent v2. */
+       in ONE direction, from agent v1 to agent v2. */
     public void addEdge(int v1, int v2) {
         addEdge(v1, v2, 0);
     }
@@ -48,16 +50,15 @@ public class Network implements Iterable<Integer>{
        Edge already exists, replaces the current Edge with a new Edge with
        weight WEIGHT. */
     public void addEdge(int v1, int v2, int weight) {
-        LinkedList<Edge> neighbors = adjLists[v1];
-        for (Edge e: neighbors){
+        LinkedList<Edge> v1neighbors = agentsList.get(v1).adjLists;
+        for (Edge e: v1neighbors){
             if (e.from == v1 && e.to == v2){
                 e.weight = weight;
                 return;
             }
         }
-        neighbors.add(new Edge(v1, v2, weight));
-
-    }//FIXME This method still has error; and we probably won't use it because our network doesn't have directed edge
+        v1neighbors.add(new Edge(v1, v2, weight));
+    }
 
     /* Adds an undirected Edge (V1, V2) to the network with weight WEIGHT. If the
        Edge already exists, replaces the current Edge with a new Edge with
@@ -65,8 +66,7 @@ public class Network implements Iterable<Integer>{
     public void addUndirectedEdge(int v1, int v2, int weight) {
         addEdge(v1, v2, weight);
         addEdge(v2, v1, weight);
-
-    }//FIXME we mainly use this method to add edge; still needs fixing
+    }
 
     /* Returns true if there exists an Edge from agent FROM to agent TO.
        Returns false otherwise. */
@@ -74,39 +74,37 @@ public class Network implements Iterable<Integer>{
         if (from == to){
             return  false;
         }
-        for (Edge e: adjLists[from]){
+        for (Edge e: agentsList.get(from).adjLists){
             if (e. from == from && e.to == to){
                 return true;
             }
         }
         return false;
-    }//FIXME
+    }
 
-    /* Returns a list of all the agents u such that the Edge (V, u)
-       exists in the network. */
+    /* Returns a list of all the neighbors of agent v in the network */
     public List<Integer> neighbors(int v) {
         List<Integer> neighbors = new ArrayList<>();
-        for (Edge e: adjLists[v]){
+        for (Edge e: agentsList.get(v).adjLists){
             neighbors.add(e.to);
         }
         return neighbors;
-    }//FIXME
+    }
 
     /* Returns the number of incoming Edges for agent V. */
     public int inDegree(int v) {
         int sum  = 0;
         for (int i = 0; i < agentCount; i++){
             if(i!=v){
-                for (Edge e: adjLists[i]){
+                for (Edge e: agentsList.get(i).adjLists){
                     if (e.to == v){
                         sum++;
-
                     }
                 }
             }
         }
         return sum;
-    }//FIXME
+    }//we probably won't need this method because inDegree only exists for directed edge
 
     /* Returns an Iterator that outputs the agents of the graph in topological
        sorted order. */
@@ -300,12 +298,10 @@ public class Network implements Iterable<Integer>{
         addUndirectedEdge(0, 1);
         addUndirectedEdge(0, 2);
         addUndirectedEdge(0, 3);
-        addUndirectedEdge(1, 4);
-        addUndirectedEdge(2, 5);
-        addUndirectedEdge(2, 6);
+        addUndirectedEdge(0, 4);
     }
 
-    //method to generate a 2D4N network with agentNum number of agents
+    //generate a 2D4N network with agentNum number of agents
     private void generate2D4N(int agentsNum){
         //TODO
     }
@@ -348,6 +344,9 @@ public class Network implements Iterable<Integer>{
     }
 
     public static void main(String[] args) {
+        Network n1 = new Network(5);
+        n1.generateN2();
+        n1.printDFS(1);
 
 
 
