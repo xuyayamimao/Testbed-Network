@@ -1,0 +1,16 @@
+Ziya 6.25:
+1. Finished implementing Network class basic methods
+2. Created PlayPDG class
+
+Ziya&James 6.26
+1. Finished implementing Agent.strategyUpdate
+2. Finished implementing PlayPDG.initializeNetwork
+
+Ziya&James 6.27
+1. Finish implement calculatePayoffs
+2. Finish implement agentRemoval(consider doing agent remove while calculate payoffs)
+
+Ziya&James 6.28
+1. Finish implement generate2D4N 
+2. Testing and debug: input graph into a visualizer and see our result 
+
