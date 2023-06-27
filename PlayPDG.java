@@ -46,8 +46,41 @@ public class PlayPDG {
         }
     }
 
+    /**
+     *
+     * @param index index of the agent in agentList we are curretly iterating through
+     */
+    public void calculatePayoffs(int index){
+        Network.Agent a = N.agentsList.get(index);
+        double result = 0;
+        for (Network.Edge e: a.adjLists){
+            boolean neighborCooperate = N.agentsList.get(e.getTo()).getCooperate();
+            if (a.getCooperate()){
+                if (neighborCooperate){
+                    result++;
+                }
+            }else{
+                if (neighborCooperate){
+                    result+=T;
+                }
+            }
+        }
+        a.actualPayoffs = result;
+    }
 
-
-
+    public void agentRemove(int index){
+        Network.Agent a = N.agentsList.get(index);
+        if (a.actualPayoffs < tParameter*normalPayoff){
+            List<Integer> neighbors = N.neighbors(index);
+            for (Integer i: neighbors){
+                for (Network.Edge e: N.agentsList.get(i).adjLists){
+                    if (e.getTo() == index){
+                        N.agentsList.get(i).adjLists.remove(e);
+                    }
+                }
+            }
+            N.agentsList.remove(index);
+        }
+    }
 
 }

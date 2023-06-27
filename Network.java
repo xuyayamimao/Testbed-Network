@@ -13,7 +13,7 @@ public class Network implements Iterable<Integer>{
     public class Agent {
         public LinkedList<Edge> adjLists;
         public boolean hasPlayed;
-        public int actualPayoffs;//agent's actualPayoffs in one trial
+        public double actualPayoffs;//agent's actualPayoffs in one trial
         public boolean cooperate;
         public boolean eliminated;
 
@@ -33,6 +33,31 @@ public class Network implements Iterable<Integer>{
         public void setCooperate(boolean cooperate){
             this.cooperate = cooperate;
         }
+
+        /**
+         *
+         */
+        /*public void calculatePayoffs(){
+            double result = 0;
+            for (Edge e: adjLists){
+                if (cooperate){
+                    if (agentsList.get(e.to).getCooperate()){
+                        result++;
+                    }else{
+
+                    }
+                }else{
+                    if (agentsList.get(e.to).getCooperate()){
+                        result+=
+
+                    }else{
+
+                    }
+                }
+            }
+        }
+        */
+
 
         /**Strategy Update
          * Randomly choose a survived neighbor to imitate and update strategy
@@ -296,7 +321,7 @@ public class Network implements Iterable<Integer>{
 
     }
 
-    private class Edge {
+    public class Edge {
 
         private final int from;
         private final int to;
@@ -306,6 +331,14 @@ public class Network implements Iterable<Integer>{
             this.from = from;
             this.to = to;
             this.weight = weight;
+        }
+
+        public int getFrom(){
+            return from;
+        }
+
+        public int getTo(){
+            return to;
         }
 
         public String toString() {
@@ -332,8 +365,30 @@ public class Network implements Iterable<Integer>{
     }
 
     //generate a 2D4N network with agentNum number of agents
-    private void generate2D4N(int agentsNum){
-        //TODO
+    private void generate2D4N(){
+        for (int i = 0; i < agentCount; i++){
+            LinkedList<Edge> neighbors = agentsList.get(i).adjLists;
+            addUndirectedEdge(i, (i+1)%agentCount);
+            addUndirectedEdge(i, (i+2)%agentCount);
+            addUndirectedEdge(i, (i-1+agentCount)%agentCount);
+            addUndirectedEdge(i, (i-2+agentCount)%agentCount);
+        }
+    }
+
+    private void printNetwork(){
+        int[][] adjMatrix = new int[agentCount][agentCount];
+        for (int i = 0; i < agentCount; i++){
+            for (int j = 0; j < agentCount; j++){
+                if (isAdjacent(i, j)){
+                    adjMatrix[i][j] = 1;
+                }else{
+                    adjMatrix[i][j] = 0;
+                }
+
+                System.out.print(adjMatrix[i][j]+" ");
+            }
+            System.out.print("\n");
+        }
     }
 
 
@@ -374,9 +429,10 @@ public class Network implements Iterable<Integer>{
     }
 
     public static void main(String[] args) {
-        Network n1 = new Network(5);
-        n1.generateN2();
-        n1.printDFS(1);
+       Network N = new Network( 100);
+       N.generate2D4N();
+       N.printNetwork();
+
 
 
 
