@@ -7,10 +7,11 @@ Ziya&James 6.26
 2. Finished implementing PlayPDG.initializeNetwork
 
 Ziya&James 6.27
-1. Finish implement calculatePayoffs
-2. Finish implement agentRemoval(consider doing agent remove while calculate payoffs)
+1. Finished implementing calculatePayoffs
+2. Finished implementing generate2D4N
+2. Finished implementing agentRemoval
 
 Ziya&James 6.28
-1. Finish implement generate2D4N 
+1. Install Pajek on lab machine
 2. Testing and debug: input graph into a visualizer and see our result 
 
