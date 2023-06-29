@@ -7,6 +7,11 @@ import java.util.HashSet;
 
 public class Network{ //original: public class Network implements Iterable<Integer>
 
+    //2D4n network always or change network later?
+    //another program that generate network and output a text file of network
+    //PDG program read info from the text file -> a more efficient approach
+    //Good for different kinds of network
+    //format of network can be read by software such as (network bench, pajek)
     public ArrayList<Agent> agentsList;
     public int agentCount; //final int -> int for agentRemove() in PDG 06/28
 
@@ -20,9 +25,11 @@ public class Network{ //original: public class Network implements Iterable<Integ
         public Agent(){
             adjLists = new LinkedList<>();
             hasPlayed = false;
-            actualPayoffs = 0;
-            cooperate = false;  //initialize agent as defector, will reset them in 06/28
+            actualPayoffs = 0; //refresh before each trail
+            cooperate = false;  //initialize agent as defector, will reset them in functions in PlayPDG 06/28
             eliminated = false;
+            //add initial num of neighbors, num of neighbors rn?
+
         }
 
 
@@ -56,6 +63,11 @@ public class Network{ //original: public class Network implements Iterable<Integ
             return result;
 
         }
+
+        //we can write strategy update for reinforcement learning function later.
+        //-also update the q table in each trail
+        //write beginning of code signify what learning approach will be used
+        //
 
 
     }

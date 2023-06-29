@@ -3,13 +3,14 @@ import java.util.Collections;
 import java.util.List;
 
 public class PlayPDG {
+    //Test
     private Network N;
 
     /*In PDG, T>R>P>S*; T>1*/
     private static int R = 1;//reward of mutual cooperation
     private static int S = 0;//reward of cooperator being defected
     private static int P = 0;//reward of mutual defection
-    private double T;//temptation to defect //int->double 06/29
+    private double T;//temptation to defect //int->double 06/29 T-> something else (b)
 
     /** Tolerance Parameter alpha;
      * when tParameter = 1, agents have zero tolerance to elimination
@@ -23,16 +24,21 @@ public class PlayPDG {
     private int normalPayoff = 4;
 
     private PlayPDG(int agentNum, double T, double toleranceP,double defectorPercent) throws Exception {
+        //use different tParameter as test cases
         N= new Network(agentNum);
         this.T = T;
         tParameter=toleranceP; //added 06/28
+        //Reverse？
         initializeNetwork(N, defectorPercent); //Initialize the network by make sure which agent cooperate&defect
         N.generate2D4N(); //Generate the 2D4n network
+
         N.printNetwork();
         calculatePayoffsAll();
         N.strategyUpdateAll();
         agentRemoveAll();
         N.printNetwork();
+        //counter for how many times an agent played w/ a neighbor? -good way for testing
+        //
 
 
 
