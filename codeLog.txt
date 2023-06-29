@@ -13,5 +13,14 @@ Ziya&James 6.27
 
 Ziya&James 6.28
 1. Install Pajek on lab machine
-2. Testing and debug: input graph into a visualizer and see our result 
+2. Testing and debug: input graph into a visualizer and see our result
+
+1, Create network into a txt file, ->txt file format output can be used for software to visualize it
+2, Run cases for test(different value of alpha, etc.) ->
+3, always keep track of percentage of agents eliminated
+4, percentage of cooperators left in network (in cooperator cluster)  -Amount of clusters left?
+5, pick colors for cooperator and defector
+6, use small network first to test the code
+7,Done the coding part by Tuesday and start testing
+8, 
 
