@@ -9,20 +9,20 @@ public class PlayPDG {
     private static int R = 1;//reward of mutual cooperation
     private static int S = 0;//reward of cooperator being defected
     private static int P = 0;//reward of mutual defection
-    private int T;//temptation to defect
+    private double T;//temptation to defect //int->double 06/29
 
     /** Tolerance Parameter alpha;
      * when tParameter = 1, agents have zero tolerance to elimination
      * when tParameter = 0, agents are completely tolerant;
      */
-    private int tParameter;
+    private double tParameter;
 
     /** Normal Payoff for 2D4N network
      * where all agents in the network are cooperators
      */
     private int normalPayoff = 4;
 
-    private PlayPDG(int agentNum, int T, int toleranceP,double defectorPercent){
+    private PlayPDG(int agentNum, double T, double toleranceP,double defectorPercent) throws Exception {
         N= new Network(agentNum);
         this.T = T;
         tParameter=toleranceP; //added 06/28
@@ -31,6 +31,9 @@ public class PlayPDG {
         N.printNetwork();
         calculatePayoffsAll();
         N.strategyUpdateAll();
+        agentRemoveAll();
+        N.printNetwork();
+
 
 
     }
@@ -100,13 +103,14 @@ public class PlayPDG {
     public void agentRemove(int index) throws Exception{
         if(N.agentCount==0) throw new Exception("No agents in the network, can't remove agent. ");
 
-        Network.Agent a = N.agentsList.get(index);
+        Network.Agent a = N.agentsList.get(index); //get out the agent
         if (a.actualPayoffs < tParameter*normalPayoff){
-            List<Integer> neighbors = N.neighbors(index);
+            List<Integer> neighbors = N.neighbors(index); //get all agents' neighbor's index
             for (Integer i: neighbors){
-                for (Network.Edge e: N.agentsList.get(i).adjLists){
+                Integer k =i;
+                for (Network.Edge e: N.agentsList.get(k).adjLists){
                     if (e.getTo() == index){
-                        N.agentsList.get(i).adjLists.remove(e);
+                        N.agentsList.get(k).adjLists.remove(e);
                     }
                 }
             }
@@ -115,6 +119,19 @@ public class PlayPDG {
         N.agentCount--;
 
     }
+
+    public void agentRemoveAll() throws Exception {
+        for (int i=0; i<N.agentsList.size(); i++){
+            agentRemove(i);
+        }
+    }
+
+    public static void main(String[] args) throws Exception {
+        PlayPDG game = new PlayPDG(10, 1.2,0.5, .2);
+
+    }
+
+
 
 
 

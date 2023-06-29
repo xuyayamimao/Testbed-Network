@@ -12,7 +12,7 @@ public class Network{ //original: public class Network implements Iterable<Integ
 
     public class Agent {
         public LinkedList<Edge> adjLists;
-        public boolean hasPlayed;
+        public boolean hasPlayed; //do we still need this?
         public double actualPayoffs;//agent's actualPayoffs in one trial
         public boolean cooperate;
         public boolean eliminated; //Do we still need this instance variable? 06/28
@@ -167,7 +167,13 @@ public class Network{ //original: public class Network implements Iterable<Integ
 
     public void printNetwork(){
         int[][] adjMatrix = new int[agentCount][agentCount];
+        System.out.print("  ");
+        for(int i=0; i<agentCount; i++){
+            System.out.print(i + " ");
+        }
+        System.out.print("\n");
         for (int i = 0; i < agentCount; i++){
+            System.out.print(i+" ");
             for (int j = 0; j < agentCount; j++){
                 if (isAdjacent(i, j)){
                     adjMatrix[i][j] = 1;
