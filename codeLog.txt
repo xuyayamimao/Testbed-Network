@@ -12,6 +12,19 @@ Ziya&James 6.27
 2. Finished implementing agentRemoval
 
 Ziya&James 6.28
-1. Install Pajek on lab machine
+1. Move strategyUpdate to PlayPDG class
+2. Finish implement ifEquilibrium
+\Install Pajek on lab machine
 2. Testing and debug: input graph into a visualizer and see our result 
 
+TODO:
+1. output network to text file
+2. visialize network in Pajek or something else
+3. run test cases of different tolerance parameters 0.05, 0.10, 0.15, 0.20....->goal is to have graph
+4. compare results with cascading failure paper to see if our code is correct
+5. brainstorm our expected results so that we know if our code is working properly
+Webpages Shared by Prof:
+https://nwb.cns.iu.edu/
+http://vlado.fmf.uni-lj.si/pub/networks/pajek/
+https://r-graph-gallery.com/
+https://www.aamas2024-conference.auckland.ac.nz/
