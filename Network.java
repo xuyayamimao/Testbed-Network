@@ -5,23 +5,23 @@ import java.util.Iterator;
 import java.util.Stack;
 import java.util.HashSet;
 
-public class Network implements Iterable<Integer>{
+public class Network{ //original: public class Network implements Iterable<Integer>
 
     public ArrayList<Agent> agentsList;
-    public final int agentCount;
+    public int agentCount; //final int -> int for agentRemove() in PDG 06/28
 
     public class Agent {
         public LinkedList<Edge> adjLists;
         public boolean hasPlayed;
         public double actualPayoffs;//agent's actualPayoffs in one trial
         public boolean cooperate;
-        public boolean eliminated;
+        public boolean eliminated; //Do we still need this instance variable? 06/28
 
         public Agent(){
             adjLists = new LinkedList<>();
             hasPlayed = false;
             actualPayoffs = 0;
-            cooperate = false;
+            cooperate = false;  //initialize agent as defector, will reset them in 06/28
             eliminated = false;
         }
 
@@ -34,36 +34,16 @@ public class Network implements Iterable<Integer>{
             this.cooperate = cooperate;
         }
 
+
+
         /**
-         *
-         */
-        /*public void calculatePayoffs(){
-            double result = 0;
-            for (Edge e: adjLists){
-                if (cooperate){
-                    if (agentsList.get(e.to).getCooperate()){
-                        result++;
-                    }else{
-
-                    }
-                }else{
-                    if (agentsList.get(e.to).getCooperate()){
-                        result+=
-
-                    }else{
-
-                    }
-                }
-            }
-        }
-        */
-
-
-        /**Strategy Update
+         * Function enable an agent to update its strategy
          * Randomly choose a survived neighbor to imitate and update strategy
+         * @Return a boolean that mark the new strategy of the agent for the next trail
          */
-        public void stratgyUpdate(){
+        public boolean strategyUpdate(){
             boolean result;
+            result = this.cooperate;
             int neighborNum = adjLists.size();
             int imiIndex = (int)Math.random()*neighborNum;//index of a randomly chosen neighbor
             int imiNeighborIndex = adjLists.get(imiIndex).to;
@@ -72,11 +52,22 @@ public class Network implements Iterable<Integer>{
             double Wij = 1/(1+Math.exp(-(imiNeighbor.actualPayoffs - this.actualPayoffs)/noise));
             if (Math.random() < Wij){
                 result = imiNeighbor.getCooperate();
-                setCooperate(result);
-            }else{
-                return;
             }
+            return result;
+
         }
+
+
+    }
+    public void strategyUpdateAll(){
+        ArrayList<Boolean> totalResult = new ArrayList<>();
+        for(int i=0; i<agentsList.size(); i++){
+            totalResult.add(agentsList.get(i).strategyUpdate());
+        }
+        for(int i=0; i<agentsList.size(); i++){
+            agentsList.get(i).setCooperate(totalResult.get(i));
+        }
+
     }
 
     /** Initializes a network with numAgents and no Edges. */
@@ -88,40 +79,49 @@ public class Network implements Iterable<Integer>{
         agentCount = numAgents;
     }
 
+    public class Edge {
 
-    /** Adds a directed Edge (V1, V2) to the network. That is, adds an edge
-       in ONE direction, from agent v1 to agent v2. */
-    public void addEdge(int v1, int v2) {
-        addEdge(v1, v2, 0);
-    }
+        private final int from;
+        private final int to;
 
-    /* Adds an undirected Edge (V1, V2) to the graph. That is, adds an edge
-       in BOTH directions, from v1 to v2 and from v2 to v1. */
-    public void addUndirectedEdge(int v1, int v2) {
-        addUndirectedEdge(v1, v2, 0);
-    }
 
-    /** Adds a directed Edge (V1, V2) to the network with weight WEIGHT. If the
-       Edge already exists, replaces the current Edge with a new Edge with
-       weight WEIGHT. */
-    public void addEdge(int v1, int v2, int weight) {
-        LinkedList<Edge> v1neighbors = agentsList.get(v1).adjLists;
-        for (Edge e: v1neighbors){
-            if (e.from == v1 && e.to == v2){
-                e.weight = weight;
-                return;
-            }
+
+        Edge(int from, int to) { //deleted instance variable, weight, 06/28
+            this.from = from;
+            this.to = to;
         }
-        v1neighbors.add(new Edge(v1, v2, weight));
+
+        public int getFrom(){
+            return from;
+        }
+
+        public int getTo(){
+            return to;
+        }
+
+        public String toString() {
+            return "(" + from + ", " + to + ")";
+        }
+
     }
 
-    /** Adds an undirected Edge (V1, V2) to the network with weight WEIGHT. If the
-       Edge already exists, replaces the current Edge with a new Edge with
-       weight WEIGHT. */
-    public void addUndirectedEdge(int v1, int v2, int weight) {
-        addEdge(v1, v2, weight);
-        addEdge(v2, v1, weight);
+
+    /**
+     *
+     * Adds an edge (V1, V2) between two neighbors in the network.
+     *
+     */
+    //If the Edge already exists, replaces the current Edge with a new Edge with. should we write about this case?
+    //06/28
+    public void addEdge(int v1, int v2) {
+        LinkedList<Edge> v1neighbors = agentsList.get(v1).adjLists;
+        LinkedList<Edge> v2neighbors = agentsList.get(v2).adjLists;
+        v1neighbors.add(new Edge(v1, v2));
+        v2neighbors.add(new Edge(v2, v1));
     }
+
+
+
 
     /** Returns true if there exists an Edge from agent FROM to agent TO.
        Returns false otherwise. */
@@ -146,26 +146,63 @@ public class Network implements Iterable<Integer>{
         return neighbors;
     }
 
-    /** Returns the number of incoming Edges for agent V. */
-    public int inDegree(int v) {
-        int sum  = 0;
+    //generate a 2D4N network with agentNum number of agents
+    public void generate2D4N(){
         for (int i = 0; i < agentCount; i++){
-            if(i!=v){
-                for (Edge e: agentsList.get(i).adjLists){
-                    if (e.to == v){
-                        sum++;
-                    }
-                }
-            }
+            LinkedList<Edge> neighbors = agentsList.get(i).adjLists;
+            addEdge(i, (i+1)%agentCount);
+            Edge edgeA = new Edge(i,(i+1)%agentCount); //added 06/28
+            neighbors.add(edgeA);
+            addEdge(i, (i+2)%agentCount);
+            Edge edgeB = new Edge(i,(i+2)%agentCount); //added 06/28
+            neighbors.add(edgeB);
+            addEdge(i, (i-1+agentCount)%agentCount);
+            Edge edgeC = new Edge(i,(i-1+agentCount)%agentCount); //added 06/28
+            neighbors.add(edgeC);
+            addEdge(i, (i-2+agentCount)%agentCount);
+            Edge edgeD = new Edge(i,(i-2+agentCount)%agentCount); //added 06/28
+            neighbors.add(edgeD);
         }
-        return sum;
-    }//we probably won't need this method because inDegree only exists for directed edge
+    }
+
+    public void printNetwork(){
+        int[][] adjMatrix = new int[agentCount][agentCount];
+        for (int i = 0; i < agentCount; i++){
+            for (int j = 0; j < agentCount; j++){
+                if (isAdjacent(i, j)){
+                    adjMatrix[i][j] = 1;
+                }else{
+                    adjMatrix[i][j] = 0;
+                }
+
+                System.out.print(adjMatrix[i][j]+" ");
+            }
+            System.out.print("\n");
+        }
+    }
+
+    public static void main(String[] args) {
+        Network N = new Network( 100);
+        N.generate2D4N();
+        N.printNetwork();
+
+
+
+
+
+    }
+
+
+
 
     /** Returns an Iterator that outputs the agents of the graph in topological
        sorted order. */
+    /*
     public Iterator<Integer> iterator() {
         return new TopologicalIterator();
     }
+
+     */
 
     /**
      *  A class that iterates through the agents of this graph,
@@ -174,6 +211,8 @@ public class Network implements Iterable<Integer>{
      *  at a agent v, and there is no path from v to an agent w,
      *  then the iteration will not include w.
      */
+
+    /*
     private class DFSIterator implements Iterator<Integer> {
 
         private final Stack<Integer> fringe;
@@ -222,8 +261,11 @@ public class Network implements Iterable<Integer>{
 
     }
 
+     */
+
     /* Returns the collected result of performing a depth-first search on this
        network's agents starting from V. */
+    /*
     public List<Integer> dfs(int v) {
         ArrayList<Integer> result = new ArrayList<Integer>();
         Iterator<Integer> iter = new DFSIterator(v);
@@ -234,15 +276,21 @@ public class Network implements Iterable<Integer>{
         return result;
     }
 
+     */
+
     /* Returns true iff there exists a path from START to STOP. Assumes both
        START and STOP are in this network. If START == STOP, returns true. */
+    /*
     public boolean pathExists(int start, int stop) {
         return dfs(start).contains(stop);
     }
 
+     */
+
 
     /* Returns the path from START to STOP. If no path exists, returns an empty
        List. If START == STOP, returns a List with START. */
+    /*
     public List<Integer> path(int start, int stop) {
         List<Integer> result = new ArrayList<Integer>();
         if (start == stop){
@@ -267,6 +315,9 @@ public class Network implements Iterable<Integer>{
         return temp;
     }
 
+     */
+
+    /*
     public List<Integer> topologicalSort() {
         ArrayList<Integer> result = new ArrayList<Integer>();
         Iterator<Integer> iter = new TopologicalIterator();
@@ -276,6 +327,9 @@ public class Network implements Iterable<Integer>{
         return result;
     }
 
+     */
+
+    /*
     private class TopologicalIterator implements Iterator<Integer> {
 
         private final Stack<Integer> fringe;
@@ -321,78 +375,19 @@ public class Network implements Iterable<Integer>{
 
     }
 
-    public class Edge {
-
-        private final int from;
-        private final int to;
-        private int weight;
-
-        Edge(int from, int to, int weight) {
-            this.from = from;
-            this.to = to;
-            this.weight = weight;
-        }
-
-        public int getFrom(){
-            return from;
-        }
-
-        public int getTo(){
-            return to;
-        }
-
-        public String toString() {
-            return "(" + from + ", " + to + ", weight = " + weight + ")";
-        }
-
-    }
-
-    private void generateN1() {
-        addUndirectedEdge(0, 1);
-        addUndirectedEdge(0, 2);
-        addUndirectedEdge(0, 4);
-        addUndirectedEdge(1, 2);
-        addUndirectedEdge(2, 0);
-        addUndirectedEdge(2, 3);
-        addUndirectedEdge(4, 3);
-    }
-
-    private void generateN2() {
-        addUndirectedEdge(0, 1);
-        addUndirectedEdge(0, 2);
-        addUndirectedEdge(0, 3);
-        addUndirectedEdge(0, 4);
-    }
-
-    //generate a 2D4N network with agentNum number of agents
-    private void generate2D4N(){
-        for (int i = 0; i < agentCount; i++){
-            LinkedList<Edge> neighbors = agentsList.get(i).adjLists;
-            addUndirectedEdge(i, (i+1)%agentCount);
-            addUndirectedEdge(i, (i+2)%agentCount);
-            addUndirectedEdge(i, (i-1+agentCount)%agentCount);
-            addUndirectedEdge(i, (i-2+agentCount)%agentCount);
-        }
-    }
-
-    private void printNetwork(){
-        int[][] adjMatrix = new int[agentCount][agentCount];
-        for (int i = 0; i < agentCount; i++){
-            for (int j = 0; j < agentCount; j++){
-                if (isAdjacent(i, j)){
-                    adjMatrix[i][j] = 1;
-                }else{
-                    adjMatrix[i][j] = 0;
-                }
-
-                System.out.print(adjMatrix[i][j]+" ");
-            }
-            System.out.print("\n");
-        }
-    }
+     */
 
 
 
+
+
+
+
+
+
+
+
+    /*
     private void printDFS(int start) {
         System.out.println("DFS traversal starting at " + start);
         List<Integer> result = dfs(start);
@@ -428,14 +423,7 @@ public class Network implements Iterable<Integer>{
         }
     }
 
-    public static void main(String[] args) {
-       Network N = new Network( 100);
-       N.generate2D4N();
-       N.printNetwork();
+     */
 
 
-
-
-
-    }
 }

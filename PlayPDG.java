@@ -22,14 +22,26 @@ public class PlayPDG {
      */
     private int normalPayoff = 4;
 
-    private PlayPDG(Network N, int T, int toleranceP){
-        this.N = N;
+    private PlayPDG(int agentNum, int T, int toleranceP,double defectorPercent){
+        N= new Network(agentNum);
         this.T = T;
+        tParameter=toleranceP; //added 06/28
+        initializeNetwork(N, defectorPercent); //Initialize the network by make sure which agent cooperate&defect
+        N.generate2D4N(); //Generate the 2D4n network
+        N.printNetwork();
+        calculatePayoffsAll();
+        N.strategyUpdateAll();
+
+
     }
 
     /** Initialize Network
      * Randomly place defectorPercent percentage of defectors in the network
      * Initialize rest of the agents as cooperators
+     * The function only assign in random sequence of cooperative/defector behavior(randomly setting the
+     * instance variable, cooperate, of each agent in the agentsList.
+     * @param N Total number of agents player wants to have when initialize the network
+     * @param defectorPercent percentage of initial defector player wants to have in the network
      */
     private void initializeNetwork(Network N, double defectorPercent){
         List<Boolean> ifCooperate = new ArrayList<Boolean>();
@@ -47,8 +59,9 @@ public class PlayPDG {
     }
 
     /**
-     *
-     * @param index index of the agent in agentList we are curretly iterating through
+     * Calculate payoff receive by an agent in one trail
+     * Update instance variable, actualPayoff, of the agent w/ the input index
+     * @param index index of the agent in agentList we are currently iterating through
      */
     public void calculatePayoffs(int index){
         Network.Agent a = N.agentsList.get(index);
@@ -66,9 +79,27 @@ public class PlayPDG {
             }
         }
         a.actualPayoffs = result;
+
     }
 
-    public void agentRemove(int index){
+    /**
+     * Calculate all agents payoff in one trail
+     */
+    public void calculatePayoffsAll(){
+        for(int i=0; i<N.agentsList.size(); i++){
+            calculatePayoffs(i);
+        }
+    }
+
+    /**
+     * Remove an agent out of the network if it's payoff(actualPayoffs) is less than tParameter*normalPayoff
+     * Use this function when an agent is eliminated in a trial
+     * Also eliminates its neighbors' Edge that connect to it in neighbors' adjLists
+     * @param index Agent's index in agentsList
+     */
+    public void agentRemove(int index) throws Exception{
+        if(N.agentCount==0) throw new Exception("No agents in the network, can't remove agent. ");
+
         Network.Agent a = N.agentsList.get(index);
         if (a.actualPayoffs < tParameter*normalPayoff){
             List<Integer> neighbors = N.neighbors(index);
@@ -81,6 +112,10 @@ public class PlayPDG {
             }
             N.agentsList.remove(index);
         }
+        N.agentCount--;
+
     }
+
+
 
 }
