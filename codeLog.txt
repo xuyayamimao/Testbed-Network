@@ -15,6 +15,12 @@ Ziya&James 6.28
 1. Install Pajek on lab machine
 2. Testing and debug: input graph into a visualizer and see our result
 
+James 6.29
+1, Finished implementing calculatePayoffsAll();strategyUpdateAll(); agentRemoveAll();
+2, Update comment for several functions
+3, Commented out part of code that we are not using as of right now. 
+
+
 TODO:
 1, Create network into a txt file, ->txt file format output can be used for software to visualize it
 2, Run cases for test(different value of alpha, etc.) -> create visualization for the results
