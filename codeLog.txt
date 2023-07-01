@@ -18,7 +18,7 @@ Ziya&James 6.28
 James 6.29
 1, Finished implementing calculatePayoffsAll();strategyUpdateAll(); agentRemoveAll();
 2, Update comment for several functions
-3, Commented out part of code that we are not using as of right now. 
+3, Commented out part of code that we are not using as of right now.
 
 
 TODO:

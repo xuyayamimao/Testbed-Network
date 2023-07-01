@@ -107,22 +107,31 @@ public class PlayPDG {
      * @param index Agent's index in agentsList
      */
     public void agentRemove(int index) throws Exception{
+        System.out.println("Original agentCount" + N.agentCount);
         if(N.agentCount==0) throw new Exception("No agents in the network, can't remove agent. ");
 
         Network.Agent a = N.agentsList.get(index); //get out the agent
         if (a.actualPayoffs < tParameter*normalPayoff){
             List<Integer> neighbors = N.neighbors(index); //get all agents' neighbor's index
             for (Integer i: neighbors){
-                Integer k =i;
-                for (Network.Edge e: N.agentsList.get(k).adjLists){
-                    if (e.getTo() == index){
-                        N.agentsList.get(k).adjLists.remove(e);
+
+                System.out.println("bug below?");
+                for (int j =0; j<N.agentsList.get(i).adjLists.size();j++){
+                    System.out.println("bug still below?");
+
+                    if (N.agentsList.get(i).adjLists.get(j).getTo() == index){
+                        System.out.println("here?");
+                        N.agentsList.get(i).adjLists.remove(N.agentsList.get(i).adjLists.get(j));
+                        System.out.println("now?");
                     }
                 }
             }
             N.agentsList.remove(index);
+           // System.out.println("???");
         }
         N.agentCount--;
+        System.out.println("final agentCount" + N.agentCount);
+
 
     }
 
