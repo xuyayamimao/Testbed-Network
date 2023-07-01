@@ -36,3 +36,8 @@ https://nwb.cns.iu.edu/
 http://vlado.fmf.uni-lj.si/pub/networks/pajek/
 https://r-graph-gallery.com/
 https://www.aamas2024-conference.auckland.ac.nz/
+
+Ziya&Jame 6.30
+1. Finished adding index instance variable in agent class and change everything else related to it
+2. Changed adjlists into List<Agent> instead of List<Edge>
+3. Fixed bug for ConcurrentModification

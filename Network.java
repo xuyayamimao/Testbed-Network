@@ -1,9 +1,4 @@
-import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Iterator;
-import java.util.Stack;
-import java.util.HashSet;
+import java.util.*;
 
 public class Network{ //original: public class Network implements Iterable<Integer>
 
@@ -15,23 +10,31 @@ public class Network{ //original: public class Network implements Iterable<Integ
     public ArrayList<Agent> agentsList;
     public int agentCount; //final int -> int for agentRemove() in PDG 06/28
 
+    public int cooperatorCount;
+
     public class Agent {
-        public LinkedList<Edge> adjLists;
-        public boolean hasPlayed; //do we still need this?
+
+        public int index;
+        public LinkedList<Agent> adjLists;
         public double actualPayoffs;//agent's actualPayoffs in one trial
         public boolean cooperate;
-        public boolean eliminated; //Do we still need this instance variable? 06/28
 
-        public Agent(){
+        public Agent(int index){
+            this.index = index;
             adjLists = new LinkedList<>();
-            hasPlayed = false;
             actualPayoffs = 0; //refresh before each trail
             cooperate = false;  //initialize agent as defector, will reset them in functions in PlayPDG 06/28
-            eliminated = false;
             //add initial num of neighbors, num of neighbors rn?
 
         }
 
+        public int getIndex(){
+            return this.index;
+        }
+
+        public void setIndex(int index){
+            this.index = index;
+        }
 
         public boolean getCooperate(){
             return this.cooperate;
@@ -39,9 +42,27 @@ public class Network{ //original: public class Network implements Iterable<Integ
 
         public void setCooperate(boolean cooperate){
             this.cooperate = cooperate;
+
+
         }
 
+        /** Returns a list of all the neighbors of agent v in the network */
+        public LinkedList<Agent> getAdjLists() {
+            return adjLists;
+        }
 
+        @Override
+        public boolean equals(Object a){
+            if (this == a){
+                return true;
+            }
+
+            if (a.getClass() != this.getClass()){
+                return false;
+            }
+
+            return this.index == ((Agent) a).index;
+        }
 
         /**
          * Function enable an agent to update its strategy
@@ -53,15 +74,13 @@ public class Network{ //original: public class Network implements Iterable<Integ
             result = this.cooperate;
             int neighborNum = adjLists.size();
             int imiIndex = (int)Math.random()*neighborNum;//index of a randomly chosen neighbor
-            int imiNeighborIndex = adjLists.get(imiIndex).to;
+            Agent imiNeighbor = adjLists.get(imiIndex);
             double noise = 0.1;//constant value of uncertainty in assessing payoff
-            Agent imiNeighbor = agentsList.get(imiNeighborIndex);
             double Wij = 1/(1+Math.exp(-(imiNeighbor.actualPayoffs - this.actualPayoffs)/noise));
             if (Math.random() < Wij){
                 result = imiNeighbor.getCooperate();
             }
             return result;
-
         }
 
         //we can write strategy update for reinforcement learning function later.
@@ -71,27 +90,50 @@ public class Network{ //original: public class Network implements Iterable<Integ
 
 
     }
-    public void strategyUpdateAll(){
-        ArrayList<Boolean> totalResult = new ArrayList<>();
-        for(int i=0; i<agentsList.size(); i++){
-            totalResult.add(agentsList.get(i).strategyUpdate());
-        }
-        for(int i=0; i<agentsList.size(); i++){
-            agentsList.get(i).setCooperate(totalResult.get(i));
-        }
 
+    public void strategyUpdateAll(){
+        for(int i=0; i<agentCount; i++){
+            Agent a = agentsList.get(i);
+            a.setCooperate(a.strategyUpdate());
+        }
     }
 
     /** Initializes a network with numAgents and no Edges. */
-    public Network(int numAgents) {
-        agentsList = (ArrayList<Agent>) new ArrayList<Agent>();
+    public Network(int numAgents, double defectorPercent) {
+        agentsList = new ArrayList<Agent>();
+
+
+        ArrayList<Integer> number = new ArrayList<>();
         for (int k = 0; k < numAgents; k++) {
-            agentsList.add(k, new Agent());
+            number.add(k);
         }
+        Collections.shuffle(number);
+
+        for (int i = 0; i < numAgents; i++) {
+            agentsList.add(new Agent(number.get(i)));
+        }
+
         agentCount = numAgents;
+
+        int numTrue = (int) Math.round(numAgents * defectorPercent);
+        cooperatorCount = numAgents-numTrue;
+
+        ArrayList<Boolean> ifCooperate= new ArrayList<>();
+
+        for (int i = 0; i < numTrue; i++){
+            ifCooperate.add(true);
+        }
+        for (int i = 0; i < numAgents - numTrue; i++){
+            ifCooperate.add(false);
+        }
+        Collections.shuffle(ifCooperate);
+        System.out.println("if cooperate content:" +ifCooperate);
+        for (int i = 0; i < agentCount; i++){
+            agentsList.get(i).setCooperate(ifCooperate.get(i));
+        }
     }
 
-    public class Edge {
+    /*public class Edge {
 
         private final int from;
         private final int to;
@@ -115,7 +157,7 @@ public class Network{ //original: public class Network implements Iterable<Integ
             return "(" + from + ", " + to + ")";
         }
 
-    }
+    }*/
 
 
     /**
@@ -125,55 +167,38 @@ public class Network{ //original: public class Network implements Iterable<Integ
      */
     //If the Edge already exists, replaces the current Edge with a new Edge with. should we write about this case?
     //06/28
-    public void addEdge(int v1, int v2) {
-        LinkedList<Edge> v1neighbors = agentsList.get(v1).adjLists;
-        LinkedList<Edge> v2neighbors = agentsList.get(v2).adjLists;
-        v1neighbors.add(new Edge(v1, v2));
-        v2neighbors.add(new Edge(v2, v1));
+    public void addEdge(Agent a1, Agent a2) {
+        if (a1.adjLists.contains(a2)){
+            return;
+        }
+        a1.adjLists.add(a2);
+        a2.adjLists.add(a1);
     }
-
-
 
 
     /** Returns true if there exists an Edge from agent FROM to agent TO.
        Returns false otherwise. */
-    public boolean isAdjacent(int from, int to) {
-        if (from == to){
+    public boolean isAdjacent(Agent a1, Agent a2) {
+        if (a1.equals(a2)){
             return  false;
         }
-        for (Edge e: agentsList.get(from).adjLists){
-            if (e. from == from && e.to == to){
+        for (Agent a: a1.adjLists){
+            if (a.equals(a2)){
                 return true;
             }
         }
         return false;
     }
 
-    /** Returns a list of all the neighbors of agent v in the network */
-    public List<Integer> neighbors(int v) {
-        List<Integer> neighbors = new ArrayList<>();
-        for (Edge e: agentsList.get(v).adjLists){
-            neighbors.add(e.to);
-        }
-        return neighbors;
-    }
 
     //generate a 2D4N network with agentNum number of agents
     public void generate2D4N(){
         for (int i = 0; i < agentCount; i++){
-            LinkedList<Edge> neighbors = agentsList.get(i).adjLists;
-            addEdge(i, (i+1)%agentCount);
-            Edge edgeA = new Edge(i,(i+1)%agentCount); //added 06/28
-            neighbors.add(edgeA);
-            addEdge(i, (i+2)%agentCount);
-            Edge edgeB = new Edge(i,(i+2)%agentCount); //added 06/28
-            neighbors.add(edgeB);
-            addEdge(i, (i-1+agentCount)%agentCount);
-            Edge edgeC = new Edge(i,(i-1+agentCount)%agentCount); //added 06/28
-            neighbors.add(edgeC);
-            addEdge(i, (i-2+agentCount)%agentCount);
-            Edge edgeD = new Edge(i,(i-2+agentCount)%agentCount); //added 06/28
-            neighbors.add(edgeD);
+            LinkedList<Agent> neighbors = agentsList.get(i).adjLists;
+            addEdge(agentsList.get(i), agentsList.get((i+1)%agentCount));
+            addEdge(agentsList.get(i), agentsList.get((i+2)%agentCount));
+            addEdge(agentsList.get(i), agentsList.get((i-1+agentCount)%agentCount));
+            addEdge(agentsList.get(i), agentsList.get((i-2+agentCount)%agentCount));
         }
     }
 
@@ -181,13 +206,13 @@ public class Network{ //original: public class Network implements Iterable<Integ
         int[][] adjMatrix = new int[agentCount][agentCount];
         System.out.print("  ");
         for(int i=0; i<agentCount; i++){
-            System.out.print(i + " ");
+            System.out.print(agentsList.get(i).getIndex()+ " ");
         }
         System.out.print("\n");
         for (int i = 0; i < agentCount; i++){
-            System.out.print(i+" ");
+            System.out.print(agentsList.get(i).getIndex()+" ");
             for (int j = 0; j < agentCount; j++){
-                if (isAdjacent(i, j)){
+                if (isAdjacent(agentsList.get(i),agentsList.get(j))){
                     adjMatrix[i][j] = 1;
                 }else{
                     adjMatrix[i][j] = 0;
@@ -200,7 +225,7 @@ public class Network{ //original: public class Network implements Iterable<Integ
     }
 
     public static void main(String[] args) {
-        Network N = new Network( 100);
+        Network N = new Network( 100, 0.2);
         N.generate2D4N();
         N.printNetwork();
 
