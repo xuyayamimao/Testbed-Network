@@ -41,3 +41,9 @@ Ziya&Jame 6.30
 1. Finished adding index instance variable in agent class and change everything else related to it
 2. Changed adjlists into List<Agent> instead of List<Edge>
 3. Fixed bug for ConcurrentModification
+
+Ziya&James 7.1
+1.Fixed bugs in agentRemove, calculatePayoffs, playPDG, agentRemoveAll
+2. Changed other detailed structures in our code, added a round() method to round decimals into certain digits
+for out calculatePayoff function. Added more comments to explain inside different functions.
+3. Made some rough tests on whether our code provide appropriate outcomes-we believe our code provide good results.

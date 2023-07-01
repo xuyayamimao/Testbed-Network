@@ -72,7 +72,10 @@ public class Network{ //original: public class Network implements Iterable<Integ
         public boolean strategyUpdate(){
             boolean result;
             result = this.cooperate;
+
             int neighborNum = adjLists.size();
+
+
             int imiIndex = (int)Math.random()*neighborNum;//index of a randomly chosen neighbor
             Agent imiNeighbor = adjLists.get(imiIndex);
             double noise = 0.1;//constant value of uncertainty in assessing payoff
@@ -98,7 +101,11 @@ public class Network{ //original: public class Network implements Iterable<Integ
         }
     }
 
-    /** Initializes a network with numAgents and no Edges. */
+    /**
+     * Initializes a network with numAgents and no Edges.
+     * @param numAgents > 4
+     * @param defectorPercent
+     * */
     public Network(int numAgents, double defectorPercent) {
         agentsList = new ArrayList<Agent>();
 
@@ -115,16 +122,16 @@ public class Network{ //original: public class Network implements Iterable<Integ
 
         agentCount = numAgents;
 
-        int numTrue = (int) Math.round(numAgents * defectorPercent);
-        cooperatorCount = numAgents-numTrue;
+        int numDefect = (int) Math.round(numAgents * defectorPercent);
+        cooperatorCount = numAgents-numDefect;
 
         ArrayList<Boolean> ifCooperate= new ArrayList<>();
 
-        for (int i = 0; i < numTrue; i++){
-            ifCooperate.add(true);
-        }
-        for (int i = 0; i < numAgents - numTrue; i++){
+        for (int i = 0; i < numDefect; i++){
             ifCooperate.add(false);
+        }
+        for (int i = 0; i < numAgents - numDefect; i++){
+            ifCooperate.add(true);
         }
         Collections.shuffle(ifCooperate);
         System.out.println("if cooperate content:" +ifCooperate);

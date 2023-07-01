@@ -25,19 +25,26 @@ public class PlayPDG {
 
     private PlayPDG(int agentNum, double T, double toleranceP,double defectorPercent) throws Exception {
         //use different tParameter as test cases
+        if(agentNum<5) throw new Exception("Agent number must be large than 4");
         N= new Network(agentNum,defectorPercent );
         this.T = T;
         tParameter=toleranceP; //added 06/28
         //Reverse？
        // initializeNetwork(N, defectorPercent); //Initialize the network by make sure which agent cooperate&defect
         N.generate2D4N(); //Generate the 2D4n network
-
         N.printNetwork();
 
-        calculatePayoffsAll();
-        N.strategyUpdateAll();
-        agentRemoveAll();
-        N.printNetwork();
+        while(N.agentCount != 0) {
+            if (N.agentCount == N.cooperatorCount) {
+                break;
+            }
+                calculatePayoffsAll();
+                agentRemoveAll();
+                N.strategyUpdateAll();
+                N.printNetwork();
+
+
+        }
 
 
         //counter for how many times an agent played w/ a neighbor? -good way for testing
@@ -86,13 +93,16 @@ public class PlayPDG {
             if (a.getCooperate()){
                 if (neighborCooperate){
                     result++;
+                    //result=kahanSummation(1, result);
                 }
             }else{
                 if (neighborCooperate){
                     result+=T;
+                    //result = kahanSummation(T, result);
                 }
             }
         }
+        result=round(result,2);
         a.actualPayoffs = result;
 
     }
@@ -101,8 +111,9 @@ public class PlayPDG {
      * Calculate all agents payoff in one trail
      */
     public void calculatePayoffsAll(){
-        for(int i=0; i<N.agentsList.size(); i++){
+        for(int i=0; i<N.agentCount; i++){
             calculatePayoffs(i);
+            System.out.println(N.agentsList.get(i).actualPayoffs);
         }
     }
 
@@ -112,31 +123,72 @@ public class PlayPDG {
      * Also eliminates its neighbors' Edge that connect to it in neighbors' adjLists
      * @param index Agent's index in agentsList
      */
-    public void agentRemove(int index) throws Exception{
+    public Network.Agent agentRemove(int index) throws Exception{
         if(N.agentCount==0) throw new Exception("No agents in the network, can't remove agent. ");
 
         Network.Agent a = N.agentsList.get(index); //get out the agent
-        if (a.actualPayoffs < tParameter*normalPayoff){
+        System.out.println("threshold: " + tParameter*normalPayoff);
+
+        if (a.actualPayoffs < tParameter*normalPayoff ){
+
             List<Network.Agent> neighbors = a.getAdjLists(); //get all agents' neighbor's index
             for (Network.Agent i: neighbors){
-                i.getAdjLists().remove(a);
+                i.getAdjLists().remove(a);  //remove all connections between agent and its neighbor
             }
-            N.agentsList.remove(a);
+            //N.agentsList.remove(a);
+            return a;
         }
-        N.agentCount--;
+
+        return null;
+       // N.agentCount--;
     }
 
 
     public void agentRemoveAll() throws Exception {
         System.out.println("Original agentCount" + N.agentCount);
+        ArrayList<Network.Agent> removeList1 = new ArrayList<>();//store agents whose actualPayoffs < 0
+        ArrayList<Network.Agent> removeList2 = new ArrayList<>();//store agents w/o neighbors
         for (int i=0; i<N.agentCount; i++){
-            agentRemove(i);
+            System.out.println("remove once");
+            removeList1.add(agentRemove(i));
         }
+        for(int i=0; i< removeList1.size();i++){
+            N.agentsList.remove(removeList1.get(i));
+            Network.Agent a = removeList1.get(i);
+            if(a!=null) {
+                N.agentCount--;
+                if(a.getCooperate()) N.cooperatorCount--; //if b is a cooperator, update cooperatorCount
+            }
+
+        }
+        for(int i=0;i<N.agentCount;i++){
+            Network.Agent a =N.agentsList.get(i);
+            if(a.getAdjLists().size()==0){
+               removeList2.add(a);
+               // if(a.getCooperate()) N.cooperatorCount--;
+            }
+        }
+        for(int i=0; i< removeList2.size();i++){
+            Network.Agent a = removeList2.get(i);
+            N.agentsList.remove(a);
+            N.agentCount--;
+            if(a.getCooperate()) N.cooperatorCount--; //if b is a cooperator, update cooperatorCount
+
+        }
+
+
+
         System.out.println("final agentCount" + N.agentCount);
     }
 
+    private static double round (double value, int precision) {
+        int scale = (int) Math.pow(10, precision);
+        return (double) Math.round(value * scale) / scale;
+    }
+
+
     public static void main(String[] args) throws Exception {
-        PlayPDG game = new PlayPDG(30, 1.3,0.3, .8);
+        PlayPDG game = new PlayPDG(100, 1.3,0.8, .4);
 
     }
 
