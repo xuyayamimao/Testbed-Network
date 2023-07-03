@@ -29,7 +29,6 @@ TODO:
 5, pick colors for cooperator and defector
 6, use small network first to test the code
 7,Done the coding part by Tuesday and start testing and run test cases after testing
-8,
 
 Webpages Shared by Prof:
 https://nwb.cns.iu.edu/
@@ -44,6 +43,11 @@ Ziya&Jame 6.30
 
 Ziya&James 7.1
 1.Fixed bugs in agentRemove, calculatePayoffs, playPDG, agentRemoveAll
-2. Changed other detailed structures in our code, added a round() method to round decimals into certain digits
-for out calculatePayoff function. Added more comments to explain inside different functions.
-3. Made some rough tests on whether our code provide appropriate outcomes-we believe our code provide good results.
+2. Changed other detailed structures in our code, added a round() method to round decimals into certain digits for calculatePayoff function. 
+3. Added more comments to explain inside different functions.
+4. Made some rough tests on whether our code provide appropriate outcomes - we believe our code provide good results.
+
+Ziya&James 7.3
+1. Implement read2D4N and write2D4N 
+2. Install Pajek in lab's machine
+3. Keep track of percentage of agents eliminated and percentage of cooperators
