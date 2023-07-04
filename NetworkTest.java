@@ -1,10 +1,9 @@
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.io.IOException;
+
 public class NetworkTest {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Network a = new Network(1, 20);
         a.generate2D4N();
-        a.printNetwork();
+        a.printNetworkToFile();
     }
 }

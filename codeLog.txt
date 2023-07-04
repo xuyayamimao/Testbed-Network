@@ -28,7 +28,7 @@ TODO:
 4, percentage of cooperators left in network (in cooperator cluster)  -Amount of clusters left?
 5, pick colors for cooperator and defector
 6, use small network first to test the code
-7,Done the coding part by Tuesday and start testing and run test cases after testing
+7, Done the coding part by Tuesday and start testing and run test cases after testing
 
 Webpages Shared by Prof:
 https://nwb.cns.iu.edu/
@@ -48,6 +48,11 @@ Ziya&James 7.1
 4. Made some rough tests on whether our code provide appropriate outcomes - we believe our code provide good results.
 
 Ziya&James 7.3
-1. Implement read2D4N and write2D4N 
-2. Install Pajek in lab's machine
-3. Keep track of percentage of agents eliminated and percentage of cooperators
+1. Installed Pajek and txt2pajek in lab's machine
+2. Figured out input file format and color of vertices
+3. Did testing of PlayPDG.java and debugged
+
+Ziya&James 7.4
+1. Implement writeNetwork and readNetwork
+2. Do more testing of PlayPDG.java
+3. Keep track of eliminated percentage and defector percentage

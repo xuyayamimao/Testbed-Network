@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 public class PlayPDG {
@@ -32,17 +31,21 @@ public class PlayPDG {
         //Reverse？
        // initializeNetwork(N, defectorPercent); //Initialize the network by make sure which agent cooperate&defect
         N.generate2D4N(); //Generate the 2D4n network
-        N.printNetwork();
+        N.printNetworkToFile();
+        int i = 1;
 
         while(N.agentCount != 0) {
             if (N.agentCount == N.cooperatorCount) {
                 break;
             }
-                calculatePayoffsAll();
-                agentRemoveAll();
-                N.strategyUpdateAll();
-                N.printNetwork();
+            System.out.println("Round" + i);
 
+            calculatePayoffsAll();
+            agentRemoveAll();
+            N.strategyUpdateAll();
+            N.printNetworkToFile();
+            i++;
+            System.out.println("Num of Coop: " + N.cooperatorCount);
 
         }
 
@@ -113,7 +116,7 @@ public class PlayPDG {
     public void calculatePayoffsAll(){
         for(int i=0; i<N.agentCount; i++){
             calculatePayoffs(i);
-            System.out.println(N.agentsList.get(i).actualPayoffs);
+            //System.out.println(N.agentsList.get(i).actualPayoffs);
         }
     }
 
@@ -127,7 +130,7 @@ public class PlayPDG {
         if(N.agentCount==0) throw new Exception("No agents in the network, can't remove agent. ");
 
         Network.Agent a = N.agentsList.get(index); //get out the agent
-        System.out.println("threshold: " + tParameter*normalPayoff);
+        //System.out.println("threshold: " + tParameter*normalPayoff);
 
         if (a.actualPayoffs < tParameter*normalPayoff ){
 
@@ -145,11 +148,11 @@ public class PlayPDG {
 
 
     public void agentRemoveAll() throws Exception {
-        System.out.println("Original agentCount" + N.agentCount);
+        //System.out.println("Original agentCount" + N.agentCount);
         ArrayList<Network.Agent> removeList1 = new ArrayList<>();//store agents whose actualPayoffs < 0
         ArrayList<Network.Agent> removeList2 = new ArrayList<>();//store agents w/o neighbors
         for (int i=0; i<N.agentCount; i++){
-            System.out.println("remove once");
+            //System.out.println("remove once");
             removeList1.add(agentRemove(i));
         }
         for(int i=0; i< removeList1.size();i++){
@@ -188,7 +191,7 @@ public class PlayPDG {
 
 
     public static void main(String[] args) throws Exception {
-        PlayPDG game = new PlayPDG(100, 1.3,0.8, .4);
+        PlayPDG game = new PlayPDG(10000, 1.3,0.3, .4);
 
     }
 
