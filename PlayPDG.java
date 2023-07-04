@@ -33,16 +33,16 @@ public class PlayPDG {
         N.printNetworkToFile("2D4N.txt");
         int i = 1;
 
-        while(N.agentCount != 0) {
-            if (N.agentCount == N.cooperatorCount) {
+
+        while(N.aliveAgentCount != 0 ) {
+            if (N.aliveAgentCount == N.cooperatorCount) {
                 break;
             }
             System.out.println("Round" + i);
-
             calculatePayoffsAll();
             agentRemoveAll();
-            N.strategyUpdateAll();
-            N.printNetworkToFile("2D4N.txt");
+            strategyUpdateAll();
+            N.printNetworkToFile("round" + i + ".txt");
             i++;
             System.out.println("Num of Coop: " + N.cooperatorCount);
 
@@ -89,7 +89,7 @@ public class PlayPDG {
             }
         }
         result=round(result,2);
-        a.actualPayoffs = result;
+        a.setActualPayoffs(result);
 
     }
 
@@ -104,6 +104,44 @@ public class PlayPDG {
     }
 
     /**
+     * Function enable an agent to update its strategy
+     * Randomly choose a survived neighbor to imitate and update strategy
+     *
+     * @Return a boolean that mark the new strategy of the agent for the next trail
+     */
+    public boolean strategyUpdate(Network.Agent a) {
+
+            boolean result = a.getCooperate();
+            int neighborNum = a.neighborNum();
+            int imiIndex = (int) Math.random() * neighborNum;//index of a randomly chosen neighbor
+            Network.Agent imiNeighbor = a.getAdjLists().get(imiIndex);
+            double noise = 0.1;//constant value of uncertainty in assessing payoff
+            double Wij = 1 / (1 + Math.exp(-(imiNeighbor.getActualPayoffs() - a.getActualPayoffs()) / noise));
+            if (Math.random() < Wij) {
+                result = imiNeighbor.getCooperate();
+            }
+            return result;
+
+    }
+
+
+    public void strategyUpdateAll() {
+        for (int i = 0; i < N.agentCount; i++) {
+
+            Network.Agent a = N.agentsList.get(i);
+            if (!a.getEliminated()) {
+                boolean originalCoop = a.getCooperate();
+                a.setCooperate(strategyUpdate(a));
+                if (a.getCooperate() == false && originalCoop == true) {
+                    N.cooperatorCount--;
+                } else if (a.getCooperate() == true && originalCoop == false) {
+                    N.cooperatorCount++;
+                }
+            }
+        }
+    }
+
+    /**
      * Remove an agent out of the network if it's payoff(actualPayoffs) is less than tParameter*normalPayoff
      * Use this function when an agent is eliminated in a trial
      * Also eliminates its neighbors' Edge that connect to it in neighbors' adjLists
@@ -111,7 +149,7 @@ public class PlayPDG {
      */
     public Network.Agent agentRemove(int index) throws Exception{
         Network.Agent a = N.agentsList.get(index); //get out the agent
-        if (a.actualPayoffs < tParameter*normalPayoff && !a.getEliminated()){
+        if (a.getActualPayoffs() < tParameter*normalPayoff && !a.getEliminated()){
             List<Network.Agent> neighbors = a.getAdjLists(); //get all agents' neighbor's index
             for (Network.Agent i: neighbors){
                 i.getAdjLists().remove(a);  //remove all connections between agent and its neighbor
@@ -155,12 +193,7 @@ public class PlayPDG {
 
 
     public static void main(String[] args) throws Exception {
-        PlayPDG game = new PlayPDG(10000, 1.3,0.3, .4);
+        PlayPDG game = new PlayPDG(100, 1.3,0.3, .4);
 
     }
-
-
-
-
-
 }

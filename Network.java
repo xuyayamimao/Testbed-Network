@@ -48,25 +48,13 @@ public class Network { //original: public class Network implements Iterable<Inte
         }
     }
 
-    public void strategyUpdateAll() {
-        for (int i = 0; i < agentCount; i++) {
-            Agent a = agentsList.get(i);
-            boolean originalCoop = a.cooperate;
-            a.setCooperate(a.strategyUpdate());
-            if (a.getCooperate() == false && originalCoop == true) {
-                cooperatorCount--;
-            } else if (a.getCooperate() == true && originalCoop == false) {
-                cooperatorCount++;
-            }
-        }
-    }
 
     /**
      * Adds an edge (V1, V2) between two neighbors in the network.
      * If the edge (V1, V2) already exist, return
      */
     public void addEdge(Agent a1, Agent a2) {
-        if (a1.adjLists.contains(a2)) {
+        if (a1.adjLists.contains(a2) || a1.equals(a2)) {
             return;
         }
         a1.adjLists.add(a2);
@@ -95,11 +83,11 @@ public class Network { //original: public class Network implements Iterable<Inte
      */
     public void generate2D4N() {
         for (int i = 0; i < agentCount; i++) {
-            LinkedList<Agent> neighbors = agentsList.get(i).adjLists;
             addEdge(agentsList.get(i), agentsList.get((i + 1) % agentCount));
             addEdge(agentsList.get(i), agentsList.get((i + 2) % agentCount));
             addEdge(agentsList.get(i), agentsList.get((i - 1 + agentCount) % agentCount));
             addEdge(agentsList.get(i), agentsList.get((i - 2 + agentCount) % agentCount));
+            System.out.println((i - 2 + agentCount) % agentCount);
         }
     }
 
@@ -108,43 +96,49 @@ public class Network { //original: public class Network implements Iterable<Inte
      * @throws IOException if the file cannot be opened
      */
     public void printNetworkToFile(String filename) throws IOException {
-        FileWriter Network2D4N = new FileWriter(filename);
-        int[][] adjMatrix = new int[agentCount][agentCount];
-        Network2D4N.write(" ");
-        for (int i = 0; i < agentCount; i++) {
-            Network2D4N.write(agentsList.get(i).getIndex() + " ");
-        }
-        Network2D4N.write("\n");
-        for (int i = 0; i < agentCount; i++) {
-            Network2D4N.write(agentsList.get(i).getIndex() + " ");
-            for (int j = 0; j < agentCount; j++) {
-                if (isAdjacent(agentsList.get(i), agentsList.get(j))) {
-                    adjMatrix[i][j] = 1;
-                } else {
-                    adjMatrix[i][j] = 0;
+        FileWriter trialOutput = new FileWriter(filename);
+        trialOutput.write("*Vertices "+agentCount + "\n");
+        for (int i = 0; i < agentCount; i++){
+            int printValue = i + 1;
+            trialOutput.write(printValue + " " + "\"" + printValue + "\" ic ");
+            Agent a = agentsList.get(i);
+            if (a.getEliminated()){
+                trialOutput.write("Gray\n");
+            }else{
+                if (a.getCooperate()){
+                    trialOutput.write("Blue\n");
+                }else{
+                    trialOutput.write("Black\n");
                 }
-                Network2D4N.write(adjMatrix[i][j] + " ");
             }
-            Network2D4N.write("\n");
         }
-        Network2D4N.close();
+        trialOutput.write("*Edges\n");
+        for (int i = 0; i < agentCount; i++){
+            int printValue1 = i + 1;
+            Agent a = agentsList.get(i);
+            if (!a.getEliminated()){
+                for (int j = 0; j < a.neighborNum(); j++){
+                    int printValue2 = a.getAdjLists().get(j).getIndex() + 1;
+                    trialOutput.write(printValue1 + " " + printValue2 + "\n");
+                }
+            }
+        }
+        System.out.println("Successful");
+        trialOutput.close();
     }
 
     public static void main(String[] args) throws IOException {
         Network N = new Network(10000, 0.2);
         N.generate2D4N();
-        N.printNetworkToFile("2D4N.txt");
+        N.printNetworkToFile("test.txt");
     }
-
-
-
 
 
     public class Agent {
 
-        public int index;
+        private int index;
         public LinkedList<Agent> adjLists;
-        public double actualPayoffs;//agent's actualPayoffs in one trial
+        private double actualPayoffs;//agent's actualPayoffs in one trial
         private boolean cooperate;
         private boolean eliminated;
 
@@ -162,6 +156,14 @@ public class Network { //original: public class Network implements Iterable<Inte
 
         public void setIndex(int index) {
             this.index = index;
+        }
+
+        public double getActualPayoffs(){
+            return actualPayoffs;
+        }
+
+        public void setActualPayoffs(double actualPayoffs){
+            this.actualPayoffs = actualPayoffs;
         }
 
         public boolean getCooperate() {
@@ -202,24 +204,7 @@ public class Network { //original: public class Network implements Iterable<Inte
             return this.index == ((Agent) a).index;
         }
 
-        /**
-         * Function enable an agent to update its strategy
-         * Randomly choose a survived neighbor to imitate and update strategy
-         *
-         * @Return a boolean that mark the new strategy of the agent for the next trail
-         */
-        public boolean strategyUpdate() {
-            boolean result = this.cooperate;
-            int neighborNum = adjLists.size();
-            int imiIndex = (int) Math.random() * neighborNum;//index of a randomly chosen neighbor
-            Agent imiNeighbor = adjLists.get(imiIndex);
-            double noise = 0.1;//constant value of uncertainty in assessing payoff
-            double Wij = 1 / (1 + Math.exp(-(imiNeighbor.actualPayoffs - this.actualPayoffs) / noise));
-            if (Math.random() < Wij) {
-                result = imiNeighbor.getCooperate();
-            }
-            return result;
-        }
+
 
         //we can write strategy update for reinforcement learning function later.
         //-also update the q table in each trail
