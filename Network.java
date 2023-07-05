@@ -17,7 +17,8 @@ public class Network { //original: public class Network implements Iterable<Inte
 
     /**
      * Initializes a network with numAgents and no Edges.
-     *
+     * Randomly place defectorPercent percentage of defectors in the network
+     * Initialize rest of the agents as cooperators
      * @param numAgents > 4
      * @param defectorPercent
      */
@@ -84,6 +85,7 @@ public class Network { //original: public class Network implements Iterable<Inte
 
     /**
      * generate a 2D4N network with agentNum number of agents
+     * Generally this function needs to be used after initializing a new network
      */
     public void generate2D4N() {
         for (int i = 0; i < agentCount; i++) {
@@ -130,6 +132,10 @@ public class Network { //original: public class Network implements Iterable<Inte
         System.out.println("Successful");
         trialOutput.close();
     }
+
+    /**
+     * print the network out in adjacency matrix form
+     */
 
     public void printNetwork(){
 

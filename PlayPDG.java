@@ -24,6 +24,12 @@ public class PlayPDG {
      */
     private int normalPayoff = 4;
 
+    /**
+     * Include initializing a network, generate2D4N(both originate from Network class)
+     * Create a directory based on expNum to put in the output of network after each trial(txt file that
+     * contain form that is acceptable as input file for pajek(need to transform txt to NET file first, though)
+     * Will stop when the after a certain number of trial, the network reaches an equilibrium state
+     */
     private PlayPDG(int agentNum, double T, double toleranceP,double defectorPercent,int expNum) throws Exception {
         //use different tParameter as test cases
         if(agentNum<5) throw new Exception("Agent number must be large than 4");
@@ -54,24 +60,11 @@ public class PlayPDG {
             System.out.println("Num of Coop: " + N.cooperatorCount + "\n");
 
         }
-
-
-
         //counter for how many times an agent played w/ a neighbor? -good way for testing
-        //
-
-
 
     }
 
-    /** Initialize Network
-     * Randomly place defectorPercent percentage of defectors in the network
-     * Initialize rest of the agents as cooperators
-     * The function only assign in random sequence of cooperative/defector behavior(randomly setting the
-     * instance variable, cooperate, of each agent in the agentsList.
-     * @param N Total number of agents player wants to have when initialize the network
-     * @param defectorPercent percentage of initial defector player wants to have in the network
-     */
+
 
 
     /**
@@ -104,7 +97,7 @@ public class PlayPDG {
      */
     public void calculatePayoffsAll(){
         for(int i=0; i<N.agentCount; i++){
-            if (!N.agentsList.get(i).getEliminated()){
+            if (!N.agentsList.get(i).getEliminated()){ //only calculate payoffs for agents that are not eliminated
                 calculatePayoffs(i);
             }
             //System.out.println(N.agentsList.get(i).actualPayoffs);
@@ -112,9 +105,11 @@ public class PlayPDG {
     }
 
     /**
-     * Function enable an agent to update its strategy
-     * Randomly choose a survived neighbor to imitate and update strategy
-     *
+     * Enable an agent to update its strategy (eg: cooperator ->defector)
+     * Enable the agent to Randomly choose a survived neighbor to imitate and update its own strategy
+     * Probability for the agent to successfully imitate the picked neighbor's strategy depends
+     * on the actualPayoff the agent received in the trial and the amount of actualPayoff the picked
+     * neighbor received
      * @Return a boolean that mark the new strategy of the agent for the next trail
      */
     public boolean strategyUpdate(Network.Agent a) {
@@ -131,7 +126,11 @@ public class PlayPDG {
             return result;
     }
 
-
+    /**
+     * apply strategyUpdate(Network.Agent a) to all agents in the network.
+     * Modify value of cooperatorCount based on each agent's strategy before their
+     * strategyUpdate() and their strategy after it.
+     */
     public void strategyUpdateAll() {
         for (int i = 0; i < N.agentCount; i++) {
             Network.Agent a = N.agentsList.get(i);
@@ -148,8 +147,8 @@ public class PlayPDG {
     }
 
     /**
-     * Remove an agent out of the network if it's payoff(actualPayoffs) is less than tParameter*normalPayoff
-     * Use this function when an agent is eliminated in a trial
+     * Return a boolean that indicate whether an agent should remove out of the network if it's payoff(actualPayoffs)
+     * is less than tParameter*normalPayoff
      * Also eliminates its neighbors' Edge that connect to it in neighbors' adjLists
      * @param index Agent's index in agentsList
      */
@@ -166,7 +165,11 @@ public class PlayPDG {
         return false;
     }
 
-
+    /**
+     * apply agentRemove() to all agents in the network. The function also eliminate an agent if it
+     * has zero neighbors after a trial.
+     * @throws Exception
+     */
     public void agentRemoveAll() throws Exception {
         if(N.aliveAgentCount==0) throw new Exception("No agents in the network, can't remove agent. ");
         for (int i = 0; i < N.agentCount; i++){
@@ -192,6 +195,12 @@ public class PlayPDG {
         }
     }
 
+    /**
+     * round a value to value of precision
+     * @param value
+     * @param precision
+     * @return
+     */
     private static double round (double value, int precision) {
         int scale = (int) Math.pow(10, precision);
         return (double) Math.round(value * scale) / scale;
@@ -200,9 +209,9 @@ public class PlayPDG {
 
     public static void main(String[] args) throws Exception {
         FileWriter experimentOut = new FileWriter("experimentOut.txt");
-        double toleranceP = 0.25;
-        for (int i = 1; i < 5; i++){
-            PlayPDG game = new PlayPDG(10000, 1.1,toleranceP + i*0.05, .5, 2);
+        double toleranceP = 0.4;
+        for (int i = 10; i < 15; i++){
+            PlayPDG game = new PlayPDG(10000, 1.1,toleranceP + (i-10)*0.05, .5, i);
             experimentOut.write(i + " " + String.valueOf(game.tParameter) + "\n");
         }
         experimentOut.close();
