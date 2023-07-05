@@ -29,6 +29,8 @@ TODO:
 5, pick colors for cooperator and defector
 6, use small network first to test the code
 7, Done the coding part by Tuesday and start testing and run test cases after testing
+8, PDG program read info from the text file -> a more efficient approach
+
 
 Webpages Shared by Prof:
 https://nwb.cns.iu.edu/
