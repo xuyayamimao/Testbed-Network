@@ -53,6 +53,14 @@ Ziya&James 7.3
 3. Did testing of PlayPDG.java and debugged
 
 Ziya&James 7.4
-1. Implement writeNetwork and readNetwork
-2. Do more testing of PlayPDG.java
-3. Keep track of eliminated percentage and defector percentage
+1. Implemented writeNetworkToFile
+2. Did more testing of PlayPDG.java
+3. Kept track of aliveAgentCount
+4. Changed adjList<Agent> to adjList<Integer> and other related methods
+5. Did huge amount of debug
+
+Ziya&James 7.5
+1. Finish implementing writing to textfile that record fraction of defector&cooperator, and fraction of dead agents in every trial
+2. Add comment to methods
+3. Run experiments and record results 
+

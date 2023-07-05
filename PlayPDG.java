@@ -1,3 +1,5 @@
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,7 +24,7 @@ public class PlayPDG {
      */
     private int normalPayoff = 4;
 
-    private PlayPDG(int agentNum, double T, double toleranceP,double defectorPercent) throws Exception {
+    private PlayPDG(int agentNum, double T, double toleranceP,double defectorPercent,int expNum) throws Exception {
         //use different tParameter as test cases
         if(agentNum<5) throw new Exception("Agent number must be large than 4");
         N= new Network(agentNum, defectorPercent);
@@ -30,23 +32,29 @@ public class PlayPDG {
         tParameter = toleranceP; //added 06/28
        // initializeNetwork(N, defectorPercent); //Initialize the network by make sure which agent cooperate&defect
         N.generate2D4N(); //Generate the 2D4n network
-        N.printNetworkToFile("2D4N.txt");
+       // N.printNetworkToFile("2D4N.txt");
         int i = 1;
-
+        new File("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/trialFileDirec" + expNum).mkdirs();
 
         while(N.aliveAgentCount != 0 ) {
             if (N.aliveAgentCount == N.cooperatorCount) {
                 break;
             }
             System.out.println("Round" + i);
+            System.out.println("Num of Coop: " + N.cooperatorCount);
             calculatePayoffsAll();
             agentRemoveAll();
             strategyUpdateAll();
-            N.printNetworkToFile("round" + i + ".txt");
+
+            N.printNetworkToFile("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/trialFileDirec"
+                            + + expNum + "/" + "round" + i + ".txt");
+            //N.printNetwork();
             i++;
-            System.out.println("Num of Coop: " + N.cooperatorCount);
+            System.out.println("Num of survived agemts:" + N.aliveAgentCount);
+            System.out.println("Num of Coop: " + N.cooperatorCount + "\n");
 
         }
+
 
 
         //counter for how many times an agent played w/ a neighbor? -good way for testing
@@ -74,23 +82,21 @@ public class PlayPDG {
     public void calculatePayoffs(int index){  //index means the index of agent in agentsList
         Network.Agent a = N.agentsList.get(index);
         double result = 0;
-        for (Network.Agent a1: a.adjLists){
-            boolean neighborCooperate = a1.getCooperate();
+        for (Integer a1: a.adjLists){
+            Network.Agent agent = N.agentsList.get(a1);
+            boolean neighborCooperate = agent.getCooperate();
             if (a.getCooperate()){
                 if (neighborCooperate){
                     result++;
-                    //result=kahanSummation(1, result);
                 }
             }else{
                 if (neighborCooperate){
                     result+=T;
-                    //result = kahanSummation(T, result);
                 }
             }
         }
         result=round(result,2);
         a.setActualPayoffs(result);
-
     }
 
     /**
@@ -98,7 +104,9 @@ public class PlayPDG {
      */
     public void calculatePayoffsAll(){
         for(int i=0; i<N.agentCount; i++){
-            calculatePayoffs(i);
+            if (!N.agentsList.get(i).getEliminated()){
+                calculatePayoffs(i);
+            }
             //System.out.println(N.agentsList.get(i).actualPayoffs);
         }
     }
@@ -110,24 +118,22 @@ public class PlayPDG {
      * @Return a boolean that mark the new strategy of the agent for the next trail
      */
     public boolean strategyUpdate(Network.Agent a) {
-
             boolean result = a.getCooperate();
             int neighborNum = a.neighborNum();
             int imiIndex = (int) Math.random() * neighborNum;//index of a randomly chosen neighbor
-            Network.Agent imiNeighbor = a.getAdjLists().get(imiIndex);
+            int imiNeighbor = a.getAdjLists().get(imiIndex);
+            Network.Agent b = N.agentsList.get(imiNeighbor); //the agent to imitate
             double noise = 0.1;//constant value of uncertainty in assessing payoff
-            double Wij = 1 / (1 + Math.exp(-(imiNeighbor.getActualPayoffs() - a.getActualPayoffs()) / noise));
+            double Wij = 1 / (1 + Math.exp(-(b.getActualPayoffs() - a.getActualPayoffs()) / noise));
             if (Math.random() < Wij) {
-                result = imiNeighbor.getCooperate();
+                result = b.getCooperate();
             }
             return result;
-
     }
 
 
     public void strategyUpdateAll() {
         for (int i = 0; i < N.agentCount; i++) {
-
             Network.Agent a = N.agentsList.get(i);
             if (!a.getEliminated()) {
                 boolean originalCoop = a.getCooperate();
@@ -147,16 +153,17 @@ public class PlayPDG {
      * Also eliminates its neighbors' Edge that connect to it in neighbors' adjLists
      * @param index Agent's index in agentsList
      */
-    public Network.Agent agentRemove(int index) throws Exception{
+    public boolean agentRemove(int index) throws Exception{
         Network.Agent a = N.agentsList.get(index); //get out the agent
         if (a.getActualPayoffs() < tParameter*normalPayoff && !a.getEliminated()){
-            List<Network.Agent> neighbors = a.getAdjLists(); //get all agents' neighbor's index
-            for (Network.Agent i: neighbors){
-                i.getAdjLists().remove(a);  //remove all connections between agent and its neighbor
+            List<Integer> neighbors = a.getAdjLists(); //get all agents' neighbor's index
+            for (Integer i: neighbors){
+                Network.Agent ai = N.agentsList.get(i);
+                ai.getAdjLists().remove((Integer) index);  //remove all connections between agent and its neighbor
             }
-            return a;
+            return true;
         }
-        return null;
+        return false;
     }
 
 
@@ -164,7 +171,7 @@ public class PlayPDG {
         if(N.aliveAgentCount==0) throw new Exception("No agents in the network, can't remove agent. ");
         for (int i = 0; i < N.agentCount; i++){
             Network.Agent a = N.agentsList.get(i);
-                if(agentRemove(i) != null){
+                if(agentRemove(i)){
                     a.setEliminated(true);
                     N.aliveAgentCount--;
                     if (a.getCooperate()){
@@ -183,7 +190,6 @@ public class PlayPDG {
                 }
             }
         }
-        System.out.println("final agentCount" + N.agentCount);
     }
 
     private static double round (double value, int precision) {
@@ -193,7 +199,14 @@ public class PlayPDG {
 
 
     public static void main(String[] args) throws Exception {
-        PlayPDG game = new PlayPDG(100, 1.3,0.3, .4);
+        FileWriter experimentOut = new FileWriter("experimentOut.txt");
+        double toleranceP = 0.25;
+        for (int i = 1; i < 5; i++){
+            PlayPDG game = new PlayPDG(10000, 1.1,toleranceP + i*0.05, .5, 2);
+            experimentOut.write(i + " " + String.valueOf(game.tParameter) + "\n");
+        }
+        experimentOut.close();
+
 
     }
 }
