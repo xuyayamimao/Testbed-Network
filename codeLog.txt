@@ -62,7 +62,13 @@ Ziya&James 7.4
 5. Did huge amount of debug
 
 Ziya&James 7.5
-1. Finish implementing writing to textfile that record fraction of defector&cooperator, and fraction of dead agents in every trial
+1. Finished implementing writing to textfile that record fraction of defector&cooperator, and fraction of dead agents in every trial
 2. Added comment to methods
-3. Run experiments and record results
+3. Ran experiments and record results
+4. Tried to fix bugs of infinite loop but did not find it
+
+Ziya&James 7.6
+1. Debug strategyUpdate method, import java.util.Random class and use Random imiIndex= new Random();, imiIndex.nextInt(4) to generate
+random number
+2. Ran more experiments to make sure the results are correct
 
