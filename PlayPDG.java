@@ -1,4 +1,6 @@
 import java.io.File;
+import java.io.FileWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 public class PlayPDG {
@@ -33,19 +35,23 @@ public class PlayPDG {
         tParameter = toleranceP;
         N.generate2D4N(); //Generate the 2D4n network
         int i = 1;
-        new File("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/trialFileDirec" + expNum).mkdirs();
+        new File("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/alpha" + toleranceP +"/trialFileDirec" + expNum).mkdirs();
 
         while(N.aliveAgentCount != 0 ) {
             if (N.aliveAgentCount == N.cooperatorCount) {
                 break;
             }
+            FileWriter NdRecord = new FileWriter("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/alpha" + toleranceP +"/trialFileDirec" + expNum + "/NdRecord.txt", true);
             System.out.println("Round" + i);
             System.out.println("Num of Coop: " + N.cooperatorCount);
             calculatePayoffsAll();
             agentRemoveAll();
             strategyUpdateAll();
-            N.printNetworkToFile("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/trialFileDirec"
-                            + + expNum + "/" + "round" + i + ".txt");
+            N.printNetworkToFile("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/alpha" + toleranceP + "/trialFileDirec"
+                            + expNum + "/" + "round" + i + ".txt");
+            double deadPortion = ((double)N.agentCount - (double)N.aliveAgentCount)/(double)N.agentCount;
+            NdRecord.write(deadPortion + "\n");
+            NdRecord.close();
             //N.printNetwork();
             i++;
             System.out.println("Num of survived agemts:" + N.aliveAgentCount);
@@ -108,7 +114,7 @@ public class PlayPDG {
             int imiNeighbor = a.getAdjLists().get(imiIndex);
             Network.Agent b = N.agentsList.get(imiNeighbor); //the agent to imitate
             double noise = 0.1;//constant value of uncertainty in assessing payoff
-            double Wij = 1 / (1 + Math.exp(-(b.getActualPayoffs() - a.getActualPayoffs()) / noise));
+            double Wij = (double)1 / (1 + Math.exp(-(b.getActualPayoffs() - a.getActualPayoffs()) / noise));
             if (Math.random() < Wij) {
                 result = b.getCooperate();
             }
@@ -121,17 +127,24 @@ public class PlayPDG {
      * 3. Modify cooperatorCount according to agents' updated strategy
      */
     public void strategyUpdateAll() {
+        ArrayList<Boolean> newCoopList = new ArrayList<>();
         for (int i = 0; i < N.agentCount; i++) {
             Network.Agent a = N.agentsList.get(i);
             if (!a.getEliminated()) {
-                boolean originalCoop = a.getCooperate();
-                a.setCooperate(strategyUpdate(a));
-                if (a.getCooperate() == false && originalCoop == true) {
+                newCoopList.add(strategyUpdate(a));
+            }else{
+                newCoopList.add(a.getCooperate());
+            }
+        }
+        for (int i = 0; i < N.agentCount; i++) {
+            Network.Agent a = N.agentsList.get(i);
+               boolean originalBoo=a.getCooperate();
+                a.setCooperate(newCoopList.get(i));
+                if (a.getCooperate() == false && originalBoo == true) {
                     N.cooperatorCount--;
-                } else if (a.getCooperate() == true && originalCoop == false) {
+                } else if (a.getCooperate() == true && originalBoo == false) {
                     N.cooperatorCount++;
                 }
-            }
         }
     }
 

@@ -173,7 +173,6 @@ public class Network {
         Network N = new Network(10, 0.2);
         N.generate2D4N();
         N.printNetwork();
-        //N.printNetworkToFile("test.txt");
     }
 
 

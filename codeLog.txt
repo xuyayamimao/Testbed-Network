@@ -63,6 +63,6 @@ Ziya&James 7.4
 
 Ziya&James 7.5
 1. Finish implementing writing to textfile that record fraction of defector&cooperator, and fraction of dead agents in every trial
-2. Add comment to methods
+2. Added comment to methods
 3. Run experiments and record results
 
