@@ -2,6 +2,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 public class PlayPDG {
     /**Network N in Network class*/
@@ -110,8 +111,8 @@ public class PlayPDG {
     public boolean strategyUpdate(Network.Agent a) {
             boolean result = a.getCooperate();
             int neighborNum = a.neighborNum();
-            int imiIndex = (int) Math.random() * neighborNum;//index of a randomly chosen neighbor
-            int imiNeighbor = a.getAdjLists().get(imiIndex);
+            Random imiIndex = new Random();
+            int imiNeighbor = a.getAdjLists().get(imiIndex.nextInt(neighborNum));
             Network.Agent b = N.agentsList.get(imiNeighbor); //the agent to imitate
             double noise = 0.1;//constant value of uncertainty in assessing payoff
             double Wij = (double)1 / (1 + Math.exp(-(b.getActualPayoffs() - a.getActualPayoffs()) / noise));
