@@ -49,6 +49,27 @@ public class Network {
         }//update all agents' cooperate instance variable according to ifCooperate ArrayList
     }
 
+    /**
+     * Network constructor that initialize the first agent as defector, all else as cooperator
+     * @param numAgents number of agents
+     */
+    public Network(int numAgents){
+        agentsList = new ArrayList<Agent>();
+        agentCount = numAgents;
+        aliveAgentCount = numAgents;
+
+        for (int i = 0; i < numAgents; i++) {
+            agentsList.add(new Agent(i));
+        }
+
+        agentsList.get(0).setCooperate(false);
+
+        for (int i = 1; i < agentCount;i++){
+            agentsList.get(i).setCooperate(true);
+        }
+        cooperatorCount = numAgents - 1;
+    }
+
 
     /**
      * 1. Add an undirected edge between agent with index a1 and a2 by updating their respective adjList

@@ -25,33 +25,33 @@ public class PlayPDG {
 
     /**This constructor includes:
      * 1. Initializing a network with defectorPercent, generate2D4N network
-     * 2. Create a directory based on expNum to store network after each round in text file (in Pajek format)
+     * 2. Create a directory based on simulationNum to store network after each round in text file (in Pajek format)
      * 3. Network continues playing PDG until reaching equilibrium state (either aliveAgentCount == 0, or cooperatorCount == aliveAgentCount)
      */
-    public PlayPDG(int agentNum, double T, double toleranceP,double defectorPercent,int expNum) throws Exception {
+    public PlayPDG(int agentNum, double T, double toleranceP,double defectorPercent,int simulationNum) throws Exception {
         //use different tParameter as test cases
         if(agentNum<5) throw new Exception("Agent number must be large than 4");
-        N= new Network(agentNum, defectorPercent);
+        N= new Network(agentNum);
         this.T = T;
         tParameter = toleranceP;
         N.generate2D4N(); //Generate the 2D4n network
         int i = 1;
         ArrayList<Double> eliminateRecord = new ArrayList<>();
         eliminateRecord.add(0.0);
-        new File("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/alpha" + toleranceP +"/trialFileDirec" + expNum).mkdirs();
+        String dir = System.getProperty("user.dir");
+        new File(dir + "/experiment" + toleranceP +"/simulation" + simulationNum).mkdirs();
 
         while(!ifSteady(eliminateRecord) ) {
-            FileWriter NdRecord = new FileWriter("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/alpha" + toleranceP +"/trialFileDirec" + expNum + "/NdRecord.txt", true);
+            FileWriter NdRecord = new FileWriter(dir + "/experiment" + toleranceP +"/simulation" + simulationNum + "/NdRecord.txt", true);
             System.out.println("Round" + i);
             System.out.println("Num of Coop: " + N.cooperatorCount);
             calculatePayoffsAll();
             agentRemoveAll();
             strategyUpdateAll();
-            N.printNetworkToFile("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/alpha" + toleranceP + "/trialFileDirec"
-                            + expNum + "/" + "round" + i + ".txt");
-            double deadPortion = ((double)N.agentCount - (double)N.aliveAgentCount)/(double)N.agentCount;
-            eliminateRecord.add(deadPortion);
-            NdRecord.write(deadPortion + "\n");
+            N.printNetworkToFile(dir + "/experiment" + toleranceP +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
+            double deadAgentPercent = ((double)N.agentCount - (double)N.aliveAgentCount)/(double)N.agentCount;
+            eliminateRecord.add(deadAgentPercent);
+            NdRecord.write(deadAgentPercent + "\n");
             NdRecord.close();
             //N.printNetwork();
             i++;
@@ -205,7 +205,20 @@ public class PlayPDG {
      * @return a boolean of whether the network reaches a steady state
      */
     public boolean ifSteady(ArrayList<Double> eliminateRecord){
-        int size = eliminateRecord.size();
+        /*int size = eliminateRecord.size();
+
+        if ((eliminateRecord.get(size - 1).compareTo(1.0))==0) {
+            return true;
+        } else if (size > 5) {
+            if (eliminateRecord.get(size - 1).compareTo(eliminateRecord.get(size - 2))==0 &&
+                    eliminateRecord.get(size - 2).compareTo(eliminateRecord.get(size - 3))==0 &&
+                    eliminateRecord.get(size - 3).compareTo(eliminateRecord.get(size - 4))==0 &&
+                    eliminateRecord.get(size - 4).compareTo(eliminateRecord.get(size - 5))==0
+        )
+            return true;
+        }
+        return false;*/
+       int size = eliminateRecord.size();
 
         if ((eliminateRecord.get(size - 1).compareTo(1.0))==0){
             return true;
