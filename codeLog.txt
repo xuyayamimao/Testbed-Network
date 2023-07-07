@@ -82,3 +82,8 @@ TODO:
 6. Make the PPT
 7. the RLBook Chapter1, Chapter 2, Chapter3
 
+Ziya&James 7.7
+1. Testing and try to find bugs
+2. Testing and try to fix bugs
+3. Testing but failed to find nor fix bugs
+

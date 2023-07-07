@@ -1,0 +1,14 @@
+*Vertices 10
+1 "1" ic Gray
+2 "2" ic Gray
+3 "3" ic Gray
+4 "4" ic Gray
+5 "5" ic Gray
+6 "6" ic Black
+7 "7" ic Black
+8 "8" ic Gray
+9 "9" ic Gray
+10 "10" ic Gray
+*Edges
+6 7
+7 6
