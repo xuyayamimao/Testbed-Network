@@ -68,7 +68,17 @@ Ziya&James 7.5
 4. Tried to fix bugs of infinite loop but did not find it
 
 Ziya&James 7.6
-1. Debug strategyUpdate method, import java.util.Random class and use Random imiIndex= new Random();, imiIndex.nextInt(4) to generate
+1. Debugged the infinite loop by debugging the trategyUpdate method, import java.util.Random class and use Random imiIndex= new Random();, imiIndex.nextInt(4) to generate
 random number
-2. Ran more experiments to make sure the results are correct
+2. Ran more experiments to make sure the results are correct, but the results are not correct
+3. IM
+
+TODO:
+1. pick 10 - 15 experiments to reproduce the figure 12, 13
+2. Visualization 3 -  5 experiments from the 1
+3. Check when one defector is in the center and if the result is consistent with the paper
+4. Check when alpha=0, if all agents are dead to check if code is correct
+5. Debug
+6. Make the PPT
+7. the RLBook Chapter1, Chapter 2, Chapter3
 
