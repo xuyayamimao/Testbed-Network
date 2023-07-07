@@ -36,12 +36,11 @@ public class PlayPDG {
         tParameter = toleranceP;
         N.generate2D4N(); //Generate the 2D4n network
         int i = 1;
+        ArrayList<Double> eliminateRecord = new ArrayList<>();
+        eliminateRecord.add(0.0);
         new File("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/alpha" + toleranceP +"/trialFileDirec" + expNum).mkdirs();
 
-        while(N.aliveAgentCount != 0 ) {
-            if (N.aliveAgentCount == N.cooperatorCount) {
-                break;
-            }
+        while(!ifSteady(eliminateRecord) ) {
             FileWriter NdRecord = new FileWriter("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/alpha" + toleranceP +"/trialFileDirec" + expNum + "/NdRecord.txt", true);
             System.out.println("Round" + i);
             System.out.println("Num of Coop: " + N.cooperatorCount);
@@ -51,6 +50,7 @@ public class PlayPDG {
             N.printNetworkToFile("C:/Users/chenjame/Desktop/Git/testbedNetwork/Testbed-Network/alpha" + toleranceP + "/trialFileDirec"
                             + expNum + "/" + "round" + i + ".txt");
             double deadPortion = ((double)N.agentCount - (double)N.aliveAgentCount)/(double)N.agentCount;
+            eliminateRecord.add(deadPortion);
             NdRecord.write(deadPortion + "\n");
             NdRecord.close();
             //N.printNetwork();
@@ -197,6 +197,28 @@ public class PlayPDG {
                 }
             }
         }
+    }
+
+    /**
+     *
+     * @param eliminateRecord is an ArrayList<Double> that stores percentage of eliminated agents in every round
+     * @return a boolean of whether the network reaches a steady state
+     */
+    public boolean ifSteady(ArrayList<Double> eliminateRecord){
+        int size = eliminateRecord.size();
+
+        if ((eliminateRecord.get(size - 1).compareTo(1.0))==0){
+            return true;
+        }else if (size > 1){
+            System.out.println("arraysize: "+ size);
+            if ((eliminateRecord.get(size - 1).compareTo(eliminateRecord.get(size - 2)))==0 &&
+                    (N.aliveAgentCount == N.cooperatorCount || (N.aliveAgentCount > 0 && N.cooperatorCount == 0 ))){
+                    System.out.println("size-1: " +eliminateRecord.get(size - 1) );
+                    System.out.println("size-2: " +eliminateRecord.get(size - 2) );
+                    return true;
+                }
+            }
+        return false;
     }
 
     /**
