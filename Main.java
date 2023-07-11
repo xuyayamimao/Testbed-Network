@@ -14,13 +14,13 @@ public class Main {
             double toleranceP = PlayPDG.round((initialTParameter + j*0.1), 2); //.23
             experimentOut.write("Alpha Value: " + toleranceP + "\n");
             experimentOut.write("b Value: " + b + "\n");
-            for (int i = 0; i < 5; i++){
+            for (int i = 0; i < 10; i++){
                 PlayPDG game = new PlayPDG(10000, 1.8,toleranceP, .1, i);
                 double deadAgentPercent = (game.N.agentCount - game.N.aliveAgentCount)/(double)game.N.agentCount;
                 experimentOut.write("Simulation" + i + " " + "Nd:" + deadAgentPercent + "\n");
                 NdAverage += deadAgentPercent;
             }
-            experimentOut.write("NdAverage:" + NdAverage/5 + "\n");
+            experimentOut.write("NdAverage:" + NdAverage/5 + "\n\n");
             NdAverage = 0.0;
         }
         experimentOut.close();

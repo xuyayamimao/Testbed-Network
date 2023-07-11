@@ -38,21 +38,21 @@ public class PlayPDG {
         int i = 1;
         ArrayList<Double> eliminateRecord = new ArrayList<>();
         eliminateRecord.add(0.0);
-        String dir = System.getProperty("user.dir");
-        new File(dir + "/experiment" + toleranceP +"/simulation" + simulationNum).mkdirs();
+        //String dir = System.getProperty("user.dir");
+        //new File(dir + "/experiment" + toleranceP +"/simulation" + simulationNum).mkdirs();
 
         while(!ifSteady(eliminateRecord) ) {
-            FileWriter NdRecord = new FileWriter(dir + "/experiment" + toleranceP +"/simulation" + simulationNum + "/NdRecord.txt", true);
+            //FileWriter NdRecord = new FileWriter(dir + "/experiment" + toleranceP +"/simulation" + simulationNum + "/NdRecord.txt", true);
             System.out.println("Round" + i);
             System.out.println("Num of Coop: " + N.cooperatorCount);
             calculatePayoffsAll();
             agentRemoveAll();
             strategyUpdateAll();
-            N.printNetworkToFile(dir + "/experiment" + toleranceP +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
+            //N.printNetworkToFile(dir + "/experiment" + toleranceP +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
             double deadAgentPercent = ((double)N.agentCount - (double)N.aliveAgentCount)/(double)N.agentCount;
             eliminateRecord.add(deadAgentPercent);
-            NdRecord.write(deadAgentPercent + "\n");
-            NdRecord.close();
+            //NdRecord.write(deadAgentPercent + "\n");
+            //NdRecord.close();
             //N.printNetwork();
             i++;
             System.out.println("Num of survived agemts:" + N.aliveAgentCount);
