@@ -7,18 +7,20 @@ import java.io.FileWriter;
 public class Main {
     public static void main(String[] args) throws Exception {
         FileWriter experimentOut = new FileWriter("IMIexperimentOut.txt");
-        double initialTParameter = 0.6; //.3
+        double initialTParameter = 0.1; //.3
         double NdAverage = 0.0;
-        for (int j = 0; j < 1; j++){
-            double toleranceP = initialTParameter + j*0.1; //.23
+        double b = 1.8;
+        for (int j = 0; j < 7; j++){
+            double toleranceP = PlayPDG.round((initialTParameter + j*0.1), 2); //.23
             experimentOut.write("Alpha Value: " + toleranceP + "\n");
-            for (int i = 0; i < 10; i++){
-                PlayPDG game = new PlayPDG(10, 1.1,toleranceP, .1, i);
+            experimentOut.write("b Value: " + b + "\n");
+            for (int i = 0; i < 5; i++){
+                PlayPDG game = new PlayPDG(10000, 1.8,toleranceP, .1, i);
                 double deadAgentPercent = (game.N.agentCount - game.N.aliveAgentCount)/(double)game.N.agentCount;
-                experimentOut.write("Experiment" + i + " " + "Nd:" + deadAgentPercent + "\n");
+                experimentOut.write("Simulation" + i + " " + "Nd:" + deadAgentPercent + "\n");
                 NdAverage += deadAgentPercent;
             }
-            experimentOut.write("NdAverage:" + NdAverage/10 + "\n");
+            experimentOut.write("NdAverage:" + NdAverage/5 + "\n");
             NdAverage = 0.0;
         }
         experimentOut.close();

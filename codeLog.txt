@@ -87,3 +87,8 @@ Ziya&James 7.7
 2. Testing and try to fix bugs
 3. Testing but failed to find nor fix bugs
 
+Ziya&James 7.10
+1. Debug......
+2. Sent email to Prof
+3. Sent email to author of cascading paper to ask some questions
+
