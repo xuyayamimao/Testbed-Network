@@ -62,11 +62,12 @@ public class Network {
             agentsList.add(new Agent(i));
         }
 
-        agentsList.get(0).setCooperate(false);
+        agentsList.get(agentCount/2).setCooperate(false);
 
-        for (int i = 1; i < agentCount;i++){
+        for (int i = 0; i < agentCount;i++){
             agentsList.get(i).setCooperate(true);
         }
+        agentsList.get(agentCount/2).setCooperate(false);
         cooperatorCount = numAgents - 1;
     }
 
@@ -112,13 +113,22 @@ public class Network {
     /**
      * Generate a 2D4N network (4-regular graph) with agentNum number of agents
      */
-    public void generate2D4N() {
+    public void generate2D4NLinear() {
         for (int i = 0; i < agentCount; i++) {
             addEdge(i, (i + 1) % agentCount);
             addEdge(i, (i + 2) % agentCount);
             addEdge(i, (i - 1 + agentCount) % agentCount);
             addEdge(i, (i - 2 + agentCount) % agentCount);
             //System.out.println((i - 2 + agentCount) % agentCount);
+        }
+    }
+
+    public void generate2D4N(){
+        for (int i = 0; i <agentCount; i++){
+            addEdge(i, (i + 1) % 100 + (i/100)*100);
+            addEdge(i, (i - 1 + 100) % 100 + (i/100)*100);
+            addEdge(i, (i + 100) % agentCount);
+            addEdge(i, (i - 100 + agentCount) % agentCount);
         }
     }
 
@@ -157,7 +167,7 @@ public class Network {
             }
         }//write all edges in the network to file
 
-        System.out.println("Successful");//print "Successful" if writing is successful
+        //System.out.println("Successful");//print "Successful" if writing is successful
         trialOutput.close();
     }
 
@@ -189,10 +199,37 @@ public class Network {
         }
     }
 
+    public void printAllData(){
+
+        for (int i = 0; i < agentCount; i++){
+            if (agentsList.get(i).cooperate){
+                System.out.print("C    ");
+            }else{
+                System.out.print("D    ");
+            }
+        }
+        System.out.println();
+
+        for (int i = 0; i < agentCount; i++){
+            System.out.print(agentsList.get(i).getActualPayoffs() +"  ");
+        }
+        System.out.println();
+
+        for (int i = 0; i < agentCount; i++){
+            if (agentsList.get(i).getEliminated()){
+                System.out.print("T    ");
+            }else{
+                System.out.print("F    ");
+            }
+
+        }
+        System.out.println();
+    }
+
 
     public static void main(String[] args) throws IOException {
         Network N = new Network(10, 0.2);
-        N.generate2D4N();
+        N.generate2D4NLinear();
         N.printNetwork();
     }
 
@@ -305,6 +342,8 @@ public class Network {
         public int neighborNum(){
             return adjLists.size();
         }
+
+
 
         //we can write strategy update for reinforcement learning function later.
         //also update the q table in each trail

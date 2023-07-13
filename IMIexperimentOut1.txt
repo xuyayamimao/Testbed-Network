@@ -1,0 +1,786 @@
+b Value: 1.0
+Alpha Value: 0.1
+Simulation0 Nd:0.0031
+Simulation1 Nd:5.0E-4
+Simulation2 Nd:0.0013
+Simulation3 Nd:0.0588
+Simulation4 Nd:2.0E-4
+Simulation5 Nd:0.0204
+Simulation6 Nd:0.0017
+Simulation7 Nd:0.0016
+Simulation8 Nd:0.0027
+Simulation9 Nd:0.0039
+NdAverage:0.00942
+
+Alpha Value: 0.2
+Simulation0 Nd:0.0012
+Simulation1 Nd:0.0079
+Simulation2 Nd:0.0
+Simulation3 Nd:0.0056
+Simulation4 Nd:0.0015
+Simulation5 Nd:0.0057
+Simulation6 Nd:0.0044
+Simulation7 Nd:0.0079
+Simulation8 Nd:0.0
+Simulation9 Nd:0.0354
+NdAverage:0.006960000000000001
+
+Alpha Value: 0.3
+Simulation0 Nd:4.0E-4
+Simulation1 Nd:0.0
+Simulation2 Nd:0.0
+Simulation3 Nd:0.0011
+Simulation4 Nd:1.0E-4
+Simulation5 Nd:9.0E-4
+Simulation6 Nd:0.0015
+Simulation7 Nd:0.0015
+Simulation8 Nd:0.0
+Simulation9 Nd:8.0E-4
+NdAverage:6.3E-4
+
+Alpha Value: 0.4
+Simulation0 Nd:2.0E-4
+Simulation1 Nd:4.0E-4
+Simulation2 Nd:3.0E-4
+Simulation3 Nd:0.0
+Simulation4 Nd:0.004
+Simulation5 Nd:8.0E-4
+Simulation6 Nd:0.0012
+Simulation7 Nd:3.0E-4
+Simulation8 Nd:0.0
+Simulation9 Nd:3.0E-4
+NdAverage:7.5E-4
+
+Alpha Value: 0.5
+Simulation0 Nd:3.0E-4
+Simulation1 Nd:5.0E-4
+Simulation2 Nd:7.0E-4
+Simulation3 Nd:0.0011
+Simulation4 Nd:4.0E-4
+Simulation5 Nd:7.0E-4
+Simulation6 Nd:3.0E-4
+Simulation7 Nd:0.0
+Simulation8 Nd:9.0E-4
+Simulation9 Nd:3.0E-4
+NdAverage:5.2E-4
+
+Alpha Value: 0.6
+Simulation0 Nd:4.0E-4
+Simulation1 Nd:2.0E-4
+Simulation2 Nd:6.0E-4
+Simulation3 Nd:4.0E-4
+Simulation4 Nd:1.0E-4
+Simulation5 Nd:6.0E-4
+Simulation6 Nd:0.0
+Simulation7 Nd:0.0012
+Simulation8 Nd:0.0
+Simulation9 Nd:0.0021
+NdAverage:5.6E-4
+
+Alpha Value: 0.7
+Simulation0 Nd:6.0E-4
+Simulation1 Nd:4.0E-4
+Simulation2 Nd:4.0E-4
+Simulation3 Nd:8.0E-4
+Simulation4 Nd:0.0
+Simulation5 Nd:4.0E-4
+Simulation6 Nd:1.0E-4
+Simulation7 Nd:6.0E-4
+Simulation8 Nd:6.0E-4
+Simulation9 Nd:6.0E-4
+NdAverage:4.5E-4
+
+Alpha Value: 0.8
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 0.9
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 1.0
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+b Value: 1.2
+Alpha Value: 0.1
+Simulation0 Nd:0.7841
+Simulation1 Nd:0.8123
+Simulation2 Nd:0.8048
+Simulation3 Nd:0.8021
+Simulation4 Nd:0.8215
+Simulation5 Nd:0.8124
+Simulation6 Nd:0.7853
+Simulation7 Nd:0.7916
+Simulation8 Nd:0.8205
+Simulation9 Nd:0.799
+NdAverage:0.8033600000000002
+
+Alpha Value: 0.2
+Simulation0 Nd:0.7837
+Simulation1 Nd:0.8232
+Simulation2 Nd:0.8032
+Simulation3 Nd:0.8248
+Simulation4 Nd:0.7803
+Simulation5 Nd:0.8092
+Simulation6 Nd:0.8081
+Simulation7 Nd:0.8061
+Simulation8 Nd:0.8122
+Simulation9 Nd:0.7972
+NdAverage:0.8048
+
+Alpha Value: 0.3
+Simulation0 Nd:0.1163
+Simulation1 Nd:0.1864
+Simulation2 Nd:0.0624
+Simulation3 Nd:0.0836
+Simulation4 Nd:0.4183
+Simulation5 Nd:0.2357
+Simulation6 Nd:0.0071
+Simulation7 Nd:0.0056
+Simulation8 Nd:0.0076
+Simulation9 Nd:0.2221
+NdAverage:0.13451000000000002
+
+Alpha Value: 0.4
+Simulation0 Nd:0.0165
+Simulation1 Nd:0.0039
+Simulation2 Nd:0.0053
+Simulation3 Nd:0.0025
+Simulation4 Nd:0.0285
+Simulation5 Nd:0.0021
+Simulation6 Nd:0.0019
+Simulation7 Nd:0.0022
+Simulation8 Nd:0.0022
+Simulation9 Nd:0.0025
+NdAverage:0.0067599999999999995
+
+Alpha Value: 0.5
+Simulation0 Nd:0.0169
+Simulation1 Nd:9.0E-4
+Simulation2 Nd:2.0E-4
+Simulation3 Nd:0.0028
+Simulation4 Nd:0.0012
+Simulation5 Nd:0.0031
+Simulation6 Nd:0.0011
+Simulation7 Nd:0.001
+Simulation8 Nd:0.0042
+Simulation9 Nd:0.0089
+NdAverage:0.00403
+
+Alpha Value: 0.6
+Simulation0 Nd:0.0025
+Simulation1 Nd:0.0032
+Simulation2 Nd:0.0015
+Simulation3 Nd:6.0E-4
+Simulation4 Nd:2.0E-4
+Simulation5 Nd:4.0E-4
+Simulation6 Nd:6.0E-4
+Simulation7 Nd:0.0024
+Simulation8 Nd:9.0E-4
+Simulation9 Nd:8.0E-4
+NdAverage:0.00131
+
+Alpha Value: 0.7
+Simulation0 Nd:4.0E-4
+Simulation1 Nd:0.0025
+Simulation2 Nd:6.0E-4
+Simulation3 Nd:6.0E-4
+Simulation4 Nd:0.0018
+Simulation5 Nd:0.0012
+Simulation6 Nd:0.0012
+Simulation7 Nd:0.0015
+Simulation8 Nd:0.0012
+Simulation9 Nd:0.003
+NdAverage:0.0013999999999999998
+
+Alpha Value: 0.8
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 0.9
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 1.0
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+b Value: 1.4
+Alpha Value: 0.1
+Simulation0 Nd:0.8589
+Simulation1 Nd:0.8712
+Simulation2 Nd:0.8705
+Simulation3 Nd:0.872
+Simulation4 Nd:0.865
+Simulation5 Nd:0.8633
+Simulation6 Nd:0.8654
+Simulation7 Nd:0.8749
+Simulation8 Nd:0.8663
+Simulation9 Nd:0.8683
+NdAverage:0.86758
+
+Alpha Value: 0.2
+Simulation0 Nd:0.872
+Simulation1 Nd:0.8761
+Simulation2 Nd:0.871
+Simulation3 Nd:0.8761
+Simulation4 Nd:0.862
+Simulation5 Nd:0.8818
+Simulation6 Nd:0.8714
+Simulation7 Nd:0.8586
+Simulation8 Nd:0.8644
+Simulation9 Nd:0.8794
+NdAverage:0.8712799999999999
+
+Alpha Value: 0.3
+Simulation0 Nd:0.705
+Simulation1 Nd:0.5541
+Simulation2 Nd:0.6495
+Simulation3 Nd:0.6069
+Simulation4 Nd:0.5582
+Simulation5 Nd:0.6588
+Simulation6 Nd:0.6789
+Simulation7 Nd:0.5717
+Simulation8 Nd:0.6065
+Simulation9 Nd:1.0E-4
+NdAverage:0.5589700000000001
+
+Alpha Value: 0.4
+Simulation0 Nd:0.0023
+Simulation1 Nd:0.0028
+Simulation2 Nd:0.0106
+Simulation3 Nd:0.0043
+Simulation4 Nd:0.0019
+Simulation5 Nd:0.0016
+Simulation6 Nd:0.0116
+Simulation7 Nd:0.0171
+Simulation8 Nd:0.0123
+Simulation9 Nd:0.0017
+NdAverage:0.006619999999999999
+
+Alpha Value: 0.5
+Simulation0 Nd:0.0109
+Simulation1 Nd:0.0022
+Simulation2 Nd:0.037
+Simulation3 Nd:0.0028
+Simulation4 Nd:0.0107
+Simulation5 Nd:0.0093
+Simulation6 Nd:0.0035
+Simulation7 Nd:0.0098
+Simulation8 Nd:0.0109
+Simulation9 Nd:0.0033
+NdAverage:0.010039999999999999
+
+Alpha Value: 0.6
+Simulation0 Nd:0.004
+Simulation1 Nd:0.0012
+Simulation2 Nd:0.0011
+Simulation3 Nd:8.0E-4
+Simulation4 Nd:0.0024
+Simulation5 Nd:0.0012
+Simulation6 Nd:8.0E-4
+Simulation7 Nd:0.0012
+Simulation8 Nd:0.0042
+Simulation9 Nd:0.0016
+NdAverage:0.0018499999999999999
+
+Alpha Value: 0.7
+Simulation0 Nd:0.0012
+Simulation1 Nd:0.0032
+Simulation2 Nd:5.0E-4
+Simulation3 Nd:0.002
+Simulation4 Nd:6.0E-4
+Simulation5 Nd:8.0E-4
+Simulation6 Nd:0.0011
+Simulation7 Nd:6.0E-4
+Simulation8 Nd:9.0E-4
+Simulation9 Nd:0.0016
+NdAverage:0.00125
+
+Alpha Value: 0.8
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 0.9
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 1.0
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+b Value: 1.6
+Alpha Value: 0.1
+Simulation0 Nd:0.9705
+Simulation1 Nd:0.9725
+Simulation2 Nd:0.9715
+Simulation3 Nd:0.9701
+Simulation4 Nd:0.9702
+Simulation5 Nd:0.9748
+Simulation6 Nd:0.9719
+Simulation7 Nd:0.9794
+Simulation8 Nd:0.9785
+Simulation9 Nd:0.9755
+NdAverage:0.97349
+
+Alpha Value: 0.2
+Simulation0 Nd:0.9578
+Simulation1 Nd:0.9737
+Simulation2 Nd:0.9715
+Simulation3 Nd:0.9662
+Simulation4 Nd:0.9755
+Simulation5 Nd:0.9714
+Simulation6 Nd:0.9752
+Simulation7 Nd:0.9743
+Simulation8 Nd:0.9743
+Simulation9 Nd:0.9718
+NdAverage:0.9711700000000001
+
+Alpha Value: 0.3
+Simulation0 Nd:0.968
+Simulation1 Nd:0.9758
+Simulation2 Nd:0.9718
+Simulation3 Nd:0.9699
+Simulation4 Nd:0.9649
+Simulation5 Nd:0.9703
+Simulation6 Nd:0.9705
+Simulation7 Nd:0.965
+Simulation8 Nd:0.9651
+Simulation9 Nd:0.966
+NdAverage:0.9687299999999999
+
+Alpha Value: 0.4
+Simulation0 Nd:0.9704
+Simulation1 Nd:0.9731
+Simulation2 Nd:0.9699
+Simulation3 Nd:0.9715
+Simulation4 Nd:0.9637
+Simulation5 Nd:0.9703
+Simulation6 Nd:0.9728
+Simulation7 Nd:0.9652
+Simulation8 Nd:0.9686
+Simulation9 Nd:0.97
+NdAverage:0.9695500000000001
+
+Alpha Value: 0.5
+Simulation0 Nd:0.925
+Simulation1 Nd:0.9232
+Simulation2 Nd:0.9278
+Simulation3 Nd:0.9275
+Simulation4 Nd:0.9373
+Simulation5 Nd:0.92
+Simulation6 Nd:0.9278
+Simulation7 Nd:0.9305
+Simulation8 Nd:0.9215
+Simulation9 Nd:0.9314
+NdAverage:0.9272
+
+Alpha Value: 0.6
+Simulation0 Nd:0.0024
+Simulation1 Nd:0.0036
+Simulation2 Nd:0.009
+Simulation3 Nd:0.0042
+Simulation4 Nd:0.0036
+Simulation5 Nd:0.0035
+Simulation6 Nd:0.0056
+Simulation7 Nd:0.0012
+Simulation8 Nd:0.0117
+Simulation9 Nd:0.0016
+NdAverage:0.00464
+
+Alpha Value: 0.7
+Simulation0 Nd:0.0276
+Simulation1 Nd:0.003
+Simulation2 Nd:0.003
+Simulation3 Nd:0.0025
+Simulation4 Nd:0.0108
+Simulation5 Nd:0.0056
+Simulation6 Nd:0.0024
+Simulation7 Nd:0.002
+Simulation8 Nd:0.0012
+Simulation9 Nd:0.0054
+NdAverage:0.00635
+
+Alpha Value: 0.8
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 0.9
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 1.0
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+b Value: 1.8
+Alpha Value: 0.1
+Simulation0 Nd:0.9843
+Simulation1 Nd:0.9763
+Simulation2 Nd:0.9816
+Simulation3 Nd:0.9838
+Simulation4 Nd:0.9878
+Simulation5 Nd:0.9807
+Simulation6 Nd:0.9868
+Simulation7 Nd:0.9817
+Simulation8 Nd:0.9803
+Simulation9 Nd:0.9803
+NdAverage:0.9823599999999999
+
+Alpha Value: 0.2
+Simulation0 Nd:0.9902
+Simulation1 Nd:0.9864
+Simulation2 Nd:0.9868
+Simulation3 Nd:0.9833
+Simulation4 Nd:0.9851
+Simulation5 Nd:0.983
+Simulation6 Nd:0.9847
+Simulation7 Nd:0.9818
+Simulation8 Nd:0.9795
+Simulation9 Nd:0.9791
+NdAverage:0.98399
+
+Alpha Value: 0.3
+Simulation0 Nd:0.9769
+Simulation1 Nd:0.978
+Simulation2 Nd:0.9778
+Simulation3 Nd:0.9769
+Simulation4 Nd:0.9769
+Simulation5 Nd:0.982
+Simulation6 Nd:0.9764
+Simulation7 Nd:0.974
+Simulation8 Nd:0.9825
+Simulation9 Nd:0.9779
+NdAverage:0.9779300000000001
+
+Alpha Value: 0.4
+Simulation0 Nd:0.9803
+Simulation1 Nd:0.9789
+Simulation2 Nd:0.9726
+Simulation3 Nd:0.9753
+Simulation4 Nd:0.9798
+Simulation5 Nd:0.9758
+Simulation6 Nd:0.9762
+Simulation7 Nd:0.977
+Simulation8 Nd:0.9744
+Simulation9 Nd:0.9746
+NdAverage:0.9764900000000001
+
+Alpha Value: 0.5
+Simulation0 Nd:0.9568
+Simulation1 Nd:0.9532
+Simulation2 Nd:0.9527
+Simulation3 Nd:0.9519
+Simulation4 Nd:0.9568
+Simulation5 Nd:0.9458
+Simulation6 Nd:0.9512
+Simulation7 Nd:0.9565
+Simulation8 Nd:0.9485
+Simulation9 Nd:0.9543
+NdAverage:0.9527700000000001
+
+Alpha Value: 0.6
+Simulation0 Nd:0.002
+Simulation1 Nd:0.0049
+Simulation2 Nd:0.003
+Simulation3 Nd:0.0099
+Simulation4 Nd:0.0088
+Simulation5 Nd:0.0072
+Simulation6 Nd:0.0056
+Simulation7 Nd:0.0035
+Simulation8 Nd:0.003
+Simulation9 Nd:0.0054
+NdAverage:0.0053300000000000005
+
+Alpha Value: 0.7
+Simulation0 Nd:0.0081
+Simulation1 Nd:0.0042
+Simulation2 Nd:0.0012
+Simulation3 Nd:0.0112
+Simulation4 Nd:0.0049
+Simulation5 Nd:0.007
+Simulation6 Nd:0.0012
+Simulation7 Nd:0.0025
+Simulation8 Nd:0.0028
+Simulation9 Nd:0.0012
+NdAverage:0.00443
+
+Alpha Value: 0.8
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 0.9
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 1.0
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+b Value: 2.0
+Alpha Value: 0.1
+Simulation0 Nd:0.9972
+Simulation1 Nd:0.9972
+Simulation2 Nd:0.9985
+Simulation3 Nd:0.9982
+Simulation4 Nd:0.999
+Simulation5 Nd:0.9972
+Simulation6 Nd:0.9992
+Simulation7 Nd:0.9985
+Simulation8 Nd:0.9978
+Simulation9 Nd:0.9975
+NdAverage:0.9980300000000002
+
+Alpha Value: 0.2
+Simulation0 Nd:0.9976
+Simulation1 Nd:0.9995
+Simulation2 Nd:0.9975
+Simulation3 Nd:0.9986
+Simulation4 Nd:0.9985
+Simulation5 Nd:0.999
+Simulation6 Nd:0.9972
+Simulation7 Nd:0.9969
+Simulation8 Nd:0.9952
+Simulation9 Nd:0.999
+NdAverage:0.9979000000000001
+
+Alpha Value: 0.3
+Simulation0 Nd:0.9912
+Simulation1 Nd:0.9909
+Simulation2 Nd:0.9874
+Simulation3 Nd:0.9842
+Simulation4 Nd:0.9919
+Simulation5 Nd:0.9887
+Simulation6 Nd:0.9918
+Simulation7 Nd:0.9931
+Simulation8 Nd:0.9895
+Simulation9 Nd:0.9891
+NdAverage:0.98978
+
+Alpha Value: 0.4
+Simulation0 Nd:0.9894
+Simulation1 Nd:0.9924
+Simulation2 Nd:0.9934
+Simulation3 Nd:0.9922
+Simulation4 Nd:0.9896
+Simulation5 Nd:0.9912
+Simulation6 Nd:0.9915
+Simulation7 Nd:0.9912
+Simulation8 Nd:0.9939
+Simulation9 Nd:0.9902
+NdAverage:0.9915
+
+Alpha Value: 0.5
+Simulation0 Nd:0.9916
+Simulation1 Nd:0.9903
+Simulation2 Nd:0.988
+Simulation3 Nd:0.9913
+Simulation4 Nd:0.9904
+Simulation5 Nd:0.9922
+Simulation6 Nd:0.9897
+Simulation7 Nd:0.988
+Simulation8 Nd:0.9913
+Simulation9 Nd:0.9894
+NdAverage:0.9902200000000001
+
+Alpha Value: 0.6
+Simulation0 Nd:0.002
+Simulation1 Nd:0.0135
+Simulation2 Nd:0.0025
+Simulation3 Nd:0.0048
+Simulation4 Nd:0.0208
+Simulation5 Nd:0.0024
+Simulation6 Nd:0.0025
+Simulation7 Nd:0.012
+Simulation8 Nd:0.0072
+Simulation9 Nd:0.0028
+NdAverage:0.007049999999999999
+
+Alpha Value: 0.7
+Simulation0 Nd:0.0021
+Simulation1 Nd:0.021
+Simulation2 Nd:0.0063
+Simulation3 Nd:0.0045
+Simulation4 Nd:0.0054
+Simulation5 Nd:0.011
+Simulation6 Nd:0.007
+Simulation7 Nd:0.0056
+Simulation8 Nd:0.002
+Simulation9 Nd:0.003
+NdAverage:0.00679
+
+Alpha Value: 0.8
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 0.9
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+
+Alpha Value: 1.0
+Simulation0 Nd:1.0
+Simulation1 Nd:1.0
+Simulation2 Nd:1.0
+Simulation3 Nd:1.0
+Simulation4 Nd:1.0
+Simulation5 Nd:1.0
+Simulation6 Nd:1.0
+Simulation7 Nd:1.0
+Simulation8 Nd:1.0
+Simulation9 Nd:1.0
+NdAverage:1.0
+

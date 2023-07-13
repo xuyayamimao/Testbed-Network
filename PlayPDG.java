@@ -38,28 +38,40 @@ public class PlayPDG {
         int i = 1;
         ArrayList<Double> eliminateRecord = new ArrayList<>();
         eliminateRecord.add(0.0);
-        //String dir = System.getProperty("user.dir");
-        //new File(dir + "/experiment" + toleranceP +"/simulation" + simulationNum).mkdirs();
+        /*String dir = System.getProperty("user.dir");
+        new File(dir + "/experiment" + toleranceP +"/simulation" + simulationNum).mkdirs();
+        FileWriter NdRecord = new FileWriter(dir + "/experiment" + toleranceP +"/simulation" + simulationNum + "/NdRecord.txt", true);
 
+         */
         while(!ifSteady(eliminateRecord) ) {
-            //FileWriter NdRecord = new FileWriter(dir + "/experiment" + toleranceP +"/simulation" + simulationNum + "/NdRecord.txt", true);
-            System.out.println("Round" + i);
-            System.out.println("Num of Coop: " + N.cooperatorCount);
+
+           // NdRecord.write("Round" + i);
+            //NdRecord.write("Num of Coop: " + N.cooperatorCount);
+            //System.out.println("Round" + i);
+            //System.out.println("Num of Coop: " + N.cooperatorCount);
+            //N.printNetworkToFile(dir + "/experiment" + toleranceP +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
+            //NdRecord.write("Num of survived agemts:" + N.aliveAgentCount);
+            //NdRecord.write("Num of Coop: " + N.cooperatorCount + "\n");
+            System.out.println("Defector Num: " + (N.aliveAgentCount-N.cooperatorCount));
             calculatePayoffsAll();
             agentRemoveAll();
+            //N.printAllData();
             strategyUpdateAll();
-            //N.printNetworkToFile(dir + "/experiment" + toleranceP +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
+
             double deadAgentPercent = ((double)N.agentCount - (double)N.aliveAgentCount)/(double)N.agentCount;
             eliminateRecord.add(deadAgentPercent);
             //NdRecord.write(deadAgentPercent + "\n");
-            //NdRecord.close();
+
             //N.printNetwork();
             i++;
-            System.out.println("Num of survived agemts:" + N.aliveAgentCount);
-            System.out.println("Num of Coop: " + N.cooperatorCount + "\n");
+
+
+            //System.out.println("Num of survived agemts:" + N.aliveAgentCount);
+            //System.out.println("Num of Coop: " + N.cooperatorCount + "\n");
 
         }
         //counter for how many times an agent played w/ a neighbor? -good way for testing
+        //NdRecord.close();
     }
 
     /**
@@ -111,14 +123,19 @@ public class PlayPDG {
     public boolean strategyUpdate(Network.Agent a) {
             boolean result = a.getCooperate();
             int neighborNum = a.neighborNum();
+            if (neighborNum == 0){
+                return result;
+            }
             Random imiIndex = new Random();
             int imiNeighbor = a.getAdjLists().get(imiIndex.nextInt(neighborNum));
             Network.Agent b = N.agentsList.get(imiNeighbor); //the agent to imitate
+        //System.out.println(b.getIndex() + ": " +b.getEliminated());
             double noise = 0.1;//constant value of uncertainty in assessing payoff
             double Wij = (double)1 / (1 + Math.exp(-(b.getActualPayoffs() - a.getActualPayoffs()) / noise));
-            if (Math.random() < Wij) {
+            if (imiIndex.nextDouble() < Wij) {
                 result = b.getCooperate();
             }
+
             return result;
     }
 
@@ -180,11 +197,13 @@ public class PlayPDG {
             Network.Agent a = N.agentsList.get(i);
                 if(agentRemove(i)){
                     a.setEliminated(true);
+
                     N.aliveAgentCount--;
                     if (a.getCooperate()){
                         N.cooperatorCount--;
                 }
             }
+
         }
 
         for (int i = 0; i < N.agentCount; i++){
@@ -223,11 +242,11 @@ public class PlayPDG {
         if ((eliminateRecord.get(size - 1).compareTo(1.0))==0){
             return true;
         }else if (size > 1){
-            System.out.println("arraysize: "+ size);
+            //System.out.println("arraysize: "+ size);
             if ((eliminateRecord.get(size - 1).compareTo(eliminateRecord.get(size - 2)))==0 &&
                     (N.aliveAgentCount == N.cooperatorCount || (N.aliveAgentCount > 0 && N.cooperatorCount == 0 ))){
-                    System.out.println("size-1: " +eliminateRecord.get(size - 1) );
-                    System.out.println("size-2: " +eliminateRecord.get(size - 2) );
+                    //System.out.println("size-1: " +eliminateRecord.get(size - 1) );
+                    //System.out.println("size-2: " +eliminateRecord.get(size - 2) );
                     return true;
                 }
             }
