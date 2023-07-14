@@ -87,37 +87,3 @@ Ziya&James 7.7
 2. Testing and try to fix bugs
 3. Testing but failed to find nor fix bugs
 
-Ziya&James 7.10
-1. Debug......
-2. Sent email to Prof
-3. Sent email to author of cascading paper to ask some questions
-
-Ziya&James 7.12
-1. Finished debugging and successfully reproduced results consistent with the cascading paper
-
-Ziya&James 7.12
-1. IM
-2. Finish visualization of comparison between our results and the papers
-3. Reorganize code to prepare for RL implementation
-
-TODO:
-1. Visualizations
-- Comparison between our results and the papers to show our results are correct using a table 
-- Comparison between paper, Q Learning & Double Q Learning
-- Comparison of total payoffs of all agents when they are RL agents and when they are all cooperators 
-
-2. Experiments
-- Reinforcement learning up to ten different experiments, and pick 5 
-b = 1[0.2, 0.4, 0.7] - we use this one to debug 
-b = 1.05 [0.2, 0.4, 0.7] 
-b = 1.1 [0.2, 0.4, 0.7] 
-- For when a single defector in the center for the paper, and when a single RL agent in the center (Q learning & Double Q Learning)
-- Track D|C, C|C, D|D and see if it flattens; if flattens, then our code is probably correct 
-- Track percentage of RL agents and normal cooperating agents 
-
-Algorithm:
-1. Agent class have another boolean activated: T if RL agent, F if cooperating agent
-2. If RL <-> RL, then we don't update either's strategy; only if RL<-> normal agent, we update strategy with probability Wij 
-3. Initialize network with one RL agent in the middle, where everyone else is cooperating agents
-
-
