@@ -131,19 +131,43 @@ public class PlayPDGQ {
             if(!a.isActivated()){ //if the agent is not activated but have at least one neighbor got activated, then activate the agent
                 for(Integer i : a.getAdjLists()){
                     AgentQ b = N.agentsList.get(i);
-                    if(b.isActivated()){
-                        a.activate();
-                        break;
+                    if(b.isActivated() && !b.getEliminated()){
+                        Random r = new Random();
+                        if(r.nextInt(100) < 25){
+                            a.activate();
+                            break;
+                        }
                     }
                 }
             } else{
                 genRTable(a);
-
+                result = actionSelect(a);
             }
-
-
-
             return result;
+    }
+
+    /**
+     * Select an action for the next round by choosing the action with
+     * max overall Q-value
+     * @param a AgentQ
+     * @return boolean of whether agent is a cooperator
+     */
+    public boolean actionSelect(AgentQ a){
+        int sumCoop = 0, sumDefect = 0;
+        boolean result;
+        for(int i = 0; i < 4; i++){
+           sumDefect += a.getQTable()[i][0];
+           sumCoop += a.getQTable()[i][1];
+        }
+        if(sumCoop > sumDefect){
+            result = true;
+        } else if (sumCoop < sumDefect) {
+            result = false;
+        }else{
+            Random r = new Random();
+            result = r.nextBoolean();
+        }
+        return result;
     }
 
 
@@ -178,20 +202,20 @@ public class PlayPDGQ {
         boolean coop = a.getCooperate();
         for(Integer i : a.getAliveNeighbor()){
             if(coop){
-                double newQValue = getNewQValue(a, i, 1);
+                long newQValue = getNewQValue(a, i, 1);
                 a.setQTable(i, 1, newQValue);
             }else{
-                double newQValue = getNewQValue(a, i, 0);
+                long newQValue = getNewQValue(a, i, 0);
                 a.setQTable(i, 0, newQValue);
             }
         }
     }
 
-    private static double getNewQValue(AgentQ a, int i, int coop) {
-        double TD;
-        double prev =  Math.max(a.getQTable()[a.getPrevState()][0], a.getQTable()[a.getPrevState()][1]);
-        TD = a.getRTable()[i][coop] + discountR*prev - a.getQTable()[i][coop];
-        double newQValue = a.getQTable()[i][coop] + learningR*TD;
+    private static long getNewQValue(AgentQ a, int i, int coop) {
+        long TD;
+        long prev =  Math.max(a.getQTable()[a.getPrevState()][0], a.getQTable()[a.getPrevState()][1]);
+        TD = (long) (a.getRTable()[i][coop] + discountR*prev - a.getQTable()[i][coop]);
+        long newQValue = (long) (a.getQTable()[i][coop] + learningR*TD);
         return newQValue;
     }
 

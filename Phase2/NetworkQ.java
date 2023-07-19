@@ -14,7 +14,6 @@ public class NetworkQ {
     public int cooperatorCount;//number of alive cooperators in the network
     //we need to calculate eliminatedPercent and defectorPercent after each trial using the above instance variables
 
-    public int activatedCount;//number of activated agents in the network
 
     /**
      * Network constructor that initialize a 2D4N network
@@ -30,13 +29,12 @@ public class NetworkQ {
             agentsList.add(new AgentQ(i));
         }
 
-        agentsList.get(agentCount/2).activate();
-        RLAgentList.add(agentCount/2);
+        agentsList.get(agentCount/2).activate();//activate the central agent
+        RLAgentList.add(agentCount/2);//update RL agent list
         AgentQ Rl = agentsList.get(agentCount/2);
         if(!Rl.getCooperate()){
             cooperatorCount = numAgents - 1;
-        }
-        activatedCount = 1;
+        }//update cooperate agent list
         generate2D4NSquare();
     }
 

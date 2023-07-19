@@ -32,12 +32,11 @@ public class AgentQ {
      */
     private boolean activated;
 
-    private double[][] QTable;
+    private long[][] QTable;
 
     private double[][] RTable;
 
     private int prevState;
-    private int prevAction;
 
     private Set<Integer> aliveNeighbor;
 
@@ -56,7 +55,6 @@ public class AgentQ {
         QTable = null;
         RTable = null;
         prevState = -1;
-        prevAction = -1;
         aliveNeighbor = new HashSet<>();
     }
 
@@ -155,19 +153,18 @@ public class AgentQ {
      */
     public void activate() {
         activated = true;
-        QTable = new double[4][2];
+        QTable = new long[4][2];
         RTable = new double[4][2];
         Random action = new Random();
         setCooperate(action.nextBoolean());//randomly choose an action when an agent is first activated
-        prevAction = 0;
-        prevState = 0;
+        prevState = -1;
     }
 
-    public double[][] getQTable() {
+    public long[][] getQTable() {
         return QTable;
     }
 
-    public void setQTable(int row, int col, double val) {
+    public void setQTable(int row, int col, long val) {
         QTable[row][col] = val;
     }
 
@@ -187,13 +184,6 @@ public class AgentQ {
         prevState = i;
     }
 
-    public int getPrevAction(){
-        return prevAction;
-    }
-
-    public void setPrevAction(int i){
-        prevAction = i;
-    }
 
     public Set<Integer> getAliveNeighbor(){ //contains each neighbor's row index in the Q table
         return aliveNeighbor;
