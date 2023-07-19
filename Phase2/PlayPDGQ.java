@@ -1,3 +1,5 @@
+package Phase2;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -20,6 +22,10 @@ public class PlayPDGQ {
 
     /** Normal Payoff for 2D4N network where all agents in the network are cooperators*/
     public int normalPayoff = 4;
+
+    public static double learningR = 0.9;
+
+    public static double discountR = 0.75;
 
     /**This constructor includes:
      * 1. Initializing a network with defectorPercent, generate2D4N network
@@ -108,6 +114,8 @@ public class PlayPDGQ {
         }
     }
 
+
+
     /**
      * Enable an agent to update its strategy
      * Enable the agent to Randomly choose a survived neighbor to imitate and update its own strategy
@@ -117,23 +125,27 @@ public class PlayPDGQ {
      * @Return a boolean that mark the new strategy of the agent for the next trail
      */
     public boolean strategyUpdate(AgentQ a) {
+
             boolean result = a.getCooperate();
             int neighborNum = a.neighborNum();
-            if (neighborNum == 0){
-                return result;
+            if(!a.isActivated()){ //if the agent is not activated but have at least one neighbor got activated, then activate the agent
+                for(Integer i : a.getAdjLists()){
+                    AgentQ b = N.agentsList.get(i);
+                    if(b.isActivated()){
+                        a.activate();
+                        break;
+                    }
+                }
+            } else{
+                genRTable(a);
+
             }
-            Random imiIndex = new Random();
-            int imiNeighbor = a.getAdjLists().get(imiIndex.nextInt(neighborNum));
-            AgentQ b = N.agentsList.get(imiNeighbor); //the agent to imitate
-        //System.out.println(b.getIndex() + ": " +b.getEliminated());
-            double noise = 0.1;//constant value of uncertainty in assessing payoff
-            double Wij = (double)1 / (1 + Math.exp(-(b.getActualPayoffs() - a.getActualPayoffs()) / noise));
-            if (imiIndex.nextDouble() < Wij) {
-                result = b.getCooperate();
-            }
+
+
 
             return result;
     }
+
 
     /**
      * 1. Apply strategyUpdate(Network.Agent a) to all agents in the network.
@@ -160,6 +172,27 @@ public class PlayPDGQ {
                     N.cooperatorCount++;
                 }
         }
+    }
+
+    public void updateQTable(AgentQ a){
+        boolean coop = a.getCooperate();
+        for(Integer i : a.getAliveNeighbor()){
+            if(coop){
+                double newQValue = getNewQValue(a, i, 1);
+                a.setQTable(i, 1, newQValue);
+            }else{
+                double newQValue = getNewQValue(a, i, 0);
+                a.setQTable(i, 0, newQValue);
+            }
+        }
+    }
+
+    private static double getNewQValue(AgentQ a, int i, int coop) {
+        double TD;
+        double prev =  Math.max(a.getQTable()[a.getPrevState()][0], a.getQTable()[a.getPrevState()][1]);
+        TD = a.getRTable()[i][coop] + discountR*prev - a.getQTable()[i][coop];
+        double newQValue = a.getQTable()[i][coop] + learningR*TD;
+        return newQValue;
     }
 
     /**
@@ -220,19 +253,6 @@ public class PlayPDGQ {
      * @return a boolean of whether the network reaches a steady state
      */
     public boolean ifSteady(ArrayList<Double> eliminateRecord){
-        /*int size = eliminateRecord.size();
-
-        if ((eliminateRecord.get(size - 1).compareTo(1.0))==0) {
-            return true;
-        } else if (size > 5) {
-            if (eliminateRecord.get(size - 1).compareTo(eliminateRecord.get(size - 2))==0 &&
-                    eliminateRecord.get(size - 2).compareTo(eliminateRecord.get(size - 3))==0 &&
-                    eliminateRecord.get(size - 3).compareTo(eliminateRecord.get(size - 4))==0 &&
-                    eliminateRecord.get(size - 4).compareTo(eliminateRecord.get(size - 5))==0
-        )
-            return true;
-        }
-        return false;*/
        int size = eliminateRecord.size();
 
         if ((eliminateRecord.get(size - 1).compareTo(1.0))==0){
@@ -247,6 +267,34 @@ public class PlayPDGQ {
                 }
             }
         return false;
+    }
+
+    public void genRTable(AgentQ a){
+        double[][] rTable = a.getRTable();
+        for(int i = 0; i < rTable.length; i++){
+            AgentQ neigh = N.agentsList.get(a.getAdjLists().get(i));
+            if(!neigh.getEliminated()) {
+                Boolean coop =neigh.getCooperate();
+                for(int j = 0; j < rTable[0].length; j++){
+                    if(j==0){  //if the agent is defector
+                        if(coop==true){
+                            a.setRTable(i, j, T);
+                        }else{
+                            a.setQTable(i, j, 0);
+                        }
+                    }else{ //cooperator
+                        if(coop==true){
+                            a.setRTable(i, j, 1);
+                        }else{
+                            a.setQTable(i, j, 0);
+                        }
+                    }
+                }
+            } else{
+                continue;
+            }
+
+        }
     }
 
     /**

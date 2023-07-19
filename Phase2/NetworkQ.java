@@ -1,10 +1,14 @@
+package Phase2;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class NetworkQ {
     /** agentList stores an ArrayList of Agent object*/
     public ArrayList<AgentQ> agentsList;
+    public List<Integer> RLAgentList;
     public final int agentCount;//number of total agents in the network, alive or eliminated
     public int aliveAgentCount;//number of alive agents in the network
     public int cooperatorCount;//number of alive cooperators in the network
@@ -27,11 +31,11 @@ public class NetworkQ {
         }
 
         agentsList.get(agentCount/2).activate();
-
-        for (int i = 0; i < agentCount;i++){
-            agentsList.get(i).setCooperate(true);
+        RLAgentList.add(agentCount/2);
+        AgentQ Rl = agentsList.get(agentCount/2);
+        if(!Rl.getCooperate()){
+            cooperatorCount = numAgents - 1;
         }
-        cooperatorCount = numAgents - 1;
         activatedCount = 1;
         generate2D4NSquare();
     }
@@ -81,6 +85,10 @@ public class NetworkQ {
             addEdge(i, (i - 1 + 100) % 100 + (i/100)*100);
             addEdge(i, (i + 100) % agentCount);
             addEdge(i, (i - 100 + agentCount) % agentCount);
+            AgentQ a = agentsList.get(i);
+            for(int j = 0; j < 4; j++){
+                a.getAliveNeighbor().add(i);
+            }
         }
     }
 

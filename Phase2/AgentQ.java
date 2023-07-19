@@ -1,4 +1,6 @@
-import java.util.LinkedList;
+package Phase2;
+
+import java.util.*;
 
 /**
  * Agent class where each Agent is an Agent in the network
@@ -30,6 +32,15 @@ public class AgentQ {
      */
     private boolean activated;
 
+    private double[][] QTable;
+
+    private double[][] RTable;
+
+    private int prevState;
+    private int prevAction;
+
+    private Set<Integer> aliveNeighbor;
+
     /**
      * Agent constructor to construct an agent with a given index
      *
@@ -39,9 +50,14 @@ public class AgentQ {
         this.index = index;
         adjLists = new LinkedList<>();
         actualPayoffs = 0;//reset to 0 before each trail
-        cooperate = false; //initialize agent as defector, will reset them in functions in PlayPDG
+        cooperate = true; //initialize agent as defector, will reset them in functions in PlayPDG
         eliminated = false;//initialize the agent as not eliminated
         activated = false;//initialize the agent as not RL agent
+        QTable = null;
+        RTable = null;
+        prevState = -1;
+        prevAction = -1;
+        aliveNeighbor = new HashSet<>();
     }
 
     /**
@@ -139,6 +155,48 @@ public class AgentQ {
      */
     public void activate() {
         activated = true;
+        QTable = new double[4][2];
+        RTable = new double[4][2];
+        Random action = new Random();
+        setCooperate(action.nextBoolean());//randomly choose an action when an agent is first activated
+        prevAction = 0;
+        prevState = 0;
+    }
+
+    public double[][] getQTable() {
+        return QTable;
+    }
+
+    public void setQTable(int row, int col, double val) {
+        QTable[row][col] = val;
+    }
+
+    public double[][] getRTable() {
+        return RTable;
+    }
+
+    public void setRTable(int  row, int col, double val) {
+        RTable[row][col] = val;
+    }
+
+    public int getPrevState(){
+        return prevState;
+    }
+
+    public void setPrevState(int i){
+        prevState = i;
+    }
+
+    public int getPrevAction(){
+        return prevAction;
+    }
+
+    public void setPrevAction(int i){
+        prevAction = i;
+    }
+
+    public Set<Integer> getAliveNeighbor(){ //contains each neighbor's row index in the Q table
+        return aliveNeighbor;
     }
 
     /**
