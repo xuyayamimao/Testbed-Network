@@ -26,6 +26,7 @@ public class AgentQ {
      */
     private boolean cooperate;
     private boolean eliminated;
+    private int clock = 100;//within trainingPeriod iterations, exploration is allowed
 
     /**
      * boolean of whether an agent is activated as a RL agent

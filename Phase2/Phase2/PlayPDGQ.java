@@ -1,9 +1,10 @@
 package Phase2;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 public class PlayPDGQ {
     /**Network N in Network class*/
     public NetworkQ N;
@@ -36,12 +37,12 @@ public class PlayPDGQ {
     /**
      * Percentage of explore of an RL agent
      */
-    public static double exploreR = 0.25;
+    public static double exploreR = 0.1;
 
     /**
      * the chance of an dormant agent being activated when it has at least one activated neighbor
      */
-    public static int activateChance;
+    public static int activateChance = 25;
 
     /**This constructor includes:
      * 1. Initializing a network with defectorPercent, generate2D4N network
@@ -56,11 +57,10 @@ public class PlayPDGQ {
         int i = 1;
         ArrayList<Double> eliminateRecord = new ArrayList<>();
         eliminateRecord.add(0.0);
-        /*String dir = System.getProperty("user.dir");
+        String dir = System.getProperty("user.dir");
         new File(dir + "/experiment" + alpha +"/simulation" + simulationNum).mkdirs();
-        FileWriter NdRecord = new FileWriter(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/NdRecord.txt", true);
-
-         */
+        //FileWriter NdRecord = new FileWriter(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/NdRecord.txt", true);
+        FileWriter CDRecord = new FileWriter(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/CDRecord.txt");
         while(!ifSteady(eliminateRecord) ) {
            // NdRecord.write("Round" + i);
             //NdRecord.write("Num of Coop: " + N.cooperatorCount);
@@ -71,12 +71,14 @@ public class PlayPDGQ {
             //NdRecord.write("Num of Coop: " + N.cooperatorCount + "\n");
             //System.out.println("Defector Num: " + (N.aliveAgentCount-N.cooperatorCount));
             calculatePayoffsAll();
+            CDRecord.write("CD: " + printCDPair() +"\n");
             agentRemoveAll();
             updateRTableAll();
             updateQTableAll();
             N.printAllData();
             strategyUpdateAll();
-            N.printAllData();
+            //N.printAllData();
+            System.out.println(N.RLAgentList.size());
 
             double deadAgentPercent = ((double)N.agentCount - (double)N.aliveAgentCount)/(double)N.agentCount;
             eliminateRecord.add(deadAgentPercent);
@@ -92,6 +94,7 @@ public class PlayPDGQ {
         }
         //counter for how many times an agent played w/ a neighbor? -good way for testing
         //NdRecord.close();
+        CDRecord.close();
     }
 
     /**
@@ -380,17 +383,15 @@ public class PlayPDGQ {
      * @return a boolean of whether the network reaches a steady state
      */
     public boolean ifSteady(ArrayList<Double> eliminateRecord){
+        //1. if all are dead
+        //2. if all agents have become RL agents && their clock has expired (int trainingPeriod) ; have a counter of how many RL agent's clock has expired
+        //3. if all alive agents are Rl agents && percentage of dead agents remain the same for 1000 trials
+        //have a counter to the number of trials percentage of dead agents stays the same, continue playing until counter reaches 1000/reset counter when current is different from previous
         int size = eliminateRecord.size();
-
         if ((eliminateRecord.get(size - 1).compareTo(1.0))==0){
             return true;
-        }else if (size > 1){
-            //System.out.println("arraysize: "+ size);
-            //System.out.println("size-1: " +eliminateRecord.get(size - 1) );
-            //System.out.println("size-2: " +eliminateRecord.get(size - 2) );
-            return (eliminateRecord.get(size - 1).compareTo(eliminateRecord.get(size - 2))) == 0 &&
-                    (N.aliveAgentCount == N.cooperatorCount || (N.aliveAgentCount > 0 && N.cooperatorCount == 0));
         }
+
         return false;
     }
 
@@ -398,4 +399,28 @@ public class PlayPDGQ {
         int scale = (int) Math.pow(10, precision);
         return (double) Math.round(value * scale) / scale;
     }
+
+    public int printCDPair(){
+        int count = 0;
+        for(int i = 0; i < N.agentCount; i++){
+            AgentQ agentQ = N.agentsList.get(i);
+            if(agentQ.getCooperate()){
+                for(Integer j : agentQ.getAdjLists()){
+                    AgentQ neighbor = N.agentsList.get(j);
+                    if(!neighbor.getCooperate()){
+                        count++;
+                    }
+                }
+            }else{
+                for(Integer j : agentQ.getAdjLists()){
+                    AgentQ neighbor = N.agentsList.get(j);
+                    if(neighbor.getCooperate()){
+                        count++;
+                    }
+
+            }
+        }
+    }
+        return count/2;
+}
 }

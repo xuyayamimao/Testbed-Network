@@ -1,3 +1,5 @@
+package Phase1;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
