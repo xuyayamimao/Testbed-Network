@@ -8,7 +8,7 @@ import java.util.List;
 public class NetworkQ {
     /** agentList stores an ArrayList of Agent object*/
     public ArrayList<AgentQ> agentsList;
-    public List<Integer> RLAgentList;
+    public ArrayList<Integer> RLAgentList;//a list of indexes of RL agents
     public final int agentCount;//number of total agents in the network, alive or eliminated
     public int aliveAgentCount;//number of alive agents in the network
     public int cooperatorCount;//number of alive cooperators in the network
@@ -22,20 +22,23 @@ public class NetworkQ {
      */
     public NetworkQ(int numAgents){
         agentsList = new ArrayList<>();
+        RLAgentList = new ArrayList<>();
         agentCount = numAgents;
         aliveAgentCount = numAgents;
-
         for (int i = 0; i < numAgents; i++) {
             agentsList.add(new AgentQ(i));
         }
-
         agentsList.get(agentCount/2).activate();//activate the central agent
         RLAgentList.add(agentCount/2);//update RL agent list
         AgentQ Rl = agentsList.get(agentCount/2);
         if(!Rl.getCooperate()){
             cooperatorCount = numAgents - 1;
+        }else{
+            cooperatorCount = numAgents;
         }//update cooperate agent list
-        generate2D4NSquare();
+        //generate2D4NSquare();
+        generateTest2D4N();
+        initializeQNeighborList();//initialize every AgentQ's QNeighborList when generating a new NetworkQ
     }
 
 
@@ -77,15 +80,39 @@ public class NetworkQ {
         return  false;
     }
 
+    /**
+     * initialize the NetworkQ as a square 2D4N network with 10000 agents
+     * same as the cascading failure paper
+     */
     public void generate2D4NSquare(){
         for (int i = 0; i <agentCount; i++){
             addEdge(i, (i + 1) % 100 + (i/100)*100);
             addEdge(i, (i - 1 + 100) % 100 + (i/100)*100);
             addEdge(i, (i + 100) % agentCount);
             addEdge(i, (i - 100 + agentCount) % agentCount);
-            AgentQ a = agentsList.get(i);
+        }
+    }
+
+    public void generateTest2D4N(){
+        for (int i = 0; i < agentCount; i++) {
+            addEdge(i, (i + 1) % agentCount);
+            addEdge(i, (i + 2) % agentCount);
+            addEdge(i, (i - 1 + agentCount) % agentCount);
+            addEdge(i, (i - 2 + agentCount) % agentCount);
+            //System.out.println((i - 2 + agentCount) % agentCount);
+        }
+    }
+
+    /**
+     * Initialize every AgentQ's QNeighborList as their initial neighbor list with four neighbors
+     */
+    public void initializeQNeighborList(){
+        for(int i = 0; i < agentCount; i++){
+            AgentQ agentQ = agentsList.get(i);
             for(int j = 0; j < 4; j++){
-                a.getAliveNeighbor().add(i);
+                int neighborIndex = agentQ.getAdjLists().get(j);
+                AgentQ neighbor = agentsList.get(neighborIndex);
+                agentQ.addToQNeighborList(neighbor);
             }
         }
     }
@@ -145,7 +172,6 @@ public class NetworkQ {
         System.out.print("\n");
 
         for(int i = 0; i < agentCount; i++){
-            AgentQ a = agentsList.get(i);
             for(int j = 0; j < agentCount; j++) {
                 if(isAdjacent(i,j)){
                     System.out.print("1 ");
@@ -182,6 +208,10 @@ public class NetworkQ {
 
         }
         System.out.println();
+        for (int i = 0; i < RLAgentList.size(); i++){
+            System.out.print(RLAgentList.get(i)+" ");
+        }
+
     }
 
 

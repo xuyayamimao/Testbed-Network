@@ -38,7 +38,7 @@ public class AgentQ {
 
     private int prevState;
 
-    private Set<Integer> aliveNeighbor;
+    private List<AgentQ> QNeighborList;//the list of an AgentQ's four neighbors, the AgentQs in the list don't change
 
     /**
      * Agent constructor to construct an agent with a given index
@@ -55,7 +55,7 @@ public class AgentQ {
         QTable = null;
         RTable = null;
         prevState = -1;
-        aliveNeighbor = new HashSet<>();
+        QNeighborList = new ArrayList<>();
     }
 
     /**
@@ -184,9 +184,12 @@ public class AgentQ {
         prevState = i;
     }
 
+    public List<AgentQ> getQNeighborList(){
+        return QNeighborList;
+    }
 
-    public Set<Integer> getAliveNeighbor(){ //contains each neighbor's row index in the Q table
-        return aliveNeighbor;
+    public void addToQNeighborList(AgentQ a){
+        QNeighborList.add(a);
     }
 
     /**

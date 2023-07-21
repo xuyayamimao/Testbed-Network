@@ -7,15 +7,16 @@ import java.io.FileWriter;
  */
 public class MainQ {
     public static void main(String[] args) throws Exception {
-        FileWriter experimentOut = new FileWriter("IMIexperimentOut.txt");
-        double initialTParameter = 0.45; //.3
+        //FileWriter experimentOut = new FileWriter("IMIexperimentOut.txt");
+        double initialAlpha = 0.45; //.3
         double NdAverage = 0.0;
         double initialB = 1.6;
-        for (int k = 0; k < 3; k++){
+        PlayPDGQ game = new PlayPDGQ(10, initialB, initialAlpha, 1);
+        /*for (int k = 0; k < 3; k++){
             double b = PlayPDGQ.round(initialB + k*0.2, 2);
             experimentOut.write("b Value: " + b + "\n");
             for (int j = 0; j < 10; j++){
-                double toleranceP = PlayPDGQ.round((initialTParameter + j*0.01), 2); //.23
+                double toleranceP = PlayPDGQ.round((initialAlpha + j*0.01), 2); //.23
                 experimentOut.write("Alpha Value: " + toleranceP + "\n");
                 for (int i = 0; i < 10; i++){
                     System.out.println("new simulation");
@@ -31,6 +32,7 @@ public class MainQ {
 
         }
 
-        experimentOut.close();
+        experimentOut.close();*/
+
     }
 }

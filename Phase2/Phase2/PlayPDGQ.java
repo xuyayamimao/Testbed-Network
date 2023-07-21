@@ -23,16 +23,32 @@ public class PlayPDGQ {
     /** Normal Payoff for 2D4N network where all agents in the network are cooperators*/
     public int normalPayoff = 4;
 
+    /**
+     * Learning rate in RL
+     */
     public static double learningR = 0.9;
 
+    /**
+     * Discount rate in RL
+     */
     public static double discountR = 0.75;
+
+    /**
+     * Percentage of explore of an RL agent
+     */
+    public static double exploreR = 0.25;
+
+    /**
+     * the chance of an dormant agent being activated when it has at least one activated neighbor
+     */
+    public static int activateChance;
 
     /**This constructor includes:
      * 1. Initializing a network with defectorPercent, generate2D4N network
      * 2. Create a directory based on simulationNum to store network after each round in text file (in Pajek format)
      * 3. Network continues playing PDG until reaching equilibrium state (either aliveAgentCount == 0, or cooperatorCount == aliveAgentCount)
      */
-    public PlayPDGQ(int agentNum, double T, double alpha, double defectorPercent, int simulationNum) throws Exception {
+    public PlayPDGQ(int agentNum, double T, double alpha, int simulationNum) throws Exception {
         if(agentNum<5) throw new Exception("Agent number must be large than 4");
         N= new NetworkQ(agentNum);
         this.T = T;
@@ -46,19 +62,21 @@ public class PlayPDGQ {
 
          */
         while(!ifSteady(eliminateRecord) ) {
-
            // NdRecord.write("Round" + i);
             //NdRecord.write("Num of Coop: " + N.cooperatorCount);
-            //System.out.println("Round" + i);
+            System.out.println("Round" + i);
             //System.out.println("Num of Coop: " + N.cooperatorCount);
             //N.printNetworkToFile(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
             //NdRecord.write("Num of survived agemts:" + N.aliveAgentCount);
             //NdRecord.write("Num of Coop: " + N.cooperatorCount + "\n");
-            System.out.println("Defector Num: " + (N.aliveAgentCount-N.cooperatorCount));
+            //System.out.println("Defector Num: " + (N.aliveAgentCount-N.cooperatorCount));
             calculatePayoffsAll();
             agentRemoveAll();
-            //N.printAllData();
+            updateRTableAll();
+            updateQTableAll();
+            N.printAllData();
             strategyUpdateAll();
+            N.printAllData();
 
             double deadAgentPercent = ((double)N.agentCount - (double)N.aliveAgentCount)/(double)N.agentCount;
             eliminateRecord.add(deadAgentPercent);
@@ -115,33 +133,35 @@ public class PlayPDGQ {
     }
 
 
-
     /**
      * Enable an agent to update its strategy
-     * Enable the agent to Randomly choose a survived neighbor to imitate and update its own strategy
-     * Probability for the agent to successfully imitate the picked neighbor's strategy depends
-     * on the actualPayoff the agent received in the trial and the amount of actualPayoff the picked
-     * neighbor received
-     * @Return a boolean that mark the new strategy of the agent for the next trail
+     * If the agent is not activated, and it has at least activated neighbor -> the agent has dice% chance or being activated
+     * If the agent is activated, then it either exploits or explores
+     * @param a AgentQ
+     * @return
      */
-    public boolean strategyUpdate(AgentQ a) {
-
-            boolean result = a.getCooperate();
-            int neighborNum = a.neighborNum();
+    public int strategyUpdate(AgentQ a) {
+            int result = (a.getCooperate()) ? 1 : 0;
             if(!a.isActivated()){ //if the agent is not activated but have at least one neighbor got activated, then activate the agent
                 for(Integer i : a.getAdjLists()){
                     AgentQ b = N.agentsList.get(i);
                     if(b.isActivated() && !b.getEliminated()){
                         Random r = new Random();
-                        if(r.nextInt(100) < 25){
-                            a.activate();
-                            break;
-                        }
+                        if(r.nextInt(100) < activateChance){
+                            result = 2;
+                        }//if at least one of AgentQ a's neighbor is activated, a has 25% chance of being activated
+                        break;
                     }
                 }
             } else{
-                genRTable(a);
-                result = actionSelect(a);
+                //if AgentQ is RL agent, then roll the dice and either explore or exploit
+                Random r = new Random();
+                int dice = r.nextInt(100);
+                if(dice < 100*exploreR){
+                    result = (explore()) ? 1 : 0;
+                }else{
+                    result = (exploit(a)) ? 1 : 0;
+                }
             }
             return result;
     }
@@ -152,7 +172,7 @@ public class PlayPDGQ {
      * @param a AgentQ
      * @return boolean of whether agent is a cooperator
      */
-    public boolean actionSelect(AgentQ a){
+    public boolean exploit(AgentQ a){
         int sumCoop = 0, sumDefect = 0;
         boolean result;
         for(int i = 0; i < 4; i++){
@@ -170,6 +190,11 @@ public class PlayPDGQ {
         return result;
     }
 
+    public boolean explore(){
+        Random r = new Random();
+        return r.nextBoolean();
+    }
+
 
     /**
      * 1. Apply strategyUpdate(Network.Agent a) to all agents in the network.
@@ -177,46 +202,75 @@ public class PlayPDGQ {
      * 3. Modify cooperatorCount according to agents' updated strategy
      */
     public void strategyUpdateAll() {
-        ArrayList<Boolean> newCoopList = new ArrayList<>();
+        ArrayList<Integer> newCoopList = new ArrayList<>();
+
         for (int i = 0; i < N.agentCount; i++) {
             AgentQ a = N.agentsList.get(i);
             if (!a.getEliminated()) {
                 newCoopList.add(strategyUpdate(a));
             }else{
-                newCoopList.add(a.getCooperate());
+                newCoopList.add((a.getCooperate()) ? 1 : 0);
             }
         }
         for (int i = 0; i < N.agentCount; i++) {
             AgentQ a = N.agentsList.get(i);
                boolean originalBoo=a.getCooperate();
-                a.setCooperate(newCoopList.get(i));
-                if (a.getCooperate() == false && originalBoo == true) {
+               if(newCoopList.get(i) == 0){
+                   a.setCooperate(false);
+               }else if(newCoopList.get(i) == 1){
+                   a.setCooperate(true);
+               }else{
+                   a.activate();
+                   N.RLAgentList.add(i);//if activated, update RLAgentList
+               }
+                if (!a.getCooperate() && originalBoo) {
                     N.cooperatorCount--;
-                } else if (a.getCooperate() == true && originalBoo == false) {
+                } else if (a.getCooperate() && !originalBoo) {
                     N.cooperatorCount++;
                 }
         }
     }
 
+    /**
+     * Update the Q-Table of AgentQ a in one round of the game
+     * @param a AgentQ
+     */
     public void updateQTable(AgentQ a){
         boolean coop = a.getCooperate();
-        for(Integer i : a.getAliveNeighbor()){
-            if(coop){
-                long newQValue = getNewQValue(a, i, 1);
-                a.setQTable(i, 1, newQValue);
-            }else{
-                long newQValue = getNewQValue(a, i, 0);
-                a.setQTable(i, 0, newQValue);
-            }
+        for(int i = 0; i < 4; i++){
+            if(!a.getQNeighborList().get(i).getEliminated()){//if the neighbor corresponding to a state is not eliminated
+                a.setPrevState(i);//we update the Agent's previous state as i
+                if(coop){
+                    long newQValue = getNewQValue(a, i, 1);
+                    a.setQTable(i, 1, newQValue);
+                }else{
+                    long newQValue = getNewQValue(a, i, 0);
+                    a.setQTable(i, 0, newQValue);
+                }
+            }//if the neighbor corresponding to the state i is eliminated, we jump to the next state to update Q-Value
         }
     }
 
+    public void updateQTableAll(){
+        for(int i = 0; i < N.RLAgentList.size(); i++){
+            int index = N.RLAgentList.get(i);
+            AgentQ agentQ = N.agentsList.get(index);
+            updateQTable(agentQ);
+        }
+    }
+
+    /**
+     * get the new Q-Value in a state-action pair
+     * @param a AgentQ
+     * @param i the state AgentQ a is in
+     * @param coop action of the AgentQ, 0 if defector, 1 if cooperator
+     * @return long value of the new Q-Value
+     */
     private static long getNewQValue(AgentQ a, int i, int coop) {
         long TD;
         long prev =  Math.max(a.getQTable()[a.getPrevState()][0], a.getQTable()[a.getPrevState()][1]);
         TD = (long) (a.getRTable()[i][coop] + discountR*prev - a.getQTable()[i][coop]);
-        long newQValue = (long) (a.getQTable()[i][coop] + learningR*TD);
-        return newQValue;
+        return (long) (a.getQTable()[i][coop] + learningR*TD);
     }
 
     /**
@@ -250,11 +304,13 @@ public class PlayPDGQ {
             AgentQ a = N.agentsList.get(i);
                 if(agentRemove(i)){
                     a.setEliminated(true);
-
                     N.aliveAgentCount--;
                     if (a.getCooperate()){
                         N.cooperatorCount--;
                 }
+                    if(a.isActivated()){
+                        N.RLAgentList.remove((Integer) i);
+                    }//if the removed agent is an RL agent, update RLAgentList
             }
 
         }
@@ -267,57 +323,47 @@ public class PlayPDGQ {
                 if (a.getCooperate()){
                     N.cooperatorCount--;
                 }
+                if(a.isActivated()){
+                    N.RLAgentList.remove((Integer) i);
+                }//if the removed agent is an RL agent, update RLAgentList
+            }
+        }
+    }
+
+
+    public void updateRTable(AgentQ a){
+        double[][] rTable = a.getRTable();
+        for(int i = 0; i < rTable.length; i++){
+            AgentQ neigh = a.getQNeighborList().get(i);
+            if(!neigh.getEliminated()) {
+                boolean coop =neigh.getCooperate();
+                for(int j = 0; j < rTable[0].length; j++){
+                    if(j==0){  //if the agent a is defector
+                        if(coop){//if the neighbor is cooperator
+                            a.setRTable(i, j, T);
+                        }else{//if the neighbor is a defector
+                            a.setQTable(i, j, 0);
+                        }
+                    }else{ //if the agent a is a cooperator
+                        if(coop){//if the neighbor is cooperator
+                            a.setRTable(i, j, 1);
+                        }else{//if the neighbor is a defector
+                            a.setQTable(i, j, 0);
+                        }
+                    }
+                }
             }
         }
     }
 
     /**
-     *
-     * @param eliminateRecord is an ArrayList<Double> that stores percentage of eliminated agents in every round
-     * @return a boolean of whether the network reaches a steady state
+     * Update the R-Table for all RL agents for them to calculate Q-Value
      */
-    public boolean ifSteady(ArrayList<Double> eliminateRecord){
-       int size = eliminateRecord.size();
-
-        if ((eliminateRecord.get(size - 1).compareTo(1.0))==0){
-            return true;
-        }else if (size > 1){
-            //System.out.println("arraysize: "+ size);
-            if ((eliminateRecord.get(size - 1).compareTo(eliminateRecord.get(size - 2)))==0 &&
-                    (N.aliveAgentCount == N.cooperatorCount || (N.aliveAgentCount > 0 && N.cooperatorCount == 0 ))){
-                    //System.out.println("size-1: " +eliminateRecord.get(size - 1) );
-                    //System.out.println("size-2: " +eliminateRecord.get(size - 2) );
-                    return true;
-                }
-            }
-        return false;
-    }
-
-    public void genRTable(AgentQ a){
-        double[][] rTable = a.getRTable();
-        for(int i = 0; i < rTable.length; i++){
-            AgentQ neigh = N.agentsList.get(a.getAdjLists().get(i));
-            if(!neigh.getEliminated()) {
-                Boolean coop =neigh.getCooperate();
-                for(int j = 0; j < rTable[0].length; j++){
-                    if(j==0){  //if the agent is defector
-                        if(coop==true){
-                            a.setRTable(i, j, T);
-                        }else{
-                            a.setQTable(i, j, 0);
-                        }
-                    }else{ //cooperator
-                        if(coop==true){
-                            a.setRTable(i, j, 1);
-                        }else{
-                            a.setQTable(i, j, 0);
-                        }
-                    }
-                }
-            } else{
-                continue;
-            }
-
+    public void updateRTableAll(){
+        for(int i = 0; i < N.RLAgentList.size(); i++){
+            int index = N.RLAgentList.get(i);
+            AgentQ agentQ = N.agentsList.get(index);
+            updateRTable(agentQ);
         }
     }
 
@@ -327,6 +373,27 @@ public class PlayPDGQ {
      * @param precision
      * @return a double
      */
+
+    /**
+     *
+     * @param eliminateRecord is an ArrayList<Double> that stores percentage of eliminated agents in every round
+     * @return a boolean of whether the network reaches a steady state
+     */
+    public boolean ifSteady(ArrayList<Double> eliminateRecord){
+        int size = eliminateRecord.size();
+
+        if ((eliminateRecord.get(size - 1).compareTo(1.0))==0){
+            return true;
+        }else if (size > 1){
+            //System.out.println("arraysize: "+ size);
+            //System.out.println("size-1: " +eliminateRecord.get(size - 1) );
+            //System.out.println("size-2: " +eliminateRecord.get(size - 2) );
+            return (eliminateRecord.get(size - 1).compareTo(eliminateRecord.get(size - 2))) == 0 &&
+                    (N.aliveAgentCount == N.cooperatorCount || (N.aliveAgentCount > 0 && N.cooperatorCount == 0));
+        }
+        return false;
+    }
+
     public static double round (double value, int precision) {
         int scale = (int) Math.pow(10, precision);
         return (double) Math.round(value * scale) / scale;
