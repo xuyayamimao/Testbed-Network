@@ -408,7 +408,7 @@ public class PlayPDGQ {
             return true;
         }else if(trialNum >= 2){
             if(eliminateRecord.get(size-1).compareTo(eliminateRecord.get(size-2)) != 0){
-                return false;
+                trialNum = 0; //
             }
         }
 
