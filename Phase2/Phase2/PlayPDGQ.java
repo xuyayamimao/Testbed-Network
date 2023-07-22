@@ -383,14 +383,44 @@ public class PlayPDGQ {
      * @return a boolean of whether the network reaches a steady state
      */
     public boolean ifSteady(ArrayList<Double> eliminateRecord){
-        //1. if all are dead
-        //2. if all agents have become RL agents && their clock has expired (int trainingPeriod) ; have a counter of how many RL agent's clock has expired
-        //3. if all alive agents are Rl agents && percentage of dead agents remain the same for 1000 trials
+
+
+
         //have a counter to the number of trials percentage of dead agents stays the same, continue playing until counter reaches 1000/reset counter when current is different from previous
         int size = eliminateRecord.size();
+        //1. if all are dead
         if ((eliminateRecord.get(size - 1).compareTo(1.0))==0){
             return true;
         }
+
+        //2. if all agents have become RL agents && their clock has expired (int trainingPeriod) ;
+        if(N.agentCount == N.RLAgentList.size()){
+            for(Integer RLAgentIndex: N.RLAgentList ){
+                if(N.agentsList.get(RLAgentIndex).clock != -1){
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        //3. if all alive agents are Rl agents && percentage of dead agents remain the same for 1000 trials
+        if(N.aliveAgentCount == N.RLAgentList.size()){
+            int beginIndex = eliminateRecord.size()-1000;
+            double beginValue = eliminateRecord.get(beginIndex);
+            for(int i = beginIndex; i < eliminateRecord.size(); i++){
+                if(i < eliminateRecord.size() - 1){
+                    if(eliminateRecord.get(i).compareTo(eliminateRecord.get(i+1)) != 0){
+                        return false;
+                    }
+                }else{
+                    return true;
+                }
+
+            }
+        }
+
+        // have a counter of how many RL agent's clock has expired
+
 
         return false;
     }
