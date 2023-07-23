@@ -26,7 +26,7 @@ public class AgentQ {
      */
     private boolean cooperate;
     private boolean eliminated;
-    public int clock = 100;//within trainingPeriod iterations, exploration is allowed
+    public int clock;//within trainingPeriod iterations, exploration is allowed
 
     /**
      * boolean of whether an agent is activated as a RL agent
@@ -158,7 +158,8 @@ public class AgentQ {
         RTable = new double[4][2];
         Random action = new Random();
         setCooperate(action.nextBoolean());//randomly choose an action when an agent is first activated
-        prevState = -1;
+        clock = 0;//initialize the clock to be 0
+        prevState = -1;//initialize prevState to be -1 because there isn't a prevState yet
     }
 
     public long[][] getQTable() {
@@ -191,6 +192,19 @@ public class AgentQ {
 
     public void addToQNeighborList(AgentQ a){
         QNeighborList.add(a);
+    }
+
+    public int getClock(){
+        return clock;
+    }
+
+    public int incrementClock(){
+        clock++;
+        return clock;
+    }
+
+    public void expireClock(){
+        clock = -1;
     }
 
     /**
