@@ -1,5 +1,6 @@
 package Phase2;
 
+import java.sql.SQLOutput;
 import java.util.*;
 
 /**
@@ -33,7 +34,7 @@ public class AgentQ {
      */
     private boolean activated;
 
-    private long[][] QTable;
+    private double[][] QTable;
 
     private double[][] RTable;
 
@@ -154,7 +155,7 @@ public class AgentQ {
      */
     public void activate() {
         activated = true;
-        QTable = new long[4][2];
+        QTable = new double[4][2];
         RTable = new double[4][2];
         Random action = new Random();
         setCooperate(action.nextBoolean());//randomly choose an action when an agent is first activated
@@ -162,11 +163,11 @@ public class AgentQ {
         prevState = -1;//initialize prevState to be -1 because there isn't a prevState yet
     }
 
-    public long[][] getQTable() {
+    public double[][] getQTable() {
         return QTable;
     }
 
-    public void setQTable(int row, int col, long val) {
+    public void setQTable(int row, int col, double val) {
         QTable[row][col] = val;
     }
 
@@ -174,36 +175,56 @@ public class AgentQ {
         return RTable;
     }
 
-    public void setRTable(int  row, int col, double val) {
+    public void printQTable(){
+        for(int i = 0; i < 4; i ++){
+            for(int j = 0; j < 2; j++){
+                System.out.print(QTable[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    public void printRTable(){
+        for(int i = 0; i < 4; i ++){
+            for(int j = 0; j < 2; j++){
+                System.out.print(RTable[i][j] + " ");
+            }
+            System.out.println();
+        }
+
+    }
+
+    public void setRTable(int row, int col, double val) {
         RTable[row][col] = val;
     }
 
-    public int getPrevState(){
+    public int getPrevState() {
         return prevState;
     }
 
-    public void setPrevState(int i){
+    public void setPrevState(int i) {
         prevState = i;
     }
 
-    public List<AgentQ> getQNeighborList(){
+    public List<AgentQ> getQNeighborList() {
         return QNeighborList;
     }
 
-    public void addToQNeighborList(AgentQ a){
+    public void addToQNeighborList(AgentQ a) {
         QNeighborList.add(a);
     }
 
-    public int getClock(){
+    public int getClock() {
         return clock;
     }
 
-    public int incrementClock(){
+    public int incrementClock() {
         clock++;
         return clock;
     }
 
-    public void expireClock(){
+    public void expireClock() {
         clock = -1;
     }
 

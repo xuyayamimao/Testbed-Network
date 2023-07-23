@@ -120,4 +120,21 @@ Algorithm:
 2. If RL <-> RL, then we don't update either's strategy; only if RL<-> normal agent, we update strategy with probability Wij 
 3. Initialize network with one RL agent in the middle, where everyone else is cooperating agents
 
+TODO:
+1.Testing
+- experiment1: b = 0, alpha = 0; and see if all RL agents become Rl agents, and all Rl agents learn to cooperate (because incentive to defect = 0)
+total payoff will decraese a bit from when all agents are cooperators, will fluctuate around this value a bit, if equilibrium is achieved, payoff shouldn't change anymore
+- experiment2: b=0, alpha=0.2 and see if RL agents can learn to cooperate, depend on clock,maybe not enough time is given to agents for learning. If weird things
+happened, check the clock, make it larger
+unless the exploration of agents cause deaths to other agents, total payoff will also achieve constant when equilibrium is achieved
+(above two experiments help us to check implementation)
+- experiment 3: b = 1, alpha = 0.2
+(experiment 3 are when we are good to go)
+2. How is RL agents spreading, too slow or too quick
+3. trainingPeriod clock = 100 (exploration allowed when iteratiion < 100) -> see if this number is too large or too small
+4. implement ifSteady
+5. what data we want to collect: alivePercentage, defectorPercentage, cooperatorPercentage, C|D pair, sum of payoff of every agents per trial (x, trial, y sum of payoff)
+what would be if every agents play as cooperator, what would be the total payoff(maximum possible payoff), calculate this for every trial/round
+
+
 
