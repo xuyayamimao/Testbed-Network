@@ -76,6 +76,7 @@ public class PlayPDGQ {
         trialNum = 0;
         eliminateRecord.add(0.0);
         AgentQ firstRl = N.agentsList.get(N.RLAgentList.get(0));
+        boolean firstRLCool = firstRl.getCooperate();
         //String dir = System.getProperty("user.dir");
         //new File(dir + "/experiment" + alpha + "/simulation" + simulationNum).mkdirs();
         //FileWriter NdRecord = new FileWriter(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/NdRecord.txt", true);
@@ -97,9 +98,11 @@ public class PlayPDGQ {
             updateRTableAll();
             updateQTableAll();
             //N.printAllData();
-            System.out.println(N.aliveAgentCount);
-            System.out.println(N.RLAgentList.size());
-            System.out.println(N.cooperatorCount);
+            System.out.println(firstRLCool);
+            System.out.println("alive agent num: " + N.aliveAgentCount);
+            System.out.println("RL agent num: " + N.RLAgentList.size());
+            System.out.println("expired clock num " + expiredClockCount);
+            System.out.println("cooperator count: " +N.cooperatorCount);
             //write a method to print cooperator count in RLAgentList
             strategyUpdateAll();
             //N.printAllData();
@@ -365,6 +368,9 @@ public class PlayPDGQ {
                 }
                 if (a.isActivated()) {
                     N.RLAgentList.remove((Integer) i);
+                    if (a.getClock() == -1) {
+                        expiredClockCount--;
+                    }//if the removed agent is RL agent whose clock has expired, update the number of expired clock
                 }//if the removed agent is an RL agent, update RLAgentList
             }
         }

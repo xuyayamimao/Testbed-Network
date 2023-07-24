@@ -40,7 +40,7 @@ public class NetworkQ {
             cooperatorCount = numAgents;
         }//update cooperate agent list
         //generate2D4NSquare();
-        generateTest2D4N();
+        generate2D4NSquare();
         initializeQNeighborList();//initialize every AgentQ's QNeighborList when generating a new NetworkQ
     }
 
