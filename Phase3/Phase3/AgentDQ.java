@@ -1,12 +1,11 @@
 package Phase2;
 
-import java.sql.SQLOutput;
 import java.util.*;
 
 /**
  * Agent class where each Agent is an Agent in the network
  */
-public class AgentQ {
+public class AgentDQ {
     /**
      * Index of the agent in Network.agentList
      */
@@ -34,29 +33,29 @@ public class AgentQ {
      */
     private boolean activated;
 
-    private double[][] QTable;
+    private double[][] QTableA;
+
+    private double[][] QTableB;
 
     private double[][] RTable;
 
-    private int prevState;
-
-    private List<AgentQ> QNeighborList;//the list of an AgentQ's four neighbors, the AgentQs in the list don't change
+    private List<AgentDQ> QNeighborList;//the list of an AgentQ's four neighbors, the AgentQs in the list don't change
 
     /**
      * Agent constructor to construct an agent with a given index
      *
      * @param index index of agent in Network.agentList
      */
-    public AgentQ(int index) {
+    public AgentDQ(int index) {
         this.index = index;
         adjLists = new LinkedList<>();
         actualPayoffs = 0;//reset to 0 before each trail
         cooperate = true; //initialize agent as defector, will reset them in functions in PlayPDG
         eliminated = false;//initialize the agent as not eliminated
         activated = false;//initialize the agent as not RL agent
-        QTable = null;
+        QTableA = null;
+        QTableB = null;
         RTable = null;
-        prevState = -1;
         QNeighborList = new ArrayList<>();
     }
 
@@ -155,30 +154,49 @@ public class AgentQ {
      */
     public void activate() {
         activated = true;
-        QTable = new double[4][2];
+        QTableA = new double[4][2];
+        QTableB = new double[4][2];
+        initializeQTables();
         RTable = new double[4][2];
         Random action = new Random();
         setCooperate(action.nextBoolean());//randomly choose an action when an agent is first activated
         clock = 0;//initialize the clock to be 0
-        prevState = -1;//initialize prevState to be -1 because there isn't a prevState yet
     }
 
-    public double[][] getQTable() {
-        return QTable;
+    public double[][] getQTableA() {
+        return QTableA;
     }
 
-    public void setQTable(int row, int col, double val) {
-        QTable[row][col] = val;
+    public void setQTableA(int row, int col, double val) {
+        QTableA[row][col] = val;
+    }
+
+    public double[][] getQTableB(){
+        return QTableB;
+    }
+
+    public void setQTableB(int row, int col, double val){
+        QTableB[row][col] = val;
     }
 
     public double[][] getRTable() {
         return RTable;
     }
 
-    public void printQTable(){
+    public void printQTableA(){
         for(int i = 0; i < 4; i ++){
             for(int j = 0; j < 2; j++){
-                System.out.print(QTable[i][j] + " ");
+                System.out.print(QTableA[i][j] + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+    }
+
+    public void printQTableB(){
+        for(int i = 0; i < 4; i ++){
+            for(int j = 0; j < 2; j++){
+                System.out.print(QTableB[i][j] + " ");
             }
             System.out.println();
         }
@@ -199,19 +217,11 @@ public class AgentQ {
         RTable[row][col] = val;
     }
 
-    public int getPrevState() {
-        return prevState;
-    }
-
-    public void setPrevState(int i) {
-        prevState = i;
-    }
-
-    public List<AgentQ> getQNeighborList() {
+    public List<AgentDQ> getQNeighborList() {
         return QNeighborList;
     }
 
-    public void addToQNeighborList(AgentQ a) {
+    public void addToQNeighborList(AgentDQ a) {
         QNeighborList.add(a);
     }
 
@@ -226,6 +236,19 @@ public class AgentQ {
 
     public void expireClock() {
         clock = -1;
+    }
+
+    /**
+     * Initialize the two Q-Tables with really small values
+     */
+    public void initializeQTables(){
+        Random r = new Random();
+        for(int i = 0; i < 4; i++){
+            for(int j = 0; j < 2; j++){
+                QTableA[i][j] = r.nextDouble(0.1);
+                QTableB[i][j] = r.nextDouble(0.1);
+            }
+        }
     }
 
     /**

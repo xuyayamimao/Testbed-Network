@@ -38,7 +38,7 @@ public class AgentQ {
 
     private double[][] RTable;
 
-    private int prevState;
+    //private int prevState;
 
     private List<AgentQ> QNeighborList;//the list of an AgentQ's four neighbors, the AgentQs in the list don't change
 
@@ -56,7 +56,7 @@ public class AgentQ {
         activated = false;//initialize the agent as not RL agent
         QTable = null;
         RTable = null;
-        prevState = -1;
+        //prevState = -1;
         QNeighborList = new ArrayList<>();
     }
 
@@ -156,11 +156,24 @@ public class AgentQ {
     public void activate() {
         activated = true;
         QTable = new double[4][2];
+        initializeQTable();
         RTable = new double[4][2];
         Random action = new Random();
         setCooperate(action.nextBoolean());//randomly choose an action when an agent is first activated
         clock = 0;//initialize the clock to be 0
-        prevState = -1;//initialize prevState to be -1 because there isn't a prevState yet
+        //prevState = -1;//initialize prevState to be -1 because there isn't a prevState yet
+    }
+
+    /**
+     * Initialize the Q-Table with really small values
+     */
+    public void initializeQTable(){
+        Random r = new Random();
+        for(int i = 0; i < 4; i++){
+            for(int j = 0; j < 2; j++){
+                QTable[i][j] = r.nextDouble(0.1);
+            }
+        }
     }
 
     public double[][] getQTable() {
@@ -199,13 +212,17 @@ public class AgentQ {
         RTable[row][col] = val;
     }
 
+    /*
     public int getPrevState() {
         return prevState;
     }
 
+
     public void setPrevState(int i) {
         prevState = i;
     }
+
+     */
 
     public List<AgentQ> getQNeighborList() {
         return QNeighborList;

@@ -76,7 +76,7 @@ public class PlayPDGQ {
         trialNum = 0;
         eliminateRecord.add(0.0);
         AgentQ firstRl = N.agentsList.get(N.RLAgentList.get(0));
-        boolean firstRLCool = firstRl.getCooperate();
+        boolean firstRLCoop = firstRl.getCooperate();
         //String dir = System.getProperty("user.dir");
         //new File(dir + "/experiment" + alpha + "/simulation" + simulationNum).mkdirs();
         //FileWriter NdRecord = new FileWriter(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/NdRecord.txt", true);
@@ -98,7 +98,7 @@ public class PlayPDGQ {
             updateRTableAll();
             updateQTableAll();
             //N.printAllData();
-            System.out.println(firstRLCool);
+            System.out.println(firstRLCoop);
             System.out.println("alive agent num: " + N.aliveAgentCount);
             System.out.println("RL agent num: " + N.RLAgentList.size());
             System.out.println("expired clock num " + expiredClockCount);
@@ -131,7 +131,7 @@ public class PlayPDGQ {
      *
      * @param index index of the agent in agentList
      */
-    public void calculatePayoffs(int index) {
+    public double calculatePayoffs(int index) {
         AgentQ a = N.agentsList.get(index);
         double result = 0;
         for (Integer a1 : a.getAdjLists()) {
@@ -149,6 +149,7 @@ public class PlayPDGQ {
         }//payoffs are the addition of all payoff with every neighbor
         result = round(result, 2);//round the result to prevent java double calculation error
         a.setActualPayoffs(result);
+        return result;
     }
 
     /**
@@ -156,9 +157,11 @@ public class PlayPDGQ {
      * 2. Skip agents that are already eliminated
      */
     public void calculatePayoffsAll() {
+        int sumOfPayoffsAll = 0;
         for (int i = 0; i < N.agentCount; i++) {
             if (!N.agentsList.get(i).getEliminated()) {
-                calculatePayoffs(i);
+                sumOfPayoffsAll += calculatePayoffs(i);
+
             }
             //System.out.println(N.agentsList.get(i).actualPayoffs);
         }
@@ -278,11 +281,13 @@ public class PlayPDGQ {
                     double newQValue = getNewQValue(a, i, 0);
                     a.setQTable(i, 0, newQValue);
                 }
-                a.setPrevState(i);//we update the Agent's previous state as i
             }//if the neighbor corresponding to the state i is eliminated, we jump to the next state to update Q-Value
         }
     }
 
+    /**
+     * Update Q-Table for all RL agents in RLAgentList
+     */
     public void updateQTableAll() {
         for (int i = 0; i < N.RLAgentList.size(); i++) {
             int index = N.RLAgentList.get(i);
@@ -297,17 +302,13 @@ public class PlayPDGQ {
      * @param a    AgentQ
      * @param i    the state AgentQ a is in
      * @param coop action of the AgentQ, 0 if defector, 1 if cooperator
-     * @return long value of the new Q-Value
+     * @return double value of the new Q-Value
      */
     private static double getNewQValue(AgentQ a, int i, int coop) {
-        double TD, prev;
-        if (a.getPrevState() == -1){
-            prev = 0;
-        }
-        else{
-            prev = Math.max(a.getQTable()[a.getPrevState()][0], a.getQTable()[a.getPrevState()][1]);
-        }
-        TD = a.getRTable()[i][coop] + discountR * prev - a.getQTable()[i][coop];
+        int nextState = (i + 1) % 4;//the next state
+        double TD, maxFutureReward;
+        maxFutureReward = Math.max(a.getQTable()[nextState][0], a.getQTable()[nextState][1]);
+        TD = a.getRTable()[i][coop] + discountR * maxFutureReward - a.getQTable()[i][coop];
         return (a.getQTable()[i][coop] + learningR * TD);
     }
 

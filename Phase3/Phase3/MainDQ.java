@@ -1,17 +1,17 @@
 package Phase2;
 
-import java.util.*;
+import java.util.Random;
 
 /**
  * Class that runs the experiment
  */
-public class MainQ {
+public class MainDQ {
     public static void main(String[] args) throws Exception {
         //FileWriter experimentOut = new FileWriter("IMIexperimentOut.txt");
-        double initialAlpha = 0.2; //.3
+        double initialAlpha = 0; //.3
         double NdAverage = 0.0;
         double initialB = 0;
-        PlayPDGQ game = new PlayPDGQ(100, initialB, initialAlpha, 1);
+        PlayPDGDQ game = new PlayPDGDQ(10000, initialB, initialAlpha, 1);
         /*for (int k = 0; k < 3; k++){
             double b = PlayPDGQ.round(initialB + k*0.2, 2);
             experimentOut.write("b Value: " + b + "\n");
@@ -33,7 +33,5 @@ public class MainQ {
         }
 
         experimentOut.close();*/
-
-
     }
 }

@@ -122,7 +122,7 @@ Algorithm:
 
 TODO:
 1.Testing
-- experiment1: b = 0, alpha = 0; and see if all RL agents become Rl agents, and all Rl agents learn to cooperate (because incentive to defect = 0)
+- experiment1: b = 0, alpha = 0; and see if all alive agents become Rl agents, and all Rl agents learn to cooperate (because incentive to defect = 0)
 total payoff will decraese a bit from when all agents are cooperators, will fluctuate around this value a bit, if equilibrium is achieved, payoff shouldn't change anymore
 - experiment2: b=0, alpha=0.2 and see if RL agents can learn to cooperate, depend on clock,maybe not enough time is given to agents for learning. If weird things
 happened, check the clock, make it larger
@@ -137,4 +137,41 @@ unless the exploration of agents cause deaths to other agents, total payoff will
 what would be if every agents play as cooperator, what would be the total payoff(maximum possible payoff), calculate this for every trial/round
 
 
+Ziya&James 7.23
+1. Finished implemented ifSteady, clock of each agent
+2. Optimized strategyUpdateAll and deleted strategyUpdate
+3. Ran tests of b = 0, alpha = 0 and b=0, alpha=0.2
 
+
+Ziya&James 7.24 
+Testing of Phase1:
+1. experiment1: b = 0, alpha = 0: all 10000 alive agents are RL agents, 9968 of them are cooperators when the game ends in equilibrium 
+2. experiment2: b=0, alpha=0.2:
+   - when the first RL agent is initialized to be cooperator, it spreads the RL strategy to around 135 of other agents, but all RL agents eventually died when they explore to become defector, so the RL strategy stopped spreading -> the game ends in a loop
+   - when the first RL agent is initialized to be defector, it immedialy dies after the first round-> RL strategy stopped spreading with all other 99 agents as non-RL agents-> the game enter infinite loop
+3. experiment3: b = 0.9, alpha = 0.2:
+   - when the first agent is initialized to be a cooperator, the game ends in equilibrium, with the data in the final round as:
+	Round1237:
+	alive agent num: 3188
+	RL agent num: 3188
+	expired clock num 3188
+	cooperator count: 2024
+     	
+   - when the first agent is initialized to be a defector:
+	Round1237:
+	alive agent num: 3300
+	RL agent num: 3300
+	expired clock num 3300
+	cooperator count: 2045
+
+4. experiment4: b = 1, alpha = 0.2:
+   - when the first agent is initialized to be a cooperator, the game ends in equilibrium, with the data in the final round as:
+	alive agent num: 2697
+	RL agent num: 2697
+	expired clock num 2697
+	cooperator count: 1619
+   - when the first agent is initialized to be a defector:
+	alive agent num: 2821
+	RL agent num: 2821
+	expired clock num 2821
+	cooperator count: 1660

@@ -5,11 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NetworkQ {
+public class NetworkDQ {
     /**
      * agentList stores an ArrayList of Agent object
      */
-    public ArrayList<AgentQ> agentsList;
+    public ArrayList<AgentDQ> agentsList;
     public ArrayList<Integer> RLAgentList;//a list of indexes of RL agents
     public final int agentCount;//number of total agents in the network, alive or eliminated
     public int aliveAgentCount;//number of alive agents in the network
@@ -23,17 +23,17 @@ public class NetworkQ {
      *
      * @param numAgents number of agents
      */
-    public NetworkQ(int numAgents) {
+    public NetworkDQ(int numAgents) {
         agentsList = new ArrayList<>();
         RLAgentList = new ArrayList<>();
         agentCount = numAgents;
         aliveAgentCount = numAgents;
         for (int i = 0; i < numAgents; i++) {
-            agentsList.add(new AgentQ(i));
+            agentsList.add(new AgentDQ(i));
         }
         agentsList.get(agentCount / 2).activate();//activate the central agent
         RLAgentList.add(agentCount / 2);//update RL agent list
-        AgentQ Rl = agentsList.get(agentCount / 2);
+        AgentDQ Rl = agentsList.get(agentCount / 2);
         if (!Rl.getCooperate()) {
             cooperatorCount = numAgents - 1;
         } else {
@@ -53,8 +53,8 @@ public class NetworkQ {
      * @param a2 index of another agent
      */
     public void addEdge(int a1, int a2) {
-        AgentQ agentQ1 = agentsList.get(a1);
-        AgentQ agentQ2 = agentsList.get(a2);
+        AgentDQ agentQ1 = agentsList.get(a1);
+        AgentDQ agentQ2 = agentsList.get(a2);
         if (agentQ1.getAdjLists().contains(a2) || a1 == a2) {
             return;
         }
@@ -76,7 +76,7 @@ public class NetworkQ {
         if (a1 == a2) {
             return false;
         }
-        AgentQ a = agentsList.get(a1);
+        AgentDQ a = agentsList.get(a1);
         for (Integer i : a.getAdjLists()) {
             if (i == a2) {
                 return true;
@@ -113,10 +113,10 @@ public class NetworkQ {
      */
     public void initializeQNeighborList() {
         for (int i = 0; i < agentCount; i++) {
-            AgentQ agentQ = agentsList.get(i);
+            AgentDQ agentQ = agentsList.get(i);
             for (int j = 0; j < 4; j++) {
                 int neighborIndex = agentQ.getAdjLists().get(j);
-                AgentQ neighbor = agentsList.get(neighborIndex);
+                AgentDQ neighbor = agentsList.get(neighborIndex);
                 agentQ.addToQNeighborList(neighbor);
             }
         }
@@ -134,7 +134,7 @@ public class NetworkQ {
         for (int i = 0; i < agentCount; i++) {
             int printValue = i + 1;
             trialOutput.write(printValue + " " + "\"" + printValue + "\" ic ");
-            AgentQ a = agentsList.get(i);
+            AgentDQ a = agentsList.get(i);
             if (a.getEliminated()) {
                 trialOutput.write("Gray\n");
             } else {
@@ -149,7 +149,7 @@ public class NetworkQ {
         trialOutput.write("*Edges\n");
         for (int i = 0; i < agentCount; i++) {
             int printValue1 = i + 1;
-            AgentQ a = agentsList.get(i);
+            AgentDQ a = agentsList.get(i);
             if (!a.getEliminated()) {
                 for (int j = 0; j < a.neighborNum(); j++) {
                     int printValue2 = a.getAdjLists().get(j) + 1;
