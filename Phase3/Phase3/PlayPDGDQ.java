@@ -46,7 +46,7 @@ public class PlayPDGDQ {
     /**
      * the chance of an dormant agent being activated when it has at least one activated neighbor
      */
-    public static int activateChance = 25;
+    public static int activateChance = 15; //25
 
     public static int clockPeriod = 200;
 
@@ -76,6 +76,7 @@ public class PlayPDGDQ {
         trialNum = 0;
         eliminateRecord.add(0.0);
         AgentDQ firstRl = N.agentsList.get(N.RLAgentList.get(0));
+        boolean firstRLCoop = firstRl.getCooperate();
         //String dir = System.getProperty("user.dir");
         //new File(dir + "/experiment" + alpha + "/simulation" + simulationNum).mkdirs();
         //FileWriter NdRecord = new FileWriter(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/NdRecord.txt", true);
@@ -89,6 +90,7 @@ public class PlayPDGDQ {
             //NdRecord.write("Num of survived agemts:" + N.aliveAgentCount);
             //NdRecord.write("Num of Coop: " + N.cooperatorCount + "\n");
             //System.out.println("Defector Num: " + (N.aliveAgentCount-N.cooperatorCount));
+            System.out.println(firstRLCoop);
             firstRl.printQTableA();
             firstRl.printQTableB();
             firstRl.printRTable();
@@ -98,9 +100,13 @@ public class PlayPDGDQ {
             updateRTableAll();
             updateQTableAll();
             //N.printAllData();
-            System.out.println(N.aliveAgentCount);
-            System.out.println(N.RLAgentList.size());
-            System.out.println(N.cooperatorCount);
+            //System.out.println(N.aliveAgentCount);
+            //System.out.println(N.RLAgentList.size());
+            //System.out.println(N.cooperatorCount);
+            System.out.println("alive agent num: " + N.aliveAgentCount);
+            System.out.println("RL agent num: " + N.RLAgentList.size());
+            System.out.println("expired clock num " + expiredClockCount);
+            System.out.println("cooperator count: " +N.cooperatorCount);
             //write a method to print cooperator count in RLAgentList
             strategyUpdateAll();
             //N.printAllData();
@@ -391,6 +397,9 @@ public class PlayPDGDQ {
                 }
                 if (a.isActivated()) {
                     N.RLAgentList.remove((Integer) i);
+                    if (a.getClock() == -1) {
+                        expiredClockCount--;
+                    }//if the removed agent is RL agent whose clock has expired, update the number of expired clock
                 }//if the removed agent is an RL agent, update RLAgentList
             }
         }
