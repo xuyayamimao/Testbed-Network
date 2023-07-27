@@ -90,6 +90,7 @@ public class PlayPDGDQ {
         FileWriter DDRecord = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "newerVersion" + "/DDRecord.txt");
         FileWriter aliveAgent = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "newerVersion" + "/aliveAgent.txt");
         FileWriter payoffSum = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "newerVersion" + "/payoffSum.txt");
+        FileWriter payoffSumIfAllCoop = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "newerVersion" + "/payoffSum.txt");
         FileWriter RLAgent = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "newerVersion" + "/RLAgent.txt");
         while (!ifSteady(eliminateRecord)) {
             // NdRecord.write("Round" + i);
@@ -101,12 +102,14 @@ public class PlayPDGDQ {
             //NdRecord.write("Num of Coop: " + N.cooperatorCount + "\n");
             //System.out.println("Defector Num: " + (N.aliveAgentCount-N.cooperatorCount));
             double[] CDCCDDPairPercent = printCDCCDDPairPercent();
+            int totalPair = totalPair();
             CCRecord.write( CDCCDDPairPercent[1] + "\n");
             CDRecord.write(  CDCCDDPairPercent[0] + "\n");
             DDRecord.write( CDCCDDPairPercent[2] + "\n");
             aliveAgent.write((double)N.aliveAgentCount/N.agentCount + "\n");
             RLAgent.write((double)N.RLAgentList.size()/N.agentCount + "\n");
             payoffSum.write( calculatePayoffsAll() + "\n");
+            payoffSumIfAllCoop.write(totalPair + "\n");
 
             System.out.println(firstRLCoop);
             firstRl.printQTableA();
@@ -150,6 +153,7 @@ public class PlayPDGDQ {
         CCRecord.close();
         aliveAgent.close();
         payoffSum.close();
+        payoffSumIfAllCoop.close();
         RLAgent.close();
     }
 
