@@ -94,49 +94,32 @@ public class PlayPDGQ {
 
 
         while (!ifSteady(eliminateRecord)) {
-            // NdRecord.write("Round" + i);
-            //NdRecord.write("Num of Coop: " + N.cooperatorCount);
             System.out.println("Round" + i);
             //System.out.println("Num of Coop: " + N.cooperatorCount);
             //N.printNetworkToFile(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
-            //NdRecord.write("Num of survived agemts:" + N.aliveAgentCount);
-            //NdRecord.write("Num of Coop: " + N.cooperatorCount + "\n");
             double[] CDCCDDPairPercent = printCDCCDDPairPercent();
-           int totalPair = totalPair();
-            CCRecord.write( CDCCDDPairPercent[1] + "\n");
             CDRecord.write(  CDCCDDPairPercent[0] + "\n");
+            CCRecord.write( CDCCDDPairPercent[1] + "\n");
             DDRecord.write( CDCCDDPairPercent[2] + "\n");
+            payoffSumIfAllCoop.write(CDCCDDPairPercent[3] + "\n");
             aliveAgent.write((double)N.aliveAgentCount/N.agentCount + "\n");
             RLAgent.write((double)N.RLAgentList.size()/N.agentCount + "\n");
             payoffSum.write( calculatePayoffsAll() + "\n");
-            payoffSumIfAllCoop.write(totalPair() + "\n");
-
-
             //System.out.println("Defector Num: " + (N.aliveAgentCount-N.cooperatorCount));
             //firstRl.printQTable();
             //firstRl.printRTable();
             calculatePayoffsAll();
-            //CDRecord.write("CD: " + printCDPair() + "\n");
             agentRemoveAll();
             updateRTableAll();
             updateQTableAll();
             //N.printAllData();
-            /*
             System.out.println(firstRLCoop);
             System.out.println("alive agent num: " + N.aliveAgentCount);
             System.out.println("RL agent num: " + N.RLAgentList.size());
             System.out.println("expired clock num " + expiredClockCount);
             System.out.println("cooperator count: " +N.cooperatorCount);
             System.out.println("neighCheck");
-
-             */
             System.out.println("neighNum: " + CDCCDDPairPercent[3]);
-            for(AgentQ agent : N.agentsList) {
-                if(agent.getEliminated()){
-                    throw new Exception("wtf");
-                }
-            }
-            //write a method to print cooperator count in RLAgentList
             strategyUpdateAll();
             //N.printAllData();
 
@@ -540,7 +523,7 @@ public class PlayPDGQ {
         result[0] = (double) CDcount/totalPair;
         result[1] = (double) CCcount/totalPair;
         result[2] = (double) DDcount/totalPair;
-        result[3] = (double) totalPair;
+        result[3] = totalPair;
         return result;
     }
 }

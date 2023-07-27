@@ -39,8 +39,7 @@ public class NetworkDQ {
         } else {
             cooperatorCount = numAgents;
         }//update cooperate agent list
-        //generate2D4NSquare();
-        generateTest2D4N();
+        generate2D4NSquare();
         initializeQNeighborList();//initialize every AgentQ's QNeighborList when generating a new NetworkQ
     }
 
@@ -69,7 +68,7 @@ public class NetworkDQ {
      *
      * @param a1 index of one agent
      * @param a2 index of another agent
-     * @return a boolean of whether a1 and a2 are adjacent
+     * @return boolean of whether a1 and a2 are adjacent
      */
     public boolean isAdjacent(int a1, int a2) {
         if (agentsList.get(a1).getEliminated() || agentsList.get(a2).getEliminated()) return false;
