@@ -8,7 +8,7 @@ import java.util.*;
 public class MainQ {
     public static void main(String[] args) throws Exception {
         //FileWriter experimentOut = new FileWriter("IMIexperimentOut.txt");
-        double initialAlpha = 0.2; //.3
+        double initialAlpha = 0; //.3
         double NdAverage = 0.0;
         double initialB = 0;
         PlayPDGQ game = new PlayPDGQ(10000, initialB, initialAlpha, 1);
