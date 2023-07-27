@@ -175,3 +175,12 @@ Testing of Phase1:
 	RL agent num: 2821
 	expired clock num 2821
 	cooperator count: 1660
+
+Ziya&James 7.26
+Visualizations:
+1. D|C, C|C, D|D of one experiment in one line plot using different color | total 8 plots
+2. x: trials. y: Percentage of alive agents per trial of one experiment in one line plot | total 8 plots
+3. x: trials. y: The percentage of alive RL agents per trial of one experiment in one line plot | total 8 plots
+4. x: trials. y: sum of agents' payoffs per trial | total 8 plots 
+
+Total 8 excel forms with one experiment results in one form 
