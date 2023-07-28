@@ -184,3 +184,29 @@ Visualizations:
 4. x: trials. y: sum of agents' payoffs per trial | total 8 plots 
 
 Total 8 excel forms with one experiment results in one form 
+
+TODO:
+1. Pay attention to the scale of different visualizations, make sure they are consistent
+2. Percentage of alive agent && payoffSum side by side in the paper
+3. CC, DC, DD and Percentage of RL agents side by side (RL agents 
+3. Alive agent as one graph
+4. RL agent percentage as one graph
+5. In the CC DC DD plot, have a vertical line to show when all agents have become RL agents
+6. Calculate data of percentage of dumb agent by (AliveAgentPercentage - RLAgentPercentage)
+7. Choose one interesting simulation to create a network using Pajek, simulation ended up with fewer number of agents e.g. b = 1, alpha with fewer number of agents 
+8. Run experiments for 100 simulations -> and make visualizations for the average of them
+9. Have a counter for the number of cascading failures in the simulations, not include data for cascading failure in visualization, but we will tell the audience the percentage of cascading failures 
+
+Experiments, each with different parameter:
+1. Combo Q-Learning
+2. Combo Double Q-Learning
+3. Everybody as Q-Learning RL agents
+4. everybody as Double-Q Learning (if we have the time)
+
+For 1,3, and 2,3, make sure the parameters (e.g. clock&spread rate) are consistent 
+
+For testing two combos
+0.9, 0.2
+1, 0.2
+1.1 0.2
+For testing everybody as Q-Learning
