@@ -62,79 +62,81 @@ public class PlayPDGDQ {
     public int trialNum;
 
     /**
-     * This constructor includes:
-     * 1. Initializing a network with defectorPercent, generate2D4N network
-     * 2. Create a directory based on simulationNum to store network after each round in text file (in Pajek format)
-     * 3. Network continues playing PDG until reaching equilibrium state (either aliveAgentCount == 0, or cooperatorCount == aliveAgentCount)
+     * experimentData stores all experiment data we are collecting, every index in ArrayList represent a trial
+     * double[0] = aliveAgent percentage
+     * double[1] = RLAgent percentage
+     * double[2] = CC percentage
+     * double[3] = CD percentage
+     * double[4] = DD percentage
+     * double[5] = payoffSum
+     * double[6] = payoffSumIfAllCoop
      */
-    public PlayPDGDQ(int agentNum, double T, double alpha, int simulationNum) throws Exception {
+    ArrayList<double[]> experimentData;
+
+
+    /**
+     * Constructor of a new PlayPDGQ object
+     * @param agentNum number of agents in the network
+     * @param initialB b value
+     * @param initialAlpha alpha value
+     * @throws Exception
+     */
+    public PlayPDGDQ(int agentNum, double initialB, double initialAlpha) throws Exception {
         if (agentNum < 5) throw new Exception("Agent number must be large than 4");
         N = new NetworkDQ(agentNum);
-        this.T = T;
-        this.alpha = alpha;
-        int i = 1;//counter of rounds
-        ArrayList<Double> eliminateRecord = new ArrayList<>();
+        this.T = initialB;
+        this.alpha = initialAlpha;
         expiredClockCount = 0;
         trialNum = 0;
+        experimentData = new ArrayList<>();
+    }
+
+    /**
+     * Instance method that actually plays the game and return all game data of all trials
+     * @param simulationNum the current simulation
+     * @return an ArrayList<double[]> that stores all the data of all trials
+     * @throws Exception
+     */
+    public ArrayList<double[]> Play(int simulationNum) throws Exception {
+        ArrayList<Double> eliminateRecord = new ArrayList<>();
         eliminateRecord.add(0.0);
-        AgentDQ firstRl = N.agentsList.get(N.RLAgentList.get(0));
-        boolean firstRLCoop = firstRl.getCooperate();
-        //String dir = System.getProperty("user.dir");
-        //new File(dir + "/experiment" + alpha + "/simulation" + simulationNum).mkdirs();
-        //FileWriter NdRecord = new FileWriter(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/NdRecord.txt", true);
-        //FileWriter CDRecord = new FileWriter(dir + "/experiment" + alpha + "/simulation" + simulationNum + "/CDRecord.txt");
-        String dir = System.getProperty("user.dir");
-        new File(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum).mkdirs();
-        FileWriter CCRecord = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "/CCRecord.txt");
-        FileWriter CDRecord = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "/CDRecord.txt");
-        FileWriter DDRecord = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "/DDRecord.txt");
-        FileWriter aliveAgent = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "/aliveAgent.txt");
-        FileWriter payoffSum = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "/payoffSum.txt");
-        FileWriter payoffSumIfAllCoop = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "/payoffSumIfAllCoop.txt");
-        FileWriter RLAgent = new FileWriter(dir + "/experimentAlpha" + alpha + "b" + T + "/simulation" + simulationNum + "/RLAgent.txt");
+        //AgentDQ firstRl = N.agentsList.get(N.RLAgentList.get(0));
+        //boolean firstRLCoop = firstRl.getCooperate();
+        int round = 1;//counter of rounds
+
+
         while (!ifSteady(eliminateRecord)) {
-            System.out.println("Round" + i);
-            //System.out.println("Num of Coop: " + N.cooperatorCount);
-            //N.printNetworkToFile(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
-            //System.out.println("Defector Num: " + (N.aliveAgentCount-N.cooperatorCount));
+            System.out.println("Round" + round);
+            double[] array = new double[7];
             double[] CDCCDDPairPercent = printCDCCDDPairPercent();
-            CDRecord.write(  CDCCDDPairPercent[0] + "\n");
-            CCRecord.write( CDCCDDPairPercent[1] + "\n");
-            DDRecord.write( CDCCDDPairPercent[2] + "\n");
-            payoffSumIfAllCoop.write(CDCCDDPairPercent[3] + "\n");
-            aliveAgent.write((double)N.aliveAgentCount/N.agentCount + "\n");
-            RLAgent.write((double)N.RLAgentList.size()/N.agentCount + "\n");
-            payoffSum.write( calculatePayoffsAll() + "\n");
-            System.out.println(firstRLCoop);
-            firstRl.printQTableA();
-            firstRl.printQTableB();
-            firstRl.printRTable();
-            calculatePayoffsAll();
+            array[0] = (double)N.aliveAgentCount/N.agentCount;//aliveAgent percentage
+            array[1] = (double)N.RLAgentList.size()/N.agentCount;//RLAgent percentage
+            array[2] = CDCCDDPairPercent[1];//CC
+            array[3] = CDCCDDPairPercent[0];//CD
+            array[4] = CDCCDDPairPercent[2];//DD
+            array[5] = calculatePayoffsAll();//payoffSum
+            array[6] = CDCCDDPairPercent[3];//payoffSumIfAllCoop
+            experimentData.add(array);
+            //System.out.println(firstRLCoop);
+            //firstRl.printQTableA();
+            //firstRl.printQTableB();
+            //firstRl.printRTable();
             agentRemoveAll();
             updateRTableAll();
             updateQTableAll();
-            //N.printAllData();
+           /*
             System.out.println("alive agent num: " + N.aliveAgentCount);
             System.out.println("RL agent num: " + N.RLAgentList.size());
             System.out.println("expired clock num " + expiredClockCount);
             System.out.println("cooperator count: " +N.cooperatorCount);
+            N.printAllData();
+            */
             strategyUpdateAll();
-            //N.printAllData();
-
-
             double deadAgentPercent = ((double) N.agentCount - (double) N.aliveAgentCount) / (double) N.agentCount;
             eliminateRecord.add(deadAgentPercent);
-
-            //N.printNetwork();
-            i++;
+            round++;
         }
-        CDRecord.close();
-        DDRecord.close();
-        CCRecord.close();
-        aliveAgent.close();
-        payoffSum.close();
-        payoffSumIfAllCoop.close();
-        RLAgent.close();
+        return experimentData;
     }
 
     /**

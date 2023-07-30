@@ -1,13 +1,13 @@
-package Phase2;
+package Phase5;
 
 import java.io.File;
 import java.io.FileWriter;
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * Class that runs the experiment
  */
-public class MainQ {
+public class AllMainDQ {
     public static void main(String[] args) throws Exception {
         double initialAlpha;
         double initialB;
@@ -31,6 +31,7 @@ public class MainQ {
                 }
                 default -> throw new Exception("not possible");
             }
+            //create all files
             String dir = System.getProperty("user.dir");
             new File(dir + "/experimentAlpha" + initialAlpha + "b" + initialB).mkdirs();
             FileWriter CCRecord = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/CCRecord.txt");
@@ -42,11 +43,13 @@ public class MainQ {
             FileWriter RLAgent = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/RLAgent.txt");
             //otherData stores the trialNum when all agents have become RL Agents
             FileWriter otherData = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/otherData.txt");
-            ArrayList<double[]> data = new ArrayList<>();
-            int numOfCascadingFailure = 0;
+
+            ArrayList<double[]> data = new ArrayList<>();//store the data to print to file
+            int numOfCascadingFailure = 0;//counter for the number of cascading failures in one experiment
+
             for(int j = 0; j < 100; j++){//for loop for 100 simulations for each experiments
-                PlayPDGQ game = new PlayPDGQ(10000, initialB, initialAlpha);
-                ArrayList<double[]> temp = game.Play(j);
+                AllPlayPDGDQ game = new AllPlayPDGDQ(10000, initialB, initialAlpha);
+                ArrayList<double[]> temp = game.Play(j);//temp stores the data in one simulation
                 //if there's cascading failure in this simulation, we discard the data and update numOfCascading Failure
                 if((temp.get(temp.size()-1))[0] == 0.0){
                     numOfCascadingFailure++;
@@ -66,6 +69,7 @@ public class MainQ {
                 }
             }
 
+            //calculating the average of data across 100 trials and write corresponding data to file
             for (double[] datum : data) {
                 for (int k = 0; k < data.get(1).length; k++) {
                     datum[k] /= 100;
@@ -80,10 +84,11 @@ public class MainQ {
                         default -> throw new Exception("not possible");
                     }
                 }
-            }//calculating the average of data across 100 trials and write corresponding data to file
+            }
             otherData.write(numOfCascadingFailure + "\n");//write the number of cascading failures across 100 simulations to file
             System.out.println(data.size());
 
+            //close all files
             CDRecord.close();
             DDRecord.close();
             CCRecord.close();

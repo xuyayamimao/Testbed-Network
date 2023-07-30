@@ -1,13 +1,12 @@
-package Phase2;
+package Phase4;
 
-import java.io.*;
 import java.util.*;
 
-public class PlayPDGQ {
+public class AllPlayPDGQ {
     /**
      * Network N in Network class
      */
-    public NetworkQ N;
+    public AllNetworkQ N;
 
     /**
      * In PDG, T>R>P>S*; T>1
@@ -44,10 +43,6 @@ public class PlayPDGQ {
      */
     public static double exploreR = 0.1;//0.1
 
-    /**
-     * the chance of an dormant agent being activated when it has at least one activated neighbor
-     */
-    public static int activateChance = 25;
 
     public static int clockPeriod = 100;
 
@@ -80,9 +75,9 @@ public class PlayPDGQ {
      * @param initialAlpha alpha value
      * @throws Exception
      */
-    public PlayPDGQ(int agentNum, double initialB, double initialAlpha) throws Exception {
+    public AllPlayPDGQ(int agentNum, double initialB, double initialAlpha) throws Exception {
         if (agentNum < 5) throw new Exception("Agent number must be large than 4");
-        N = new NetworkQ(agentNum);
+        N = new AllNetworkQ(agentNum);
         this.T = initialB;
         this.alpha = initialAlpha;
         expiredClockCount = 0;
@@ -147,11 +142,11 @@ public class PlayPDGQ {
      * @param index index of the agent in agentList
      */
     public double calculatePayoffs(int index) {
-        AgentQ a = N.agentsList.get(index);
+        AllAgentQ a = N.agentsList.get(index);
         double result = 0;
         for (Integer a1 : a.getAdjLists()) {
-            AgentQ agentQ = N.agentsList.get(a1);
-            boolean neighborCooperate = agentQ.getCooperate();
+            AllAgentQ allAgentQ = N.agentsList.get(a1);
+            boolean neighborCooperate = allAgentQ.getCooperate();
             if (a.getCooperate()) {
                 if (neighborCooperate) {
                     result++;
@@ -192,62 +187,33 @@ public class PlayPDGQ {
         for (int i = 0; i < N.RLAgentList.size(); i++) {
             boolean result;
             int index = N.RLAgentList.get(i);
-            AgentQ agentQ = N.agentsList.get(index);
-            boolean originBool = agentQ.getCooperate();
-            if (agentQ.getClock() > -1) {//when the clock hasn't expired
-                agentQ.incrementClock();
+            AllAgentQ allAgentQ = N.agentsList.get(index);
+            boolean originBool = allAgentQ.getCooperate();
+            if (allAgentQ.getClock() > -1) {//when the agent's clock hasn't expired
+                allAgentQ.incrementClock();
                 Random r = new Random();
                 int dice = r.nextInt(100);
                 if (dice < 100 * exploreR) {
                     result = explore();
                 } else {
-                    result = exploit(agentQ);
+                    result = exploit(allAgentQ);
                 }
-                if (agentQ.incrementClock() > clockPeriod) {
-                    agentQ.expireClock();//if clock in the next round is larger than the set clockPeriod, the clock is expired and set to -1
+                if (allAgentQ.incrementClock() > clockPeriod) {
+                    allAgentQ.expireClock();//if clock in the next round is larger than the set clockPeriod, the clock is expired and set to -1
                     expiredClockCount++;//update the number of expired clock
                 }
             } else {//when the clock has expired
-                result = exploit(agentQ);
+                result = exploit(allAgentQ);
             }
 
             //update above agents' cooperate value, and update cooperateCount
-            agentQ.setCooperate(result);
-            if (originBool && !agentQ.getCooperate()) {
+            allAgentQ.setCooperate(result);
+            if (originBool && !allAgentQ.getCooperate()) {
                 N.cooperatorCount--;
-            } else if (!originBool && agentQ.getCooperate()) {
+            } else if (!originBool && allAgentQ.getCooperate()) {
                 N.cooperatorCount++;
             }
 
-        }
-
-        //generate new strategy for all RL agents' non-RL neighbor, either activate or not activate depending on the dice
-        ArrayList<Integer> newActivateList = new ArrayList<>();//list to store all indexes of newly activated RL agents
-        Set<Integer> visited = new HashSet<>();//a set to store all non-RL agents' who have has already rolled the dice
-        for (int i = 0; i < N.RLAgentList.size(); i++) {
-            int index = N.RLAgentList.get(i);
-            AgentQ agentQ = N.agentsList.get(index);
-            for (Integer neigbor : agentQ.getAdjLists()) {
-                AgentQ neighorAgent = N.agentsList.get(neigbor);
-                if (!neighorAgent.isActivated() && !visited.contains((Integer) neigbor)) {
-                    visited.add(neigbor);
-                    Random r = new Random();
-                    if (r.nextInt(100) < activateChance) {
-                        newActivateList.add(neigbor);
-                    }
-
-                }
-            }
-        }
-
-        //activate all new RL agents, update RLAgentList and cooperatorCount
-        for (Integer i : newActivateList) {
-            AgentQ agentQ = N.agentsList.get(i);
-            agentQ.activate();
-            N.RLAgentList.add(i);
-            if (!agentQ.getCooperate()) {
-                N.cooperatorCount--;
-            }
         }
     }
 
@@ -258,7 +224,7 @@ public class PlayPDGQ {
      * @param a AgentQ
      * @return boolean of whether agent is a cooperator
      */
-    public boolean exploit(AgentQ a) {
+    public boolean exploit(AllAgentQ a) {
         int sumCoop = 0, sumDefect = 0;
         boolean result;
         for (int i = 0; i < 4; i++) {
@@ -286,7 +252,7 @@ public class PlayPDGQ {
      *
      * @param a AgentQ
      */
-    public void updateQTable(AgentQ a) {
+    public void updateQTable(AllAgentQ a) {
         boolean coop = a.getCooperate();
         for (int i = 0; i < 4; i++) {
             if (!a.getQNeighborList().get(i).getEliminated()) {//if the neighbor corresponding to a state is not eliminated
@@ -307,8 +273,8 @@ public class PlayPDGQ {
     public void updateQTableAll() {
         for (int i = 0; i < N.RLAgentList.size(); i++) {
             int index = N.RLAgentList.get(i);
-            AgentQ agentQ = N.agentsList.get(index);
-            updateQTable(agentQ);
+            AllAgentQ allAgentQ = N.agentsList.get(index);
+            updateQTable(allAgentQ);
         }
     }
 
@@ -320,7 +286,7 @@ public class PlayPDGQ {
      * @param coop action of the AgentQ, 0 if defector, 1 if cooperator
      * @return double value of the new Q-Value
      */
-    private static double getNewQValue(AgentQ a, int i, int coop) {
+    private static double getNewQValue(AllAgentQ a, int i, int coop) {
         int nextState = (i + 1) % 4;//the next state
         double TD, maxFutureReward;
         maxFutureReward = Math.max(a.getQTable()[nextState][0], a.getQTable()[nextState][1]);
@@ -337,11 +303,11 @@ public class PlayPDGQ {
      * @throws Exception
      */
     public boolean agentRemove(int index) throws Exception {
-        AgentQ a = N.agentsList.get(index);
+        AllAgentQ a = N.agentsList.get(index);
         if (a.getActualPayoffs() < alpha * normalPayoff && !a.getEliminated()) {
             List<Integer> neighbors = a.getAdjLists(); //get all agents' neighbor's index
             for (Integer i : neighbors) {
-                AgentQ ai = N.agentsList.get(i);
+                AllAgentQ ai = N.agentsList.get(i);
                 ai.getAdjLists().remove((Integer) index);  //remove all edges between agent and its neighbor
             }
             return true;
@@ -358,7 +324,7 @@ public class PlayPDGQ {
     public void agentRemoveAll() throws Exception {
         if (N.aliveAgentCount == 0) throw new Exception("No agents in the network, can't remove agent. ");
         for (int i = 0; i < N.agentCount; i++) {
-            AgentQ a = N.agentsList.get(i);
+            AllAgentQ a = N.agentsList.get(i);
             if (agentRemove(i)) {
                 a.setEliminated(true);
                 N.aliveAgentCount--;
@@ -376,7 +342,7 @@ public class PlayPDGQ {
         }
 
         for (int i = 0; i < N.agentCount; i++) {
-            AgentQ a = N.agentsList.get(i);
+            AllAgentQ a = N.agentsList.get(i);
             if (a.neighborNum() == 0 && !a.getEliminated()) {
                 a.setEliminated(true);
                 N.aliveAgentCount--;
@@ -394,10 +360,10 @@ public class PlayPDGQ {
     }
 
 
-    public void updateRTable(AgentQ a) {
+    public void updateRTable(AllAgentQ a) {
         double[][] rTable = a.getRTable();
         for (int i = 0; i < rTable.length; i++) {
-            AgentQ neigh = a.getQNeighborList().get(i);
+            AllAgentQ neigh = a.getQNeighborList().get(i);
             if (!neigh.getEliminated()) {
                 boolean coop = neigh.getCooperate();
                 for (int j = 0; j < rTable[0].length; j++) {
@@ -425,8 +391,8 @@ public class PlayPDGQ {
     public void updateRTableAll() {
         for (int i = 0; i < N.RLAgentList.size(); i++) {
             int index = N.RLAgentList.get(i);
-            AgentQ agentQ = N.agentsList.get(index);
-            updateRTable(agentQ);
+            AllAgentQ allAgentQ = N.agentsList.get(index);
+            updateRTable(allAgentQ);
         }
     }
 
@@ -478,9 +444,9 @@ public class PlayPDGQ {
 
     public int totalPair(){
         int totalPair = 0;
-        for(AgentQ agentQ : N.agentsList){
-            if(!agentQ.getEliminated()){
-                totalPair += agentQ.neighborNum();
+        for(AllAgentQ allAgentQ : N.agentsList){
+            if(!allAgentQ.getEliminated()){
+                totalPair += allAgentQ.neighborNum();
             }
         }
         return totalPair;
@@ -490,10 +456,10 @@ public class PlayPDGQ {
         int CDcount = 0, CCcount = 0, DDcount = 0;
         double[] result = new double[4];
         for (int i = 0; i < N.agentCount; i++) {
-            AgentQ agentQ = N.agentsList.get(i);
-            if (agentQ.getCooperate()) {
-                for (Integer j : agentQ.getAdjLists()) {
-                    AgentQ neighbor = N.agentsList.get(j);
+            AllAgentQ allAgentQ = N.agentsList.get(i);
+            if (allAgentQ.getCooperate()) {
+                for (Integer j : allAgentQ.getAdjLists()) {
+                    AllAgentQ neighbor = N.agentsList.get(j);
                     if (!neighbor.getCooperate()) {
                         CDcount++;
                     } else { //if both agents cooperate
@@ -501,8 +467,8 @@ public class PlayPDGQ {
                     }
                 }
             } else {
-                for (Integer j : agentQ.getAdjLists()) {
-                    AgentQ neighbor = N.agentsList.get(j);
+                for (Integer j : allAgentQ.getAdjLists()) {
+                    AllAgentQ neighbor = N.agentsList.get(j);
                     if (neighbor.getCooperate()) {
                         CDcount++;
                     } else { //if both agents don't cooperate

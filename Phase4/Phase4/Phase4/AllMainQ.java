@@ -1,4 +1,4 @@
-package Phase2;
+package Phase4;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -7,7 +7,7 @@ import java.util.*;
 /**
  * Class that runs the experiment
  */
-public class MainQ {
+public class AllMainQ {
     public static void main(String[] args) throws Exception {
         double initialAlpha;
         double initialB;
@@ -45,7 +45,7 @@ public class MainQ {
             ArrayList<double[]> data = new ArrayList<>();
             int numOfCascadingFailure = 0;
             for(int j = 0; j < 100; j++){//for loop for 100 simulations for each experiments
-                PlayPDGQ game = new PlayPDGQ(10000, initialB, initialAlpha);
+                AllPlayPDGQ game = new AllPlayPDGQ(10000, initialB, initialAlpha);
                 ArrayList<double[]> temp = game.Play(j);
                 //if there's cascading failure in this simulation, we discard the data and update numOfCascading Failure
                 if((temp.get(temp.size()-1))[0] == 0.0){
