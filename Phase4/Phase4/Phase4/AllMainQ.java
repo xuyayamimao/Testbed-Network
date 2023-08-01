@@ -42,6 +42,7 @@ public class AllMainQ {
             FileWriter RLAgent = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/RLAgent.txt");
             //otherData stores the trialNum when all agents have become RL Agents
             FileWriter otherData = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/otherData.txt");
+            FileWriter trialNum = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/trialNum.txt");
             ArrayList<double[]> data = new ArrayList<>();
             int numOfCascadingFailure = 0;
             for(int j = 0; j < 100; j++){//for loop for 100 simulations for each experiments
@@ -54,19 +55,20 @@ public class AllMainQ {
                 else{
                     for(int k = 0; k < temp.size(); k++){
                         double[] array = temp.get(k);
-                        if(data.size() < k+1){
+                        if(data.size() < k + 1){
                             data.add(array);
                         }else{
                             for(int l = 0; l < array.length; l++){
                                 data.get(k)[l] += temp.get(k)[l];
                             }
-
                         }
                     }
                 }
             }
+            int round = 1;
 
             for (double[] datum : data) {
+                trialNum.write(round + "\n");
                 for (int k = 0; k < data.get(1).length; k++) {
                     datum[k] /= 100;
                     switch (k) {
@@ -80,6 +82,7 @@ public class AllMainQ {
                         default -> throw new Exception("not possible");
                     }
                 }
+                round++;
             }//calculating the average of data across 100 trials and write corresponding data to file
             otherData.write(numOfCascadingFailure + "\n");//write the number of cascading failures across 100 simulations to file
             System.out.println(data.size());
@@ -92,6 +95,7 @@ public class AllMainQ {
             payoffSumIfAllCoop.close();
             RLAgent.close();
             otherData.close();
+            trialNum.close();
         }
     }
 }

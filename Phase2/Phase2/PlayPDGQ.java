@@ -97,14 +97,14 @@ public class PlayPDGQ {
      * @throws Exception
      */
     public ArrayList<double[]> Play(int simulationNum) throws Exception {
-        ArrayList<Double> eliminateRecord = new ArrayList<>();
-        eliminateRecord.add(0.0);
+        //ArrayList<Double> eliminateRecord = new ArrayList<>();
+        //eliminateRecord.add(0.0);
         //AgentQ firstRl = N.agentsList.get(N.RLAgentList.get(0));
         //boolean firstRLCoop = firstRl.getCooperate();
         int round = 1;//counter of rounds
 
 
-        while (!ifSteady(eliminateRecord)) {
+        while (round <= 1400) {
             //System.out.println("Round" + round);
             double[] array = new double[7];
             //N.printNetworkToFile(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
@@ -134,7 +134,7 @@ public class PlayPDGQ {
             strategyUpdateAll();
             //N.printAllData();
             double deadAgentPercent = ((double) N.agentCount - (double) N.aliveAgentCount) / (double) N.agentCount;
-            eliminateRecord.add(deadAgentPercent);
+            //eliminateRecord.add(deadAgentPercent);
             round++;
         }
         return experimentData;
@@ -491,23 +491,25 @@ public class PlayPDGQ {
         double[] result = new double[4];
         for (int i = 0; i < N.agentCount; i++) {
             AgentQ agentQ = N.agentsList.get(i);
-            if (agentQ.getCooperate()) {
-                for (Integer j : agentQ.getAdjLists()) {
-                    AgentQ neighbor = N.agentsList.get(j);
-                    if (!neighbor.getCooperate()) {
-                        CDcount++;
-                    } else { //if both agents cooperate
-                        CCcount++;
+            if (!agentQ.getEliminated()) {
+                if (agentQ.getCooperate()) {
+                    for (Integer j : agentQ.getAdjLists()) {
+                        AgentQ neighbor = N.agentsList.get(j);
+                        if (!neighbor.getCooperate()) {
+                            CDcount++;
+                        } else { //if both agents cooperate
+                            CCcount++;
+                        }
                     }
-                }
-            } else {
-                for (Integer j : agentQ.getAdjLists()) {
-                    AgentQ neighbor = N.agentsList.get(j);
-                    if (neighbor.getCooperate()) {
-                        CDcount++;
-                    } else { //if both agents don't cooperate
-                        DDcount++;
+                } else {
+                    for (Integer j : agentQ.getAdjLists()) {
+                        AgentQ neighbor = N.agentsList.get(j);
+                        if (neighbor.getCooperate()) {
+                            CDcount++;
+                        } else { //if both agents don't cooperate
+                            DDcount++;
 
+                        }
                     }
                 }
             }

@@ -98,15 +98,15 @@ public class PlayPDGDQ {
      * @throws Exception
      */
     public ArrayList<double[]> Play(int simulationNum) throws Exception {
-        ArrayList<Double> eliminateRecord = new ArrayList<>();
-        eliminateRecord.add(0.0);
+        //ArrayList<Double> eliminateRecord = new ArrayList<>();
+        //eliminateRecord.add(0.0);
         //AgentDQ firstRl = N.agentsList.get(N.RLAgentList.get(0));
         //boolean firstRLCoop = firstRl.getCooperate();
         int round = 1;//counter of rounds
 
 
-        while (!ifSteady(eliminateRecord)) {
-            System.out.println("Round" + round);
+        while (round <= 2700) {
+            //System.out.println("Round" + round);
             double[] array = new double[7];
             double[] CDCCDDPairPercent = printCDCCDDPairPercent();
             array[0] = (double)N.aliveAgentCount/N.agentCount;//aliveAgent percentage
@@ -133,7 +133,7 @@ public class PlayPDGDQ {
             */
             strategyUpdateAll();
             double deadAgentPercent = ((double) N.agentCount - (double) N.aliveAgentCount) / (double) N.agentCount;
-            eliminateRecord.add(deadAgentPercent);
+            //eliminateRecord.add(deadAgentPercent);
             round++;
         }
         return experimentData;
@@ -382,7 +382,9 @@ public class PlayPDGDQ {
      * @throws Exception
      */
     public void agentRemoveAll() throws Exception {
-        if (N.aliveAgentCount == 0) throw new Exception("No agents in the network, can't remove agent. ");
+        if (N.aliveAgentCount == 0) {
+            return;
+        }
         for (int i = 0; i < N.agentCount; i++) {
             AgentDQ a = N.agentsList.get(i);
             if (agentRemove(i)) {
