@@ -32,7 +32,7 @@ public class PlayPDGQ {
     /**
      * Learning rate in RL
      */
-    public static double learningR = 0.9;
+    public static double learningR = 0.3;
 
     /**
      * Discount rate in RL
@@ -47,7 +47,7 @@ public class PlayPDGQ {
     /**
      * the chance of an dormant agent being activated when it has at least one activated neighbor
      */
-    public static int activateChance = 25;
+    public static int activateChance = 10;
 
     public static int clockPeriod = 100;
 

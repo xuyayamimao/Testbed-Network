@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="commons-lang3-3.13.0-javadoc">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/commons-lang3-3.13.0-bin/commons-lang3-3.13.0/commons-lang3-3.13.0-tests.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/commons-lang3-3.13.0-bin/commons-lang3-3.13.0/commons-lang3-3.13.0.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/Downloads/commons-lang3-3.13.0-bin/commons-lang3-3.13.0/commons-lang3-3.13.0-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Downloads/commons-lang3-3.13.0-bin/commons-lang3-3.13.0/commons-lang3-3.13.0-sources.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/commons-lang3-3.13.0-bin/commons-lang3-3.13.0/commons-lang3-3.13.0-test-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

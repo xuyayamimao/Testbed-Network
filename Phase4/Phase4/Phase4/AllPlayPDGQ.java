@@ -31,7 +31,8 @@ public class AllPlayPDGQ {
     /**
      * Learning rate in RL
      */
-    public static double learningR = 0.1;
+
+    public static double learningR = 0.3;
 
     /**
      * Discount rate in RL
@@ -326,9 +327,8 @@ public class AllPlayPDGQ {
      * @throws Exception
      */
     public void agentRemoveAll() throws Exception {
-        if (N.aliveAgentCount == 0) {
-            return;
-        }
+
+        if (N.aliveAgentCount == 0) return;
         for (int i = 0; i < N.agentCount; i++) {
             AllAgentQ a = N.agentsList.get(i);
             if (agentRemove(i)) {
