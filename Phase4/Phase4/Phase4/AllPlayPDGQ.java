@@ -31,12 +31,12 @@ public class AllPlayPDGQ {
     /**
      * Learning rate in RL
      */
-    public static double learningR = 0.9;
+    public static double learningR = 0.1;
 
     /**
      * Discount rate in RL
      */
-    public static double discountR = 0.75;
+    public static double discountR = 0.9;
 
     /**
      * Percentage of explore of an RL agent
@@ -54,6 +54,8 @@ public class AllPlayPDGQ {
     public int expiredClockCount;
 
     public int trialNum;
+
+    public int round;
 
 
     /**
@@ -83,6 +85,7 @@ public class AllPlayPDGQ {
         expiredClockCount = 0;
         trialNum = 0;
         experimentData = new ArrayList<>();
+        round = 1;
     }
 
     /**
@@ -96,21 +99,22 @@ public class AllPlayPDGQ {
         //eliminateRecord.add(0.0);
         //AgentQ firstRl = N.agentsList.get(N.RLAgentList.get(0));
         //boolean firstRLCoop = firstRl.getCooperate();
-        int round = 1;//counter of rounds
+        round = 1;//counter of rounds
 
 
         while (round <= 1200) {
             //System.out.println("Round" + round);
-            double[] array = new double[7];
+            double[] array = new double[8];
             //N.printNetworkToFile(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
             double[] CDCCDDPairPercent = printCDCCDDPairPercent();
-            array[0] = (double)N.aliveAgentCount/N.agentCount;//aliveAgent percentage
-            array[1] = (double)N.RLAgentList.size()/N.agentCount;//RLAgent percentage
-            array[2] = CDCCDDPairPercent[1];//CC
-            array[3] = CDCCDDPairPercent[0];//CD
-            array[4] = CDCCDDPairPercent[2];//DD
-            array[5] = calculatePayoffsAll();//payoffSum
-            array[6] = CDCCDDPairPercent[3];//payoffSumIfAllCoop
+            array[0] = round;
+            array[1] = (double)N.aliveAgentCount/N.agentCount;//aliveAgent percentage
+            array[2] = (double)N.RLAgentList.size()/N.agentCount;//RLAgent percentage
+            array[3] = CDCCDDPairPercent[1];//CC
+            array[4] = CDCCDDPairPercent[0];//CD
+            array[5] = CDCCDDPairPercent[2];//DD
+            array[6] = calculatePayoffsAll();//payoffSum
+            array[7] = CDCCDDPairPercent[3];//payoffSumIfAllCoop
             experimentData.add(array);
             //firstRl.printQTable();
             //firstRl.printRTable();
@@ -322,7 +326,9 @@ public class AllPlayPDGQ {
      * @throws Exception
      */
     public void agentRemoveAll() throws Exception {
-        if (N.aliveAgentCount == 0) throw new Exception("No agents in the network, can't remove agent. ");
+        if (N.aliveAgentCount == 0) {
+            return;
+        }
         for (int i = 0; i < N.agentCount; i++) {
             AllAgentQ a = N.agentsList.get(i);
             if (agentRemove(i)) {
@@ -481,6 +487,14 @@ public class AllPlayPDGQ {
             }
         }
         int totalPair = totalPair();
+        if(totalPair == 0){
+            result[0] = 0;
+            result[1] = 0;
+            result[2] = 0;
+            result[3] = 0;
+            return result;
+
+        }
         result[0] = (double) CDcount/totalPair;
         result[1] = (double) CCcount/totalPair;
         result[2] = (double) DDcount/totalPair;

@@ -75,6 +75,7 @@ public class MainQ {
             failedData.add(new Object[] {"Trial", "% of Alive Agents", "% of Activated Agents", "C|C %", "C|D %",
                     "D|D %", "Payoff Sum", "Payoff Sum if All Agents are Cooperators", " % of Dormant Agents"});
 
+
             for(int j = 0; j < 100; j++){//for loop for 100 simulations for each experiments
                 PlayPDGQ game = new PlayPDGQ(10000, initialB, initialAlpha);
                 ArrayList<double[]> temp = game.Play(j);//temp stores all data of the game, refer PlayPDGQ class instance variable experimentData
@@ -84,16 +85,16 @@ public class MainQ {
                 if(Double.compare((temp.get(temp.size()-1))[1], 0.0) == 0){
                     addDatatoList(failedData, temp);
                     numOfCascadingFailure++;
-                    System.out.println("failed");
+                    //System.out.println("failed");
                 }//if there isn't cascading failure in this simulation, we add the data into successfulData
                 else{
                     addDatatoList(successfullData, temp);
-                    System.out.println("success");
+                    //System.out.println("success");
                 }
             }
 
             //calculating the average of data across all successful simulations and generate excel form
-            for (int l = 2; l < successfullData.size(); l++) {
+            for (int l = 1; l < successfullData.size(); l++) {
                 Object[] trialData = successfullData.get(l);
                 for (int k = 0; k < successfullData.get(2).length; k++) {
                     double b = (double) trialData[k];
@@ -106,7 +107,7 @@ public class MainQ {
 
             ////calculating the average of data across all failed simulations and generate excel form
             rowid=0;//reset row number
-            for (int l = 2; l < failedData.size(); l++) {
+            for (int l = 1; l < failedData.size(); l++) {
                 Object[] trialData = failedData.get(l);
                 for (int k = 0; k < failedData.get(2).length; k++) {
                     double b = (double) trialData[k];
@@ -117,7 +118,7 @@ public class MainQ {
             writeDatatoExcel(failedData, spreadsheetFail, rowid);
 
             otherData.write(numOfCascadingFailure + "\n");//write the number of cascading failures across 100 simulations to file
-            FileOutputStream out = new FileOutputStream(dir + "/Hybrid_Q_Learning.xlsx");
+            FileOutputStream out = new FileOutputStream(dir + "/Hybrid_Q_Learning_learningR_" + PlayPDGQ.learningR + "discountR_" + PlayPDGQ.discountR + ".xlsx");
             workbook.write(out);
             out.close();
             System.out.println(successfullData.size());
