@@ -32,7 +32,7 @@ public class PlayPDGQ {
     /**
      * Learning rate in RL
      */
-    public static double learningR = 0.1;
+    public static double learningR = 1.0;
 
     /**
      * Discount rate in RL
@@ -60,17 +60,20 @@ public class PlayPDGQ {
 
     public int trialNum;
 
+    public int round;
+
 
     /**
      * experimentData stores all experiment data we are collecting, every index in ArrayList represent a trial
-     * double[0] = aliveAgent percentage
-     * double[1] = RLAgent percentage
-     * double[2] = CC percentage
-     * double[3] = CD percentage
-     * double[4] = DD percentage
-     * double[5] = payoffSum
-     * double[6] = payoffSumIfAllCoop
-     * double[7] = dormant agent percentage
+     * double[0] = trialNum;
+     * double[1] = aliveAgent percentage
+     * double[2] = RLAgent percentage
+     * double[3] = CC percentage
+     * double[4] = CD percentage
+     * double[5] = DD percentage
+     * double[6] = payoffSum
+     * double[7] = payoffSumIfAllCoop
+     * double[8] = dormant agent percentage
      */
     ArrayList<double[]> experimentData;
 
@@ -89,6 +92,7 @@ public class PlayPDGQ {
         expiredClockCount = 0;
         trialNum = 0;
         experimentData = new ArrayList<>();
+        round = 0;
     }
 
     /**
@@ -102,22 +106,24 @@ public class PlayPDGQ {
         //eliminateRecord.add(0.0);
         //AgentQ firstRl = N.agentsList.get(N.RLAgentList.get(0));
         //boolean firstRLCoop = firstRl.getCooperate();
-        int round = 1;//counter of rounds
+        round = 1;//counter of rounds
 
 
         while (round <= 1400) {
             //System.out.println("Round" + round);
-            double[] array = new double[8];
+            double[] array = new double[9];
             //N.printNetworkToFile(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
             double[] CDCCDDPairPercent = printCDCCDDPairPercent();
-            array[0] = (double)N.aliveAgentCount/N.agentCount;//aliveAgent percentage
-            array[1] = (double)N.RLAgentList.size()/N.agentCount;//RLAgent percentage
-            array[2] = CDCCDDPairPercent[1];//CC
-            array[3] = CDCCDDPairPercent[0];//CD
-            array[4] = CDCCDDPairPercent[2];//DD
-            array[5] = calculatePayoffsAll();//payoffSum
-            array[6] = CDCCDDPairPercent[3];//payoffSumIfAllCoop
-            array[7] = ((double)N.aliveAgentCount - N.RLAgentList.size())/N.agentCount;
+            array[0] = round;
+            array[1] = (double)N.aliveAgentCount/N.agentCount;//aliveAgent percentage
+            //System.out.println(array[1]);
+            array[2] = (double)N.RLAgentList.size()/N.agentCount;//RLAgent percentage
+            array[3] = CDCCDDPairPercent[1];//CC
+            array[4] = CDCCDDPairPercent[0];//CD
+            array[5] = CDCCDDPairPercent[2];//DD
+            array[6] = calculatePayoffsAll();//payoffSum
+            array[7] = CDCCDDPairPercent[3];//payoffSumIfAllCoop
+            array[8] = ((double)N.aliveAgentCount - N.RLAgentList.size())/N.agentCount;
             experimentData.add(array);
             //firstRl.printQTable();
             //firstRl.printRTable();
@@ -293,10 +299,10 @@ public class PlayPDGQ {
         for (int i = 0; i < 4; i++) {
             if (!a.getQNeighborList().get(i).getEliminated()) {//if the neighbor corresponding to a state is not eliminated
                 if (coop) {
-                    double newQValue = getNewQValue(a, i, 1);
+                    double newQValue = getNewQValue(a, i, 1, round);
                     a.setQTable(i, 1, newQValue);
                 } else {
-                    double newQValue = getNewQValue(a, i, 0);
+                    double newQValue = getNewQValue(a, i, 0, round);
                     a.setQTable(i, 0, newQValue);
                 }
             }//if the neighbor corresponding to the state i is eliminated, we jump to the next state to update Q-Value
@@ -322,12 +328,13 @@ public class PlayPDGQ {
      * @param coop action of the AgentQ, 0 if defector, 1 if cooperator
      * @return double value of the new Q-Value
      */
-    private static double getNewQValue(AgentQ a, int i, int coop) {
+    private static double getNewQValue(AgentQ a, int i, int coop, int trialNum) {
         int nextState = (i + 1) % 4;//the next state
         double TD, maxFutureReward;
+        double learningRate = learningR/trialNum;
         maxFutureReward = Math.max(a.getQTable()[nextState][0], a.getQTable()[nextState][1]);
         TD = a.getRTable()[i][coop] + discountR * maxFutureReward - a.getQTable()[i][coop];
-        return (a.getQTable()[i][coop] + learningR * TD);
+        return (a.getQTable()[i][coop] + learningRate * TD);
     }
 
     /**
@@ -358,7 +365,9 @@ public class PlayPDGQ {
      * @throws Exception
      */
     public void agentRemoveAll() throws Exception {
-        if (N.aliveAgentCount == 0) throw new Exception("No agents in the network, can't remove agent. ");
+        if (N.aliveAgentCount == 0) {
+            return;
+        }
         for (int i = 0; i < N.agentCount; i++) {
             AgentQ a = N.agentsList.get(i);
             if (agentRemove(i)) {

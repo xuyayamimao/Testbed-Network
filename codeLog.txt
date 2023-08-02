@@ -210,3 +210,9 @@ For testing two combos
 1, 0.2
 1.1 0.2
 For testing everybody as Q-Learning
+
+TODO:
+1. for the scale, make the scale 5% to see better the changes
+2. try to make the spread lower for hybrid Q-Learning 10% to see if the performance is better
+3. lower the learningR = 0.1 ; discount rate = 0.9
+4。 
