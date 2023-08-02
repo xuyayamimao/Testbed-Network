@@ -1,8 +1,16 @@
 package Phase4;
 
-import java.io.File;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.util.*;
+
+import jdk.jfr.Percentage;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import java.lang.Double;
 
 /**
  * Class that runs the experiment
@@ -11,7 +19,9 @@ public class AllMainQ {
     public static void main(String[] args) throws Exception {
         double initialAlpha;
         double initialB;
-        for(int i = 0; i < 4; i++){//for loop for the four testing experiments
+        for(int i = 1; i < 2; i++){//for loop for the four testing experiments
+            //create one excel workbook for all four experiments
+            XSSFWorkbook workbook = new XSSFWorkbook();
             switch (i) {
                 case 0 -> {
                     initialAlpha = 0.0;
@@ -32,7 +42,11 @@ public class AllMainQ {
                 default -> throw new Exception("not possible");
             }
             String dir = System.getProperty("user.dir");
-            new File(dir + "/experimentAlpha" + initialAlpha + "b" + initialB).mkdirs();
+            //use otherData.txt to store the number of cascading failure within the simulations
+            FileWriter otherData = new FileWriter(dir +  "/otherData.txt");
+
+
+            /*
             FileWriter CCRecord = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/CCRecord.txt");
             FileWriter CDRecord = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/CDRecord.txt");
             FileWriter DDRecord = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB +  "/DDRecord.txt");
@@ -43,59 +57,113 @@ public class AllMainQ {
             //otherData stores the trialNum when all agents have become RL Agents
             FileWriter otherData = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/otherData.txt");
             FileWriter trialNum = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/trialNum.txt");
-            ArrayList<double[]> data = new ArrayList<>();
-            int numOfCascadingFailure = 0;
+
+             */
+            //successfullData stores data of successful simulation
+            ArrayList<Object[]> successfullData = new ArrayList<>();
+            //failedData stores data of cascading failure simulation
+            ArrayList<Object[]> failedData = new ArrayList<>();
+
+            //create a new sheet in workbook to store data in successful simulations
+            XSSFSheet spreadsheetSuccess = workbook.createSheet("Alpha" + initialAlpha + "b" + initialB+ "Success");
+            //create a new sheet in workbook to store data in failed simulations
+            XSSFSheet spreadsheetFail = workbook.createSheet("Alpha" + initialAlpha + "b" + initialB+ "Fail");
+            int numOfCascadingFailure = 0;//initialize the number of cascading failure to be 0
+
+            //write the headings of both data; note that the heading is in index 0 of both ArrayList
+            successfullData.add(new Object[] {"Trial", "% of Alive Agents", "% of Activated Agents", "C|C %", "C|D %",
+                    "D|D %", "Payoff Sum", "Payoff Sum if All Agents are Cooperators"});
+            failedData.add(new Object[] {"Trial", "% of Alive Agents", "% of Activated Agents", "C|C %", "C|D %",
+                    "D|D %", "Payoff Sum", "Payoff Sum if All Agents are Cooperators"});
+
             for(int j = 0; j < 100; j++){//for loop for 100 simulations for each experiments
                 AllPlayPDGQ game = new AllPlayPDGQ(10000, initialB, initialAlpha);
-                ArrayList<double[]> temp = game.Play(j);
-                //if there's cascading failure in this simulation, we discard the data and update numOfCascading Failure
-                if((temp.get(temp.size()-1))[0] == 0.0){
+                ArrayList<double[]> temp = game.Play(j);//temp stores all data of the game, refer PlayPDGQ class instance variable experimentData
+                //if there's cascading failure in this simulation, we add the data to failedData
+                System.out.println(temp.get(temp.size()-1)[1]);
+                //compare element of index 1: alive agent percentage with 0, if same, then we have a cascading failure
+                if(Double.compare((temp.get(temp.size()-1))[1], 0.0) == 0){
+                    addDatatoList(failedData, temp);
                     numOfCascadingFailure++;
-                }//if there isn't cascading failure in this simulation, we add the data into data for calculating average and printing
+                    //System.out.println("failed");
+                }//if there isn't cascading failure in this simulation, we add the data into successfulData
                 else{
-                    for(int k = 0; k < temp.size(); k++){
-                        double[] array = temp.get(k);
-                        if(data.size() < k + 1){
-                            data.add(array);
-                        }else{
-                            for(int l = 0; l < array.length; l++){
-                                data.get(k)[l] += temp.get(k)[l];
-                            }
-                        }
-                    }
+                    addDatatoList(successfullData, temp);
+                    //System.out.println("success");
                 }
             }
-            int round = 1;
 
-            for (double[] datum : data) {
-                trialNum.write(round + "\n");
-                for (int k = 0; k < data.get(1).length; k++) {
-                    datum[k] /= 100;
-                    switch (k) {
-                        case 0 -> aliveAgent.write(datum[k] + "\n");
-                        case 1 -> RLAgent.write(datum[k] + "\n");
-                        case 2 -> CCRecord.write(datum[k] + "\n");
-                        case 3 -> CDRecord.write(datum[k] + "\n");
-                        case 4 -> DDRecord.write(datum[k] + "\n");
-                        case 5 -> payoffSum.write(datum[k] + "\n");
-                        case 6 -> payoffSumIfAllCoop.write(datum[k] + "\n");
-                        default -> throw new Exception("not possible");
-                    }
+            //calculating the average of data across all successful simulations and generate excel form
+            for (int l = 1; l < successfullData.size(); l++) {
+                Object[] trialData = successfullData.get(l);
+                for (int k = 0; k < successfullData.get(2).length; k++) {
+                    double b = (double) trialData[k];
+                    trialData[k] = b /(100 - numOfCascadingFailure);
+
                 }
-                round++;
-            }//calculating the average of data across 100 trials and write corresponding data to file
-            otherData.write(numOfCascadingFailure + "\n");//write the number of cascading failures across 100 simulations to file
-            System.out.println(data.size());
+            }
+            int rowid = 0;
+            writeDatatoExcel(successfullData, spreadsheetSuccess, rowid);
 
-            CDRecord.close();
-            DDRecord.close();
-            CCRecord.close();
-            aliveAgent.close();
-            payoffSum.close();
-            payoffSumIfAllCoop.close();
-            RLAgent.close();
+            ////calculating the average of data across all failed simulations and generate excel form
+            rowid=0;//reset row number
+            for (int l = 1; l < failedData.size(); l++) {
+                Object[] trialData = failedData.get(l);
+                for (int k = 0; k < failedData.get(2).length; k++) {
+                    double b = (double) trialData[k];
+                    trialData[k] = b /numOfCascadingFailure;
+
+                }
+            }
+            writeDatatoExcel(failedData, spreadsheetFail, rowid);
+
+            otherData.write(numOfCascadingFailure + "\n");//write the number of cascading failures across 100 simulations to file
+            FileOutputStream out = new FileOutputStream(dir + "/Q_Learning_learningR_" + AllPlayPDGQ.learningR + "discountR_" + AllPlayPDGQ.discountR + ".xlsx");
+            workbook.write(out);
+            out.close();
+            System.out.println(successfullData.size());
+            System.out.println(failedData.size());
             otherData.close();
-            trialNum.close();
+
         }
     }
+
+    private static void writeDatatoExcel(ArrayList<Object[]>Data, XSSFSheet spreadsheet, int rowid) {
+        XSSFRow rowFailed;
+        for (Object[] datum : Data) {
+            rowFailed = spreadsheet.createRow(rowid++);
+            int cellid = 0;
+            for (Object d : datum) {
+                Cell cell = rowFailed.createCell(cellid++);
+                if (d.getClass().equals(String.class)) {
+                    cell.setCellValue((String) d);
+                } else {
+                    cell.setCellValue((double) d);
+                }
+            }
+        }
+    }
+
+    private static void addDatatoList(ArrayList<Object[]>Data, ArrayList<double[]> temp) {
+        for(int k = 0; k < temp.size(); k++){
+            Object[] array = convert(temp.get(k));
+            if(Data.size() < k+2){
+                Data.add(k+1, array);
+            }else{
+                for(int l = 0; l < array.length; l++){
+                    double b = (double) Data.get(k+1)[l];
+                    Data.get(k+1)[l] = b+ temp.get(k)[l];
+                }
+            }
+        }
+    }
+
+    private static Object[] convert(double[] array) {
+        Object[] output = new Object[array.length];
+        for (int i = 0; i < array.length; i++) {
+            output[i] = array[i];
+        }
+        return output;
+    }
 }
+

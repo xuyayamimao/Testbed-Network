@@ -125,6 +125,8 @@ public class PlayPDGQ {
             array[7] = CDCCDDPairPercent[3];//payoffSumIfAllCoop
             array[8] = ((double)N.aliveAgentCount - N.RLAgentList.size())/N.agentCount;
             experimentData.add(array);
+            System.out.println("DD" + CDCCDDPairPercent[2]);
+            System.out.println("Total" +CDCCDDPairPercent[3]);
             //firstRl.printQTable();
             //firstRl.printRTable();
             agentRemoveAll();
@@ -526,6 +528,16 @@ public class PlayPDGQ {
             }
         }
         int totalPair = totalPair();
+        if(totalPair == 0){
+            result[0] = 0;
+            result[1] = 0;
+            result[2] = 0;
+            result[3] = 0;
+            return result;
+
+        }
+        System.out.println("DDCount:" + DDcount +"TotalPair:" + totalPair);
+
         result[0] = (double) CDcount/totalPair;
         result[1] = (double) CCcount/totalPair;
         result[2] = (double) DDcount/totalPair;
