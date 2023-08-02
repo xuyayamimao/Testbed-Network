@@ -32,12 +32,12 @@ public class PlayPDGQ {
     /**
      * Learning rate in RL
      */
-    public static double learningR = 1.0;
+    public static double learningR = 0.9;
 
     /**
      * Discount rate in RL
      */
-    public static double discountR = 0.9;
+    public static double discountR = 0.7;
 
     /**
      * Percentage of explore of an RL agent
