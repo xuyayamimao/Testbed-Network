@@ -32,12 +32,12 @@ public class PlayPDGQ {
     /**
      * Learning rate in RL
      */
-    public static double learningR = 0.9;
+    public static double learningR = 0.1;
 
     /**
      * Discount rate in RL
      */
-    public static double discountR = 0.75;
+    public static double discountR = 0.9;
 
     /**
      * Percentage of explore of an RL agent
@@ -70,6 +70,7 @@ public class PlayPDGQ {
      * double[4] = DD percentage
      * double[5] = payoffSum
      * double[6] = payoffSumIfAllCoop
+     * double[7] = dormant agent percentage
      */
     ArrayList<double[]> experimentData;
 
@@ -106,7 +107,7 @@ public class PlayPDGQ {
 
         while (round <= 1400) {
             //System.out.println("Round" + round);
-            double[] array = new double[7];
+            double[] array = new double[8];
             //N.printNetworkToFile(dir + "/experiment" + alpha +"/simulation" + simulationNum + "/" + "trial" + i + ".txt");
             double[] CDCCDDPairPercent = printCDCCDDPairPercent();
             array[0] = (double)N.aliveAgentCount/N.agentCount;//aliveAgent percentage
@@ -116,6 +117,7 @@ public class PlayPDGQ {
             array[4] = CDCCDDPairPercent[2];//DD
             array[5] = calculatePayoffsAll();//payoffSum
             array[6] = CDCCDDPairPercent[3];//payoffSumIfAllCoop
+            array[7] = ((double)N.aliveAgentCount - N.RLAgentList.size())/N.agentCount;
             experimentData.add(array);
             //firstRl.printQTable();
             //firstRl.printRTable();
