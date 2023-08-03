@@ -19,8 +19,8 @@ public class AllMainQ {
     public static void main(String[] args) throws Exception {
         double initialAlpha;
         double initialB;
-        for(int i = 1; i < 2; i++){//for loop for the four testing experiments
-            //create one excel workbook for all four experiments
+
+        for(int i = 0; i < 4; i++){//for loop for the four testing experiments
             XSSFWorkbook workbook = new XSSFWorkbook();
             switch (i) {
                 case 0 -> {
@@ -45,20 +45,6 @@ public class AllMainQ {
             //use otherData.txt to store the number of cascading failure within the simulations
             FileWriter otherData = new FileWriter(dir +  "/otherData.txt");
 
-
-            /*
-            FileWriter CCRecord = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/CCRecord.txt");
-            FileWriter CDRecord = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/CDRecord.txt");
-            FileWriter DDRecord = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB +  "/DDRecord.txt");
-            FileWriter aliveAgent = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB  + "/aliveAgent.txt");
-            FileWriter payoffSum = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB  + "/payoffSum.txt");
-            FileWriter payoffSumIfAllCoop = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/payoffSumIfAllCoop.txt");
-            FileWriter RLAgent = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/RLAgent.txt");
-            //otherData stores the trialNum when all agents have become RL Agents
-            FileWriter otherData = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/otherData.txt");
-            FileWriter trialNum = new FileWriter(dir + "/experimentAlpha" + initialAlpha + "b" + initialB + "/trialNum.txt");
-
-             */
             //successfullData stores data of successful simulation
             ArrayList<Object[]> successfullData = new ArrayList<>();
             //failedData stores data of cascading failure simulation
@@ -76,20 +62,19 @@ public class AllMainQ {
             failedData.add(new Object[] {"Trial", "% of Alive Agents", "% of Activated Agents", "C|C %", "C|D %",
                     "D|D %", "Payoff Sum", "Payoff Sum if All Agents are Cooperators"});
 
+
             for(int j = 0; j < 100; j++){//for loop for 100 simulations for each experiments
                 AllPlayPDGQ game = new AllPlayPDGQ(10000, initialB, initialAlpha);
                 ArrayList<double[]> temp = game.Play(j);//temp stores all data of the game, refer PlayPDGQ class instance variable experimentData
-                //if there's cascading failure in this simulation, we add the data to failedData
+                //for printing of alive agent percentage
                 System.out.println(temp.get(temp.size()-1)[1]);
-                //compare element of index 1: alive agent percentage with 0, if same, then we have a cascading failure
+                //compare element of index 1: alive agent percentage with 0, if same, then we have a cascading failure, so we add temp to failedData
                 if(Double.compare((temp.get(temp.size()-1))[1], 0.0) == 0){
-                    addDatatoList(failedData, temp);
+                    addDataToList(failedData, temp);
                     numOfCascadingFailure++;
-                    //System.out.println("failed");
                 }//if there isn't cascading failure in this simulation, we add the data into successfulData
                 else{
-                    addDatatoList(successfullData, temp);
-                    //System.out.println("success");
+                    addDataToList(successfullData, temp);
                 }
             }
 
@@ -103,10 +88,9 @@ public class AllMainQ {
                 }
             }
             int rowid = 0;
-            writeDatatoExcel(successfullData, spreadsheetSuccess, rowid);
+            writeDataToExcel(successfullData, spreadsheetSuccess, rowid);
 
             ////calculating the average of data across all failed simulations and generate excel form
-            rowid=0;//reset row number
             for (int l = 1; l < failedData.size(); l++) {
                 Object[] trialData = failedData.get(l);
                 for (int k = 0; k < failedData.get(2).length; k++) {
@@ -115,10 +99,10 @@ public class AllMainQ {
 
                 }
             }
-            writeDatatoExcel(failedData, spreadsheetFail, rowid);
+            writeDataToExcel(failedData, spreadsheetFail, rowid);
 
             otherData.write(numOfCascadingFailure + "\n");//write the number of cascading failures across 100 simulations to file
-            FileOutputStream out = new FileOutputStream(dir + "/Q_Learning_learningR_" + AllPlayPDGQ.learningR + "discountR_" + AllPlayPDGQ.discountR + ".xlsx");
+            FileOutputStream out = new FileOutputStream(dir + "/Q_Learning_learningR" + AllPlayPDGQ.learningR + "_"+"discountR" + AllPlayPDGQ.discountR + ".xlsx");
             workbook.write(out);
             out.close();
             System.out.println(successfullData.size());
@@ -128,7 +112,13 @@ public class AllMainQ {
         }
     }
 
-    private static void writeDatatoExcel(ArrayList<Object[]>Data, XSSFSheet spreadsheet, int rowid) {
+    /**
+     * This method write all data from ArrayList<Object[]>Data to excel
+     * @param Data ArrayList<Object[]>
+     * @param spreadsheet a spreadsheet within an Excel workbook
+     * @param rowid for creating new row
+     */
+    private static void writeDataToExcel(ArrayList<Object[]>Data, XSSFSheet spreadsheet, int rowid) {
         XSSFRow rowFailed;
         for (Object[] datum : Data) {
             rowFailed = spreadsheet.createRow(rowid++);
@@ -144,7 +134,13 @@ public class AllMainQ {
         }
     }
 
-    private static void addDatatoList(ArrayList<Object[]>Data, ArrayList<double[]> temp) {
+    /**
+     * The method that add all data in temp to an ArrayList<Object[]> for writing to excel
+     * @param Data ArrayList<Object[]> that stores the data being written to excel
+     * @param temp ArrayList<double[]> stores the data generated by the game
+     */
+
+    private static void addDataToList(ArrayList<Object[]>Data, ArrayList<double[]> temp) {
         for(int k = 0; k < temp.size(); k++){
             Object[] array = convert(temp.get(k));
             if(Data.size() < k+2){
@@ -158,6 +154,11 @@ public class AllMainQ {
         }
     }
 
+    /**
+     * This method convert an array of double to an array of Object
+     * @param array array of double
+     * @return array of Object
+     */
     private static Object[] convert(double[] array) {
         Object[] output = new Object[array.length];
         for (int i = 0; i < array.length; i++) {

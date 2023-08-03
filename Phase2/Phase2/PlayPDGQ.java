@@ -32,7 +32,7 @@ public class PlayPDGQ {
     /**
      * Learning rate in RL
      */
-    public static double learningR = 0.4;
+    public static double learningR = 0.3;
 
     /**
      * Discount rate in RL
@@ -47,7 +47,7 @@ public class PlayPDGQ {
     /**
      * the chance of an dormant agent being activated when it has at least one activated neighbor
      */
-    public static int activateChance = 10;
+    public static int activateChance = 25;
 
     public static int clockPeriod = 100;
 
@@ -125,8 +125,8 @@ public class PlayPDGQ {
             array[7] = CDCCDDPairPercent[3];//payoffSumIfAllCoop
             array[8] = ((double)N.aliveAgentCount - N.RLAgentList.size())/N.agentCount;
             experimentData.add(array);
-            System.out.println("DD" + CDCCDDPairPercent[2]);
-            System.out.println("Total" +CDCCDDPairPercent[3]);
+            //System.out.println("DD" + CDCCDDPairPercent[2]);
+            //System.out.println("Total" +CDCCDDPairPercent[3]);
             //firstRl.printQTable();
             //firstRl.printRTable();
             agentRemoveAll();
@@ -333,10 +333,9 @@ public class PlayPDGQ {
     private static double getNewQValue(AgentQ a, int i, int coop, int trialNum) {
         int nextState = (i + 1) % 4;//the next state
         double TD, maxFutureReward;
-        double learningRate = learningR/trialNum;
         maxFutureReward = Math.max(a.getQTable()[nextState][0], a.getQTable()[nextState][1]);
         TD = a.getRTable()[i][coop] + discountR * maxFutureReward - a.getQTable()[i][coop];
-        return (a.getQTable()[i][coop] + learningRate * TD);
+        return (a.getQTable()[i][coop] + learningR * TD);
     }
 
     /**
@@ -536,7 +535,7 @@ public class PlayPDGQ {
             return result;
 
         }
-        System.out.println("DDCount:" + DDcount +"TotalPair:" + totalPair);
+        //System.out.println("DDCount:" + DDcount +"TotalPair:" + totalPair);
 
         result[0] = (double) CDcount/totalPair;
         result[1] = (double) CCcount/totalPair;
