@@ -18,8 +18,8 @@ public class MainQ {
     public static void main(String[] args) throws Exception {
         double initialAlpha;
         double initialB;
-        for(int i = 1; i < 2; i++){//for loop for the four testing experiments
-            //create one excel workbook for all four experiments
+
+        for(int i = 1; i < 4; i++){//for loop for the four testing experiments
             XSSFWorkbook workbook = new XSSFWorkbook();
             switch (i) {
                 case 0 -> {
