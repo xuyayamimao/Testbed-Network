@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/Phase4" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="commons-codec-1.15" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="file://$USER_HOME$/Downloads/poi-bin-5.1.0/lib" />
+          <root url="file://$USER_HOME$/Downloads/poi-bin-5.1.0/ooxml-lib" />
+          <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0/poi-5.1.0.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0/poi-examples-5.1.0.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0/poi-excelant-5.1.0.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0/poi-ooxml-5.1.0.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0/poi-ooxml-full-5.1.0.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0/poi-ooxml-lite-5.1.0.jar!/" />
+          <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0/poi-scratchpad-5.1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0/poi-javadoc-5.1.0.jar!/" />
+        </JAVADOC>
+        <SOURCES />
+        <jarDirectory url="file://$USER_HOME$/Downloads/poi-bin-5.1.0/lib" recursive="false" />
+        <jarDirectory url="file://$USER_HOME$/Downloads/poi-bin-5.1.0/ooxml-lib" recursive="false" />
+      </library>
+    </orderEntry>
+  </component>
+</module>
