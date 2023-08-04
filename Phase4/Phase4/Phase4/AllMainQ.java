@@ -20,7 +20,7 @@ public class AllMainQ {
         double initialAlpha;
         double initialB;
 
-        for(int i = 0; i < 4; i++){//for loop for the four testing experiments
+        for(int i = 0; i < 5; i++){//for loop for the four testing experiments
             XSSFWorkbook workbook = new XSSFWorkbook();
             switch (i) {
                 case 0 -> {
@@ -38,6 +38,10 @@ public class AllMainQ {
                 case 3 -> {
                     initialAlpha = 0.2;
                     initialB = 1.1;
+                }
+                case 4 -> {
+                    initialAlpha = 0.2;
+                    initialB = 2;
                 }
                 default -> throw new Exception("not possible");
             }
@@ -63,18 +67,35 @@ public class AllMainQ {
                     "D|D %", "Payoff Sum", "Payoff Sum if All Agents are Cooperators"});
 
 
-            for(int j = 0; j < 100; j++){//for loop for 100 simulations for each experiments
-                AllPlayPDGQ game = new AllPlayPDGQ(10000, initialB, initialAlpha);
-                ArrayList<double[]> temp = game.Play(j);//temp stores all data of the game, refer PlayPDGQ class instance variable experimentData
-                //for printing of alive agent percentage
-                System.out.println(temp.get(temp.size()-1)[1]);
-                //compare element of index 1: alive agent percentage with 0, if same, then we have a cascading failure, so we add temp to failedData
-                if(Double.compare((temp.get(temp.size()-1))[1], 0.0) == 0){
-                    addDataToList(failedData, temp);
-                    numOfCascadingFailure++;
-                }//if there isn't cascading failure in this simulation, we add the data into successfulData
-                else{
-                    addDataToList(successfullData, temp);
+            for (int m = 0; m < 100; m++) {//for loop for 100 simulations for each experiments
+                if(Double.compare(initialB, 1.1) == 0 || Double.compare(initialB, 2.0) == 0){
+                    AllPlayPDGQ game = new AllPlayPDGQ(10000, initialB, initialAlpha);
+                    ArrayList<double[]> temp = game.Play(m);//temp stores all data of the game, refer PlayPDGQ class instance variable experimentData
+                    if(m > 89) game.N.printNetworkToFile("Simulation" + m + "b"+initialB+"pajekFile.txt");
+                    //for printing of alive agent percentage
+                    System.out.println(temp.get(temp.size() - 1)[1]);
+                    //compare element of index 1: alive agent percentage with 0, if same, then we have a cascading failure, so we add temp to failedData
+                    if (Double.compare((temp.get(temp.size() - 1))[1], 0.0) == 0) {
+                        addDataToList(failedData, temp);
+                        numOfCascadingFailure++;
+                    }//if there isn't cascading failure in this simulation, we add the data into successfulData
+                    else {
+                        addDataToList(successfullData, temp);
+                    }
+                }else{
+                    AllPlayPDGQ game = new AllPlayPDGQ(10000, initialB, initialAlpha);
+                    ArrayList<double[]> temp = game.Play(m);//temp stores all data of the game, refer PlayPDGQ class instance variable experimentData
+                    //for printing of alive agent percentage
+                    System.out.println(temp.get(temp.size() - 1)[1]);
+                    //compare element of index 1: alive agent percentage with 0, if same, then we have a cascading failure, so we add temp to failedData
+                    if (Double.compare((temp.get(temp.size() - 1))[1], 0.0) == 0) {
+                        addDataToList(failedData, temp);
+                        numOfCascadingFailure++;
+                    }//if there isn't cascading failure in this simulation, we add the data into successfulData
+                    else {
+                        addDataToList(successfullData, temp);
+                    }
+
                 }
             }
 

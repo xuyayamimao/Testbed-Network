@@ -131,30 +131,30 @@ public class AllNetworkQ {
      */
     public void printNetworkToFile(String filename) throws IOException {
         FileWriter trialOutput = new FileWriter(filename);//open file for writing
-        trialOutput.write("*Vertices " + agentCount + "\n");
+        trialOutput.write("*Vertices " + aliveAgentCount + "\n");
+        ArrayList<AllAgentQ> aliveAgents = new ArrayList<>();
         for (int i = 0; i < agentCount; i++) {
-            int printValue = i + 1;
-            trialOutput.write(printValue + " " + "\"" + printValue + "\" ic ");
-            AllAgentQ a = agentsList.get(i);
-            if (a.getEliminated()) {
-                trialOutput.write("Gray\n");
-            } else {
-                if (a.getCooperate()) {
+            AllAgentQ agentQ = agentsList.get(i);
+            if(!agentQ.getEliminated()){
+                aliveAgents.add(agentQ);
+                int printValue = i + 1;
+                trialOutput.write(aliveAgents.size() + " " + "\"" + printValue + "\" ic ");
+                if (agentQ.getCooperate()) {
                     trialOutput.write("Blue\n");
                 } else {
-                    trialOutput.write("Black\n");
+                    trialOutput.write("Orange\n");
                 }
             }
         }//write all vertices in the network to file
 
         trialOutput.write("*Edges\n");
-        for (int i = 0; i < agentCount; i++) {
-            int printValue1 = i + 1;
-            AllAgentQ a = agentsList.get(i);
+        for(int i = 0; i < aliveAgentCount; i++){
+            AllAgentQ a = aliveAgents.get(i);
             if (!a.getEliminated()) {
                 for (int j = 0; j < a.neighborNum(); j++) {
-                    int printValue2 = a.getAdjLists().get(j) + 1;
-                    trialOutput.write(printValue1 + " " + printValue2 + "\n");
+                    AllAgentQ neighbor = agentsList.get(a.getAdjLists().get(j));
+                    int printValue2 = aliveAgents.indexOf(neighbor) + 1;
+                    trialOutput.write(i + 1 + " " + printValue2 + "\n");
                 }
             }
         }//write all edges in the network to file
