@@ -19,9 +19,8 @@ public class AllMainQ {
     public static void main(String[] args) throws Exception {
         double initialAlpha;
         double initialB;
-
-        for(int i = 0; i < 5; i++){//for loop for the four testing experiments
-            XSSFWorkbook workbook = new XSSFWorkbook();
+        XSSFWorkbook workbook1 = new XSSFWorkbook();
+        for (int i = 0; i < 11; i++) {//for loop for the four testing experiments
             switch (i) {
                 case 0 -> {
                     initialAlpha = 0.0;
@@ -41,13 +40,37 @@ public class AllMainQ {
                 }
                 case 4 -> {
                     initialAlpha = 0.2;
+                    initialB = 1.5;
+                }
+                case 5 -> {
+                    initialAlpha = 0.2;
+                    initialB = 2;
+                }
+                case 6 -> {
+                    initialAlpha = 0.25;
+                    initialB = 0.9;
+                }
+                case 7 -> {
+                    initialAlpha = 0.25;
+                    initialB = 1.0;
+                }
+                case 8 -> {
+                    initialAlpha = 0.25;
+                    initialB = 1.1;
+                }
+                case 9 -> {
+                    initialAlpha = 0.25;
+                    initialB = 1.5;
+                }
+                case 10 -> {
+                    initialAlpha = 0.25;
                     initialB = 2;
                 }
                 default -> throw new Exception("not possible");
             }
             String dir = System.getProperty("user.dir");
             //use otherData.txt to store the number of cascading failure within the simulations
-            FileWriter otherData = new FileWriter(dir +  "/otherData.txt");
+            FileWriter otherData = new FileWriter(dir + "/" + "alpha" +initialAlpha + "b" + initialB+ "numOfCascadingFailures.txt");
 
             //successfullData stores data of successful simulation
             ArrayList<Object[]> successfullData = new ArrayList<>();
@@ -55,23 +78,23 @@ public class AllMainQ {
             ArrayList<Object[]> failedData = new ArrayList<>();
 
             //create a new sheet in workbook to store data in successful simulations
-            XSSFSheet spreadsheetSuccess = workbook.createSheet("Alpha" + initialAlpha + "b" + initialB+ "Success");
+            XSSFSheet spreadsheetSuccess = workbook1.createSheet("Alpha" + initialAlpha + "b" + initialB + "Success");
             //create a new sheet in workbook to store data in failed simulations
-            XSSFSheet spreadsheetFail = workbook.createSheet("Alpha" + initialAlpha + "b" + initialB+ "Fail");
+            XSSFSheet spreadsheetFail = workbook1.createSheet("Alpha" + initialAlpha + "b" + initialB + "Fail");
             int numOfCascadingFailure = 0;//initialize the number of cascading failure to be 0
 
             //write the headings of both data; note that the heading is in index 0 of both ArrayList
-            successfullData.add(new Object[] {"Trial", "% of Alive Agents", "% of Activated Agents", "C|C %", "C|D %",
-                    "D|D %", "Payoff Sum", "Payoff Sum if All Agents are Cooperators"});
-            failedData.add(new Object[] {"Trial", "% of Alive Agents", "% of Activated Agents", "C|C %", "C|D %",
-                    "D|D %", "Payoff Sum", "Payoff Sum if All Agents are Cooperators"});
+            successfullData.add(new Object[]{"Trial", "% of Alive Agents", "% of Activated Agents", "C|C %", "C|D %",
+                    "D|D %", "Payoff Sum", "Payoff Sum if All Agents are Cooperators", " % of Dormant Agents"});
+            failedData.add(new Object[]{"Trial", "% of Alive Agents", "% of Activated Agents", "C|C %", "C|D %",
+                    "D|D %", "Payoff Sum", "Payoff Sum if All Agents are Cooperators", " % of Dormant Agents"});
 
 
             for (int m = 0; m < 100; m++) {//for loop for 100 simulations for each experiments
-                if(Double.compare(initialB, 1.1) == 0 || Double.compare(initialB, 2.0) == 0){
+                if(Double.compare(initialB, 1.1) == 0 || Double.compare(initialB, 1.5) == 0){
                     AllPlayPDGQ game = new AllPlayPDGQ(10000, initialB, initialAlpha);
                     ArrayList<double[]> temp = game.Play(m);//temp stores all data of the game, refer PlayPDGQ class instance variable experimentData
-                    if(m > 89) game.N.printNetworkToFile("Simulation" + m + "b"+initialB+"pajekFile.txt");
+                    if(m > 89) game.N.printNetworkToFile("Simulation" + m + "alpha" + initialAlpha + "b"+initialB+"pajekFile.txt");
                     //for printing of alive agent percentage
                     System.out.println(temp.get(temp.size() - 1)[1]);
                     //compare element of index 1: alive agent percentage with 0, if same, then we have a cascading failure, so we add temp to failedData
@@ -104,7 +127,7 @@ public class AllMainQ {
                 Object[] trialData = successfullData.get(l);
                 for (int k = 0; k < successfullData.get(2).length; k++) {
                     double b = (double) trialData[k];
-                    trialData[k] = b /(100 - numOfCascadingFailure);
+                    trialData[k] = b / (100 - numOfCascadingFailure);
 
                 }
             }
@@ -116,15 +139,15 @@ public class AllMainQ {
                 Object[] trialData = failedData.get(l);
                 for (int k = 0; k < failedData.get(2).length; k++) {
                     double b = (double) trialData[k];
-                    trialData[k] = b /numOfCascadingFailure;
+                    trialData[k] = b / numOfCascadingFailure;
 
                 }
             }
             writeDataToExcel(failedData, spreadsheetFail, rowid);
 
             otherData.write(numOfCascadingFailure + "\n");//write the number of cascading failures across 100 simulations to file
-            FileOutputStream out = new FileOutputStream(dir + "/Q_Learning_learningR" + AllPlayPDGQ.learningR + "_"+"discountR" + AllPlayPDGQ.discountR + ".xlsx");
-            workbook.write(out);
+            FileOutputStream out = new FileOutputStream(dir + "/Q_Learning_learningR" + AllPlayPDGQ.learningR + "_" + "discountR" + AllPlayPDGQ.discountR + ".xlsx");
+            workbook1.write(out);
             out.close();
             System.out.println(successfullData.size());
             System.out.println(failedData.size());
