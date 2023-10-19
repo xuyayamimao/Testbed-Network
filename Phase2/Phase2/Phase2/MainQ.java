@@ -18,7 +18,7 @@ public class MainQ {
         double initialAlpha;
         double initialB;
             XSSFWorkbook workbook1 = new XSSFWorkbook();
-            for (int i = 0; i < 5; i++) {//for loop for the four testing experiments
+            for (int i = 0; i < 11; i++) {//for loop for the four testing experiments
                 switch (i) {
                     case 0 -> {
                         initialAlpha = 0.0;
@@ -38,13 +38,37 @@ public class MainQ {
                     }
                     case 4 -> {
                         initialAlpha = 0.2;
+                        initialB = 1.5;
+                    }
+                    case 5 -> {
+                        initialAlpha = 0.2;
+                        initialB = 2;
+                    }
+                    case 6 -> {
+                        initialAlpha = 0.25;
+                        initialB = 0.9;
+                    }
+                    case 7 -> {
+                        initialAlpha = 0.25;
+                        initialB = 1.0;
+                    }
+                    case 8 -> {
+                        initialAlpha = 0.25;
+                        initialB = 1.1;
+                    }
+                    case 9 -> {
+                        initialAlpha = 0.25;
+                        initialB = 1.5;
+                    }
+                    case 10 -> {
+                        initialAlpha = 0.25;
                         initialB = 2;
                     }
                     default -> throw new Exception("not possible");
                 }
                 String dir = System.getProperty("user.dir");
                 //use otherData.txt to store the number of cascading failure within the simulations
-                FileWriter otherData = new FileWriter(dir + "/otherData.txt");
+                FileWriter otherData = new FileWriter(dir + "/" + "alpha" +initialAlpha + "b" + initialB+ "numOfCascadingFailures.txt");
 
                 //successfullData stores data of successful simulation
                 ArrayList<Object[]> successfullData = new ArrayList<>();

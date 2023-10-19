@@ -1,0 +1,21 @@
+<component name="libraryTable">
+  <library name="lib">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/poi-5.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/poi-examples-5.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/poi-excelant-5.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/poi-ooxml-5.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/poi-ooxml-full-5.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/poi-ooxml-lite-5.1.0.jar!/" />
+      <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/poi-scratchpad-5.1.0.jar!/" />
+      <root url="file://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/lib" />
+      <root url="file://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/ooxml-lib" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/poi-javadoc-5.1.0.jar!/" />
+    </JAVADOC>
+    <SOURCES />
+    <jarDirectory url="file://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/lib" recursive="false" />
+    <jarDirectory url="file://$USER_HOME$/Downloads/poi-bin-5.1.0-20211024/poi-bin-5.1.0/ooxml-lib" recursive="false" />
+  </library>
+</component>

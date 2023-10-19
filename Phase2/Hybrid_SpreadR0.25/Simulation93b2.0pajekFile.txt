@@ -1,0 +1,64 @@
+*Vertices 20
+1 "4561" ic Orange
+2 "4660" ic Orange
+3 "4661" ic Blue
+4 "4760" ic Orange
+5 "4761" ic Blue
+6 "4861" ic Orange
+7 "5549" ic Orange
+8 "5648" ic Orange
+9 "5649" ic Blue
+10 "5650" ic Orange
+11 "5749" ic Blue
+12 "5750" ic Orange
+13 "7610" ic Orange
+14 "7611" ic Orange
+15 "7709" ic Orange
+16 "7710" ic Blue
+17 "7711" ic Blue
+18 "7712" ic Orange
+19 "7810" ic Orange
+20 "7811" ic Orange
+*Edges
+1 3
+2 3
+2 4
+3 1
+3 2
+3 5
+4 2
+4 5
+5 3
+5 4
+5 6
+6 5
+7 9
+8 9
+9 7
+9 8
+9 10
+9 11
+10 9
+10 12
+11 9
+11 12
+12 10
+12 11
+13 14
+13 16
+14 13
+14 17
+15 16
+16 13
+16 15
+16 17
+16 19
+17 14
+17 16
+17 18
+17 20
+18 17
+19 16
+19 20
+20 17
+20 19

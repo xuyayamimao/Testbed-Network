@@ -1,0 +1,62 @@
+*Vertices 18
+1 "721" ic Orange
+2 "722" ic Orange
+3 "820" ic Orange
+4 "821" ic Blue
+5 "822" ic Blue
+6 "823" ic Orange
+7 "921" ic Orange
+8 "922" ic Orange
+9 "8692" ic Orange
+10 "8791" ic Orange
+11 "8792" ic Blue
+12 "8793" ic Orange
+13 "8890" ic Orange
+14 "8891" ic Blue
+15 "8892" ic Blue
+16 "8893" ic Orange
+17 "8991" ic Orange
+18 "8992" ic Orange
+*Edges
+1 2
+1 4
+2 1
+2 5
+3 4
+4 1
+4 3
+4 5
+4 7
+5 2
+5 4
+5 6
+5 8
+6 5
+7 4
+7 8
+8 5
+8 7
+9 11
+10 11
+10 14
+11 9
+11 10
+11 12
+11 15
+12 11
+12 16
+13 14
+14 10
+14 13
+14 15
+14 17
+15 11
+15 14
+15 16
+15 18
+16 12
+16 15
+17 14
+17 18
+18 15
+18 17
